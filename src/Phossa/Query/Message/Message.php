@@ -23,7 +23,7 @@ use Phossa\Shared\Message\MessageAbstract;
 class Message extends MessageAbstract
 {
     /**#@+
-     * @type  int
+     * @var   int
      */
 
     /**
