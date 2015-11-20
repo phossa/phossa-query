@@ -21,12 +21,20 @@ namespace Phossa\Query;
 class QueryBuilder implements QueryBuilderInterface
 {
     /**
-     * The query object
+     * Current query object
      *
      * @var    QueryInterface
      * @access protected
      */
     protected $query;
+
+    /**
+     * Query object pool
+     *
+     * @var    QueryInterface[]
+     * @access protected
+     */
+    protected $pool = [];
 
     /**
      * Driver
@@ -35,6 +43,18 @@ class QueryBuilder implements QueryBuilderInterface
      * @access protected
      */
     protected $driver;
+
+    /**
+     * Constructor
+     *
+     * @param  Driver\DriverInterface $driver (optional) db driver
+     * @access public
+     */
+    public function __construct(
+        Driver\DriverInterface $driver = null
+    ) {
+        if ($driver) $this->setDriver($driver);
+    }
 
     /**
      * {@inheritDoc}
@@ -48,12 +68,15 @@ class QueryBuilder implements QueryBuilderInterface
         // create the SELECT query
         $this->query = new Select\SelectQuery($this);
 
+        // multiple query objects supported
+        $this->pool[] = $this->query;
+
         // set query's driver
         $this->query->setDriver($driver);
 
         // set columns
         return call_user_func_array(
-            [ $this->query, 'column' ],
+            [ $this->query, 'select' ],
             func_get_args()
         );
     }
@@ -63,8 +86,12 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function setDriver(Driver\DriverInterface $driver)
     {
-        // if $query set, set $query's driver
-        if ($this->query) $this->query->setDriver($driver);
+        // set query objects driver
+        if ($this->pool) {
+            foreach($this->pool as $q) {
+                $q->setDriver($driver);
+            }
+        }
 
         // set driver for $this
         $this->driver = $driver;
@@ -77,11 +104,8 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function getDriver()/*# : Driver\DriverInterface */
     {
-        // if $query set, use $query's driver
-        if ($this->query) return $this->query->getDriver();
-
-        // if $this driver not set, use a new Mysql driver
-        return $this->driver ?: new Driver\Mysql();
+        return $this->driver ?:
+            ($this->query ? $this->query->getDriver() : new Driver\Mysql());
     }
 
     /**
@@ -90,11 +114,8 @@ class QueryBuilder implements QueryBuilderInterface
     public function toSql(
         Driver\DriverInterface $driver = null
     )/*# : string */ {
-        // if $driver provided
-        if ($driver) $this->setDriver($driver);
-
-        // return string
-        return $this->__toString();
+        if ($this->query) return $this->query->toSql($driver);
+        return '';
     }
 
     /**
@@ -102,10 +123,6 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function __toString()/*# string */
     {
-        // if $query set
-        if ($this->query) return $this->query->__toString();
-
-        // otherwise return empty string
-        return '';
+        return $this->toSql();
     }
 }

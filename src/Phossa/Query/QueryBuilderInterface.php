@@ -24,25 +24,9 @@ interface QueryBuilderInterface extends QueryInterface
     /**
      * Select query
      *
-     * <code>
-     *     // SELECT *
-     *     ->select()
-     *
-     *     // SELECT `user_id`, `user_name`
-     *     ->select('user_id', 'user_name')
-     *
-     *     // SELECT `user_id` AS `u`, `user_name` AS `n`
-     *     ->select('user_id as u', 'user_name as n')
-     *
-     *     // SELECT `user_id`, `user_name`
-     *     ->select(['user_id', 'user_name'])
-     *
-     *     // SELECT `user_id` AS `u`, `user_name` AS `n`
-     *     ->select(['user_id' => 'u', 'user_name' => 'n'])
-     * </code>
-     *
      * @param  string|array variable parameters
      * @return Select\SelectQueryInterface
+     * @see    Select\SelectInterface::select()
      * @access public
      * @api
      */

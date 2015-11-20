@@ -23,10 +23,7 @@ use Phossa\Query;
  */
 interface SelectQueryInterface extends
     Query\QueryInterface,
-    SelectInterface,
-    JoinInterface,
-    WhereInterface,
-    LimitInterface
+    SelectInterface
 {
 
 }

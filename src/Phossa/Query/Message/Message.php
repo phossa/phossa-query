@@ -27,9 +27,14 @@ class Message extends MessageAbstract
      */
 
     /**
-     * Wrong log level name
+     * Invalid table spec "%s"
      */
-    const WRONG_LOG_LEVEL       = 1510301240;
+    const INVALID_TBL_SPEC      = 1511091322;
+
+    /**
+     * Invalid column spec "%s"
+     */
+    const INVALID_COL_SPEC      = 1511091323;
 
     /**#@-*/
 
@@ -37,5 +42,7 @@ class Message extends MessageAbstract
      * {@inheritdoc}
      */
     protected static $messages = [
+        self::INVALID_TBL_SPEC      => 'Invalid table spec "%s"',
+        self::INVALID_COL_SPEC      => 'Invalid column spec "%s"',
     ];
 }

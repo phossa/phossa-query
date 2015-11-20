@@ -12,10 +12,12 @@ namespace Phossa\Query;
 
 use Phossa\Query\Driver;
 
+use Phossa\Query\Message\Message;
+
 /**
  * QueryTrait
  *
- * Partial implementation of QueryInterface for those *QueryInterface
+ * Implementation of QueryInterface for those *QueryInterface
  *
  * @trait
  * @package \Phossa\Query
@@ -74,10 +76,52 @@ trait QueryTrait
     /**
      * {@inheritDoc}
      */
-    public function toSql(
-        Driver\DriverInterface $driver = null
-    )/*# : string */ {
-        if ($driver) $this->setDriver($driver);
-        return $this->__toString();
+    public function __toString()/*# string */
+    {
+        return $this->toSql();
+    }
+
+    /**
+     * Is this a column spec ?
+     *
+     * @param  string $colSpec column spec to check
+     * @return false|string|array
+     * @access protected
+     */
+    protected function isColSpec(/*# string */ $colSpec)
+    {
+        // column <= 64 chars, alias <= 256 chars
+        $pattern = '\s*(.{1,64})(\s+AS\s+(.{1,256})\s*)?$';
+
+        if (preg_match("/$pattern/i", $colSpec, $m)) {
+            $col = $m[1];
+            $as  = isset($m[3]) ? $m[3] : false;
+            return $as ? $col : [$col, $as];
+        }
+        return false;
+    }
+
+    /**
+     * Is this a table spec ?
+     *
+     * @param  string $tblSpec table spec
+     * @return false|string|array
+     * @access protected
+     */
+    protected function isTblSpec(/*# string */ $tblSpec)
+    {
+        return $tblSpec;
+    }
+
+    /**
+     * debug message
+     *
+     * @param  int $code message code
+     * @return this
+     * @access protected
+     */
+    protected function debug()
+    {
+        $mesg = Message::get($code, func_get_args());
     }
 }

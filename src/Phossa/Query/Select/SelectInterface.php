@@ -28,14 +28,23 @@ interface SelectInterface
      *     // SELECT *
      *     ->select()
      *
-     *     // SELECT `user_id`, `user_name`
-     *     ->setColPrefix('user_')->select('id', 'name')
+     *     // SELECT `user_id`
+     *     ->select('user_id')
+     *
+     *     // SELECT `user_id` AS `i`
+     *     ->select('user_id AS i`)
      *
      *     // SELECT `user_id`, `user_name`
      *     ->select('user_id', 'user_name')
      *
+     *     // SELECT `user_id` AS `i`, `user_name` AS `n`
+     *     ->select('user_id AS i', 'user_name AS n')
+     *
      *     // SELECT `user_id`, `user_name`
      *     ->select(['user_id', 'user_name'])
+     *
+     *     // SELECT `user_id` AS `u`, `user_name` AS `n`
+     *     ->select(['user_id AS i', 'user_name AS n'])
      *
      *     // SELECT `user_id` AS `u`, `user_name` AS `n`
      *     ->select(['user_id' => 'u', 'user_name' => 'n'])
@@ -49,28 +58,6 @@ interface SelectInterface
     public function select()/*# : SelectQueryInterface */;
 
     /**
-     * Wrap whole select with an AS
-     *
-     * Use columns() to specify columns to select
-     *
-     * <code>
-     *     // (SELECT * ..) AS `x`
-     *     ->selectAs('x')
-     *
-     *     // (SELECT `user_name` FROM `users`) AS `x`
-     *     ->selectAs('x')->col('user_name')->from('users')
-     * </code>
-     *
-     * @param  string $as alias name
-     * @return this
-     * @access public
-     * @api
-     */
-    public function selectAs(
-        /*# string */ $as
-    )/*# : SelectQueryInterface */;
-
-    /**
      * From clause
      *
      * <code>
@@ -81,10 +68,16 @@ interface SelectInterface
      *     ->from('users as u')
      *
      *     // FROM `users`, `accounts`
-     *     ->from(['users', 'accounts'])
+     *     ->from('users', 'accounts')
      *
      *     // FROM `users` AS `u`, `accounts` AS `a`
      *     ->from('users as u', 'accounts as a')
+     *
+     *     // FROM `users`, `accounts`
+     *     ->from(['users', 'accounts'])
+     *
+     *     // FROM `users` AS `u`, `accounts` AS `a`
+     *     ->from(['users AS u', 'accounts AS a'])
      *
      *     // FROM `users` AS `u`, 'accounts' AS `a`
      *     ->from(['users' => 'u', 'accounts' => 'a'])
@@ -100,14 +93,13 @@ interface SelectInterface
     )/*# : SelectQueryInterface */;
 
     /**
-     * From clause with table alias
+     * From clause with second argument is the alias(es)
      *
      * <code>
      *     // FROM `users` AS `u`, `accounts` AS `a`
-     *     ->fromAs('users', 'u')
-     *     ->fromAs('accounts', 'a')
+     *     ->fromAs('users', 'u')->fromAs('accounts', 'a')
      *
-     *     // same as above
+     *     // FROM `users` AS `u`, `accounts` AS `a`
      *     ->fromAs(['users', 'accounts'], ['u', 'a'])
      * </code>
      *
@@ -123,7 +115,7 @@ interface SelectInterface
     )/*# : SelectQueryInterface */;
 
     /**
-     * Add columns to query, usage is same as self::select()
+     * Select column(s) to query, usage is same as self::select()
      *
      * <code>
      *     // SELECT `user_name`
@@ -135,11 +127,17 @@ interface SelectInterface
      *     // SELECT `user_id`, `user_name`
      *     ->column('user_id', 'user_name')
      *
+     *     // SELECT `user_id` AS `i`, `user_name` AS `n`
+     *     ->column('user_id AS i', 'user_name AS n')
+     *
      *     // SELECT `user_id`, `user_name`
      *     ->column(['user_id', 'user_name'])
      *
-     *     // SELECT `user_id` AS id, `user_name` AS name
-     *     ->column(['user_id' => 'id', 'user_name' => 'name'])
+     *     // SELECT `user_id` AS `i`, `user_name` AS `n`
+     *     ->column(['user_id AS i', 'user_name AS n'])
+     *
+     *     // SELECT `user_id` AS `i`, `user_name` AS `n`
+     *     ->column(['user_id' => 'i', 'user_name' => 'n'])
      * </code>
      *
      * @param  string|array $colSpec column specification
@@ -154,7 +152,7 @@ interface SelectInterface
     )/*# : SelectQueryInterface */;
 
     /**
-     * Add column (with its alias) to query
+     * Select column(s) with second argument as its alias(es)
      *
      * <code>
      *     // SELECT COUNT(`user_name`) AS `cnt`
