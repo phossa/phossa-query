@@ -8,9 +8,10 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Select;
+namespace Phossa\Query\Sql\Select;
 
-use Phossa\Query;
+use Phossa\Query\Sql;
+use Phossa\Query\Driver;
 use Phossa\Query\Message\Message;
 
 /**
@@ -18,14 +19,14 @@ use Phossa\Query\Message\Message;
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Phossa\Query\Select\SelectQueryInterface
+ * @see     \Phossa\Query\Sql\QueryAbstract
+ * @see     \Phossa\Query\Sql\Select\SelectInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class SelectQuery implements SelectQueryInterface
+class SelectQuery extends Sql\QueryAbstract implements
+    SelectInterface
 {
-    use Query\QueryTrait;
-
     /**
      * query parts
      *
@@ -48,11 +49,18 @@ class SelectQuery implements SelectQueryInterface
      * {@inheritDoc}
      */
     public function getStatement(
+        /*# string */ $tablePrefix = '',
         Driver\DriverInterface $driver = null
     )/*# : string */ {
         // get driver
-        if ($driver === null) $driver = $this->getDriver();
+        if ($driver === null) {
+            $driver = $this->builder->getDriver();
+        }
 
+        // get table prefix
+        if ($tablePrefix === '') {
+            $tablePrefix = $this->builder->getTablePrefix();
+        }
     }
 
     /**

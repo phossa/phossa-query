@@ -16,50 +16,23 @@ namespace Phossa\Query;
  * @interface
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Query\Sql\QueryInterface
+ * @see     \Phossa\Query\BuilderOptionInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface QueryBuilderInterface extends QueryInterface
+interface QueryBuilderInterface extends
+    Sql\QueryInterface,
+    BuilderOptionInterface
 {
-    /**
-     * Get current query builder mode
-     *
-     * @param  void
-     * @return int
-     * @access public
-     */
-    public function getMode()/*# : int */;
-
-    /**
-     * Set the table prefix
-     *
-     * @param  string $prefix the prefix string
-     * @return this
-     * @access public
-     * @api
-     */
-    public function setTablePrefix(
-        /*# string */ $prefix
-    )/*# : QueryBuilderInterface */;
-
-    /**
-     * Get the table prefix
-     *
-     * @param  void
-     * @return string
-     * @access public
-     * @api
-     */
-    public function getTablePrefix()/*# : string */;
-
     /**
      * Select query
      *
      * @param  string|array variable parameters
-     * @return Select\SelectQueryInterface
-     * @see    Select\SelectInterface::select()
+     * @return Sql\Select\SelectQuery
+     * @see    Sql\Select\SelectInterface::select()
      * @access public
      * @api
      */
-    public function select()/*# : Select\SelectQueryInterface */;
+    public function select()/*# : Sql\Select\SelectQuery */;
 }

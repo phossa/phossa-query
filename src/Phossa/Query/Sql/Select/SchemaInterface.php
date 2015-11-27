@@ -8,7 +8,7 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Select;
+namespace Phossa\Query\Sql\Select;
 
 /**
  * Schema related interface
@@ -56,7 +56,7 @@ interface SchemaInterface
     public function setTblPrefix(
         /*# string */ $tblPrefix
     )/*# : SelectQueryInterface */;
-    
+
     /**
      * Set column name prefix
      *

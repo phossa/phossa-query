@@ -8,10 +8,12 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query;
+namespace Phossa\Query\Sql;
+
+use Phossa\Query\Driver;
 
 /**
- * Able to print out the query string
+ * Query output related interface
  *
  * @interface
  * @package \Phossa\Query
@@ -19,20 +21,20 @@ namespace Phossa\Query;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface GetSqlInterface
+interface QueryInterface
 {
     /**
      * Return the statement for $driver
      *
+     * @param  string $tablePrefix (optional) prefix to table
      * @param  Driver\DriverInterface $driver (optional) specific driver
-     * @param  string $tablePrefix prefix to table
      * @return string
      * @access public
      * @api
      */
     public function getStatement(
-        Driver\DriverInterface $driver = null,
-        /*# string */ $tablePrefix = ''
+        /*# string */ $tablePrefix = '',
+        Driver\DriverInterface $driver = null
     )/*# : string */;
 
     /**

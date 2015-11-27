@@ -31,7 +31,7 @@ interface DriverCapableInterface
      */
     public function setDriver(
         DriverInterface $driver
-    );
+    )/*# : DriverCapableInterface */;
 
     /**
      * Get the driver. if not set, return a new Common driver

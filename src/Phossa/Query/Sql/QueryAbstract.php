@@ -8,24 +8,21 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query;
+namespace Phossa\Query\Sql;
 
-use Phossa\Query\Driver;
 use Phossa\Query\Message\Message;
 
 /**
- * QueryTrait
+ * Abstract class of Query
  *
- * Implementation of QueryInterface for those *QueryInterface
- *
- * @trait
+ * @abstract
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Phossa\Query\QueryInterface
+ * @see     \Phossa\Query\Sql\QueryInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-trait QueryTrait
+abstract class QueryAbstract implements QueryInterface
 {
     /**
      * query build object
@@ -36,44 +33,16 @@ trait QueryTrait
     protected $builder;
 
     /**
-     * Driver
-     *
-     * @var    Driver\DriverInterface
-     * @access protected
-     */
-    protected $driver;
-
-    /**
      * constructor
      *
      * @param  QueryBuilderInterface $builder the builder object
-     * @param  Driver\DriverInterface $driver the driver
      * @access public
      * @api
      */
     public function __construct(
-        QueryBuilderInterface $builder,
-        Driver\DriverInterface $driver
+        QueryBuilderInterface $builder
     ) {
         $this->builder = $builder;
-        $this->setDriver($driver);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setDriver(Driver\DriverInterface $driver)
-    {
-        $this->driver = $driver;
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDriver()/*# : Driver\DriverInterface */
-    {
-        return $this->driver;
     }
 
     /**

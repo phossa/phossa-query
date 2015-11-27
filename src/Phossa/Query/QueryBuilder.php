@@ -20,6 +20,8 @@ namespace Phossa\Query;
  */
 class QueryBuilder implements QueryBuilderInterface
 {
+    // <editor-fold defaultstate="collapsed" desc="properties">
+
     /**
      * Current query object
      *
@@ -79,6 +81,8 @@ class QueryBuilder implements QueryBuilderInterface
 
     /**#@-*/
 
+    // </editor-fold>
+
     /**
      * Constructor
      *
@@ -86,6 +90,7 @@ class QueryBuilder implements QueryBuilderInterface
      * default is loose mode for different queries
      *
      * @param  Driver\DriverInterface $driver (optional) db driver
+     * @param  string $prefix table prefix if any
      * @param  int $mode sql mode
      * @access public
      */
@@ -98,16 +103,27 @@ class QueryBuilder implements QueryBuilderInterface
         if ($driver) $this->setDriver($driver);
 
         // set table prefix
-        $this->setTablePrefix($prefix);
+        if ($prefix) $this->setTablePrefix($prefix);
 
         // set mode
-        if ($mode) $this->mode = (int) $mode;
+        if ($mode) $this->setQueryMode($mode);
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="BuilderOptionInterface">
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setQueryMode(
+        /*# int */ $mode
+    )/*# : BuilderOptionInterface */ {
+        return $this->mode = (int) $mode;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getMode()
+    public function getQueryMode()/*# : int */
     {
         return $this->mode;
     }
@@ -115,39 +131,10 @@ class QueryBuilder implements QueryBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function select()/*# : SelectQueryInterface */
-    {
-        // get driver if set before or use the Common driver
-        $driver = $this->getDriver();
-
-        // create the SELECT query
-        $this->query  = new Select\SelectQuery($this, $driver);
-
-        // multiple query objects supported for UNION select etc.
-        $this->pool[] = $this->query;
-
-        // set columns
-        return call_user_func_array(
-            [ $this->query, 'select' ],
-            func_get_args()
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setDriver(Driver\DriverInterface $driver)
-    {
-        // set query objects' driver
-        if ($this->pool) {
-            foreach($this->pool as $q) {
-                $q->setDriver($driver);
-            }
-        }
-
-        // set driver for $this
+    public function setDriver(
+        Driver\DriverInterface $driver
+    )/*# : DriverCapableInterface */ {
         $this->driver = $driver;
-
         return $this;
     }
 
@@ -156,14 +143,18 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function getDriver()/*# : Driver\DriverInterface */
     {
-        return $this->driver ?: new Driver\Common();
+        if ($this->driver === null) {
+            $this->driver = new Driver\Common();
+        }
+        return $this->driver;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setTablePrefix(/*# string */ $prefix
-    )/*# : QueryInterface */ {
+    public function setTablePrefix(
+        /*# string */ $prefix
+    )/*# : BuilderOptionInterface */ {
         $this->prefix = $prefix;
         return $this;
     }
@@ -176,17 +167,21 @@ class QueryBuilder implements QueryBuilderInterface
         return $this->prefix;
     }
 
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="QueryInterface">
+
     /**
      * {@inheritDoc}
      */
     public function getStatement(
-        Driver\DriverInterface $driver = null,
-        /*# string */ $tablePrefix = ''
+        /*# string */ $tablePrefix = '',
+        Driver\DriverInterface $driver = null
     )/*# : string */ {
         if ($this->query) {
             return $this->query->getStatement(
-                $driver,
-                $tablePrefix ?: $this->prefix
+                $tablePrefix ?: $this->getTablePrefix(),
+                $driver ?: $this->getDriver()
             );
         }
         return '';
@@ -206,5 +201,25 @@ class QueryBuilder implements QueryBuilderInterface
     public function __toString()/*# string */
     {
         return $this->getStatement();
+    }
+
+    // </editor-fold>
+
+    /**
+     * {@inheritDoc}
+     */
+    public function select()/*# : SelectQueryInterface */
+    {
+        // create the SELECT query
+        $this->query  = new Select\SelectQuery($this);
+
+        // multiple query objects supported for UNION select etc.
+        $this->pool[] = $this->query;
+
+        // set columns
+        return call_user_func_array(
+            [ $this->query, 'select' ],
+            func_get_args()
+        );
     }
 }

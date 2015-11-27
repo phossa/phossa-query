@@ -8,7 +8,7 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Select;
+namespace Phossa\Query\Sql\Select;
 
 /**
  * Order by clause related interface
