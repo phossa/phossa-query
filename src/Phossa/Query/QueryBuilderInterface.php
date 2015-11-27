@@ -22,6 +22,37 @@ namespace Phossa\Query;
 interface QueryBuilderInterface extends QueryInterface
 {
     /**
+     * Get current query builder mode
+     *
+     * @param  void
+     * @return int
+     * @access public
+     */
+    public function getMode()/*# : int */;
+
+    /**
+     * Set the table prefix
+     *
+     * @param  string $prefix the prefix string
+     * @return this
+     * @access public
+     * @api
+     */
+    public function setTablePrefix(
+        /*# string */ $prefix
+    )/*# : QueryBuilderInterface */;
+
+    /**
+     * Get the table prefix
+     *
+     * @param  void
+     * @return string
+     * @access public
+     * @api
+     */
+    public function getTablePrefix()/*# : string */;
+
+    /**
      * Select query
      *
      * @param  string|array variable parameters

@@ -19,19 +19,31 @@ namespace Phossa\Query;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface ToStringInterface
+interface GetSqlInterface
 {
     /**
-     * Set the driver and return the query string
+     * Return the statement for $driver
      *
      * @param  Driver\DriverInterface $driver (optional) specific driver
+     * @param  string $tablePrefix prefix to table
      * @return string
      * @access public
      * @api
      */
-    public function toSql(
-        Driver\DriverInterface $driver = null
+    public function getStatement(
+        Driver\DriverInterface $driver = null,
+        /*# string */ $tablePrefix = ''
     )/*# : string */;
+
+    /**
+     * Return binding values
+     *
+     * @param  void
+     * @return array
+     * @access public
+     * @api
+     */
+    public function getBindings()/*# : array */;
 
     /**
      * Return the query string

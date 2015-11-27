@@ -25,7 +25,7 @@ namespace Phossa\Query;
  * @since   1.0.0 added
  */
 interface QueryInterface extends
-    ToStringInterface,
+    GetSqlInterface,
     Driver\DriverCapableInterface
 {
 

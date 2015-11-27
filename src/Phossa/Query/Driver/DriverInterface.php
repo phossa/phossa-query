@@ -21,5 +21,25 @@ namespace Phossa\Query\Driver;
  */
 interface DriverInterface
 {
+    /**
+     * Set identifer quotation
+     *
+     * @param  bool $quote quote or not
+     * @return this
+     * @access public
+     * @api
+     */
+    public function setQuote(
+        /*# bool */ $quote = true
+    )/*# : DriverInterface */;
 
+    /**
+     * Get current quote status
+     *
+     * @param  void
+     * @return bool
+     * @access public
+     * @api
+     */
+    public function getQuote()/*# : bool */;
 }

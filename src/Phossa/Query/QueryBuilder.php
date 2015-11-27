@@ -45,15 +45,71 @@ class QueryBuilder implements QueryBuilderInterface
     protected $driver;
 
     /**
+     * Table prefix
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $prefix = '';
+
+    /**
+     * Query mode, strict or loose
+     *
+     * @var    int
+     * @access protected
+     */
+    protected $mode = 0;
+
+    /**#@+
+     * Query mode constant bits
+     *
+     * @const
+     */
+
+    /**
+     * strict mode, warns non-strict usage, such as 'user AS u'
+     */
+    const MODE_STRICT       = 1;
+
+    /**
+     * warns about non-standard sql features in the statement such as
+     * SELECT HIGH_PRIORITY ...
+     */
+    const MODE_NONCOMPAT    = 2;
+
+    /**#@-*/
+
+    /**
      * Constructor
      *
+     * If no driver specified, only COMMON type of query returned
+     * default is loose mode for different queries
+     *
      * @param  Driver\DriverInterface $driver (optional) db driver
+     * @param  int $mode sql mode
      * @access public
      */
     public function __construct(
-        Driver\DriverInterface $driver = null
+        Driver\DriverInterface $driver = null,
+        /*# string */ $prefix = '',
+        /*# int */ $mode = 0
     ) {
+        // set driver
         if ($driver) $this->setDriver($driver);
+
+        // set table prefix
+        $this->setTablePrefix($prefix);
+
+        // set mode
+        if ($mode) $this->mode = (int) $mode;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMode()
+    {
+        return $this->mode;
     }
 
     /**
@@ -61,18 +117,14 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function select()/*# : SelectQueryInterface */
     {
-        // get driver if previously set(or set in $query)
-        // otherwise use the default driver
+        // get driver if set before or use the Common driver
         $driver = $this->getDriver();
 
         // create the SELECT query
-        $this->query = new Select\SelectQuery($this);
+        $this->query  = new Select\SelectQuery($this, $driver);
 
-        // multiple query objects supported
+        // multiple query objects supported for UNION select etc.
         $this->pool[] = $this->query;
-
-        // set query's driver
-        $this->query->setDriver($driver);
 
         // set columns
         return call_user_func_array(
@@ -86,7 +138,7 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function setDriver(Driver\DriverInterface $driver)
     {
-        // set query objects driver
+        // set query objects' driver
         if ($this->pool) {
             foreach($this->pool as $q) {
                 $q->setDriver($driver);
@@ -104,18 +156,48 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function getDriver()/*# : Driver\DriverInterface */
     {
-        return $this->driver ?:
-            ($this->query ? $this->query->getDriver() : new Driver\Mysql());
+        return $this->driver ?: new Driver\Common();
     }
 
     /**
      * {@inheritDoc}
      */
-    public function toSql(
-        Driver\DriverInterface $driver = null
+    public function setTablePrefix(/*# string */ $prefix
+    )/*# : QueryInterface */ {
+        $this->prefix = $prefix;
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTablePrefix()/*# : string */
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getStatement(
+        Driver\DriverInterface $driver = null,
+        /*# string */ $tablePrefix = ''
     )/*# : string */ {
-        if ($this->query) return $this->query->toSql($driver);
+        if ($this->query) {
+            return $this->query->getStatement(
+                $driver,
+                $tablePrefix ?: $this->prefix
+            );
+        }
         return '';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBindings()/*# : array */ {
+        if ($this->query) return $this->query->getBindings();
+        return [];
     }
 
     /**
@@ -123,6 +205,6 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function __toString()/*# string */
     {
-        return $this->toSql();
+        return $this->getStatement();
     }
 }

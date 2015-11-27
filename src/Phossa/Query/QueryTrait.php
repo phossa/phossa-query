@@ -11,7 +11,6 @@
 namespace Phossa\Query;
 
 use Phossa\Query\Driver;
-
 use Phossa\Query\Message\Message;
 
 /**
@@ -48,12 +47,16 @@ trait QueryTrait
      * constructor
      *
      * @param  QueryBuilderInterface $builder the builder object
+     * @param  Driver\DriverInterface $driver the driver
      * @access public
      * @api
      */
-    public function __construct(QueryBuilderInterface $builder)
-    {
+    public function __construct(
+        QueryBuilderInterface $builder,
+        Driver\DriverInterface $driver
+    ) {
         $this->builder = $builder;
+        $this->setDriver($driver);
     }
 
     /**
@@ -70,7 +73,15 @@ trait QueryTrait
      */
     public function getDriver()/*# : Driver\DriverInterface */
     {
-        return $this->driver ?: new Driver\Mysql();
+        return $this->driver;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getBindings()/*# array */
+    {
+        return [];
     }
 
     /**
@@ -78,7 +89,7 @@ trait QueryTrait
      */
     public function __toString()/*# string */
     {
-        return $this->toSql();
+        return $this->getStatement();
     }
 
     /**

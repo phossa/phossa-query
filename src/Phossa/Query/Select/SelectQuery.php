@@ -11,7 +11,6 @@
 namespace Phossa\Query\Select;
 
 use Phossa\Query;
-
 use Phossa\Query\Message\Message;
 
 /**
@@ -48,11 +47,11 @@ class SelectQuery implements SelectQueryInterface
     /**
      * {@inheritDoc}
      */
-    public function toSql(
+    public function getStatement(
         Driver\DriverInterface $driver = null
     )/*# : string */ {
-        // set driver
-        if ($driver) $this->setDriver($driver);
+        // get driver
+        if ($driver === null) $driver = $this->getDriver();
 
     }
 

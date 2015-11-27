@@ -34,7 +34,7 @@ interface DriverCapableInterface
     );
 
     /**
-     * Get the driver. if not set, return a new Mysql driver
+     * Get the driver. if not set, return a new Common driver
      *
      * @param  void
      * @return DriverInterface

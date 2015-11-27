@@ -25,29 +25,29 @@ interface SelectInterface
      * Select clause
      *
      * <code>
-     *     // SELECT *
+     *     // MODE_STRICT: SELECT *
      *     ->select()
      *
-     *     // SELECT `user_id`
+     *     // MODE_STRICT: SELECT `user_id`
      *     ->select('user_id')
      *
-     *     // SELECT `user_id` AS `i`
-     *     ->select('user_id AS i`)
-     *
-     *     // SELECT `user_id`, `user_name`
+     *     // MODE_STRICT: SELECT `user_id`, `user_name`
      *     ->select('user_id', 'user_name')
+     *
+     *     // MODE_STRICT: SELECT `user_id`, `user_name`
+     *     ->select(['user_id', 'user_name'])
+     *
+     *     // MODE_STRICT: SELECT `user_id`, `user_name` AS `n`
+     *     ->select(['user_id', 'user_name' => 'n'])
+     *
+     *     // SELECT `user_id` AS `i`
+     *     ->select('user_id AS i')
      *
      *     // SELECT `user_id` AS `i`, `user_name` AS `n`
      *     ->select('user_id AS i', 'user_name AS n')
      *
-     *     // SELECT `user_id`, `user_name`
-     *     ->select(['user_id', 'user_name'])
-     *
      *     // SELECT `user_id` AS `u`, `user_name` AS `n`
      *     ->select(['user_id AS i', 'user_name AS n'])
-     *
-     *     // SELECT `user_id` AS `u`, `user_name` AS `n`
-     *     ->select(['user_id' => 'u', 'user_name' => 'n'])
      * </code>
      *
      * @param  string|array variable parameters
@@ -61,26 +61,26 @@ interface SelectInterface
      * From clause
      *
      * <code>
-     *     // FROM `users`
+     *     // MODE_STRICT: FROM `users`
      *     ->from('users')
+     *
+     *     // MODE_STRICT: FROM `users`, `accounts`
+     *     ->from('users', 'accounts')
+     *
+     *     // MODE_STRICT: FROM `users`, `accounts`
+     *     ->from(['users', 'accounts'])
+     *
+     *     // MODE_STRICT: FROM `users`, 'accounts' AS `a`
+     *     ->from(['users', 'accounts' => 'a'])
      *
      *     // FROM `users` AS `u`
      *     ->from('users as u')
      *
-     *     // FROM `users`, `accounts`
-     *     ->from('users', 'accounts')
-     *
      *     // FROM `users` AS `u`, `accounts` AS `a`
      *     ->from('users as u', 'accounts as a')
      *
-     *     // FROM `users`, `accounts`
-     *     ->from(['users', 'accounts'])
-     *
      *     // FROM `users` AS `u`, `accounts` AS `a`
      *     ->from(['users AS u', 'accounts AS a'])
-     *
-     *     // FROM `users` AS `u`, 'accounts' AS `a`
-     *     ->from(['users' => 'u', 'accounts' => 'a'])
      * </code>
      *
      * @param  string|array $tblSpec table specifications
@@ -95,15 +95,17 @@ interface SelectInterface
     /**
      * From clause with second argument is the alias(es)
      *
+     * First argument may be a subselect
+     *
      * <code>
-     *     // FROM `users` AS `u`, `accounts` AS `a`
+     *     // MODE_STRICT: FROM `users` AS `u`, `accounts` AS `a`
      *     ->fromAs('users', 'u')->fromAs('accounts', 'a')
      *
-     *     // FROM `users` AS `u`, `accounts` AS `a`
+     *     // MODE_STRICT: FROM `users` AS `u`, `accounts` AS `a`
      *     ->fromAs(['users', 'accounts'], ['u', 'a'])
      * </code>
      *
-     * @param  string|array $table table specification
+     * @param  string|array $table table specification or subselect
      * @param  string|array $as alias name
      * @return this
      * @access public
@@ -115,29 +117,29 @@ interface SelectInterface
     )/*# : SelectQueryInterface */;
 
     /**
-     * Select column(s) to query, usage is same as self::select()
+     * Select column[s] to query, usage is same as self::select()
      *
      * <code>
-     *     // SELECT `user_name`
+     *     // MODE_STRICT: SELECT `user_name`
      *     ->column('user_name')
+     *
+     *     // MODE_STRICT: SELECT `user_id`, `user_name`
+     *     ->column('user_id', 'user_name')
+     *
+     *     // MODE_STRICT: SELECT `user_id`, `user_name`
+     *     ->column(['user_id', 'user_name'])
+     *
+     *     // MODE_STRICT: SELECT `user_id`, `user_name` AS `n`
+     *     ->column(['user_id', 'user_name' => 'n'])
      *
      *     // SELECT `user_name` AS `n`
      *     ->column('user_name AS n')
      *
-     *     // SELECT `user_id`, `user_name`
-     *     ->column('user_id', 'user_name')
-     *
      *     // SELECT `user_id` AS `i`, `user_name` AS `n`
      *     ->column('user_id AS i', 'user_name AS n')
      *
-     *     // SELECT `user_id`, `user_name`
-     *     ->column(['user_id', 'user_name'])
-     *
      *     // SELECT `user_id` AS `i`, `user_name` AS `n`
      *     ->column(['user_id AS i', 'user_name AS n'])
-     *
-     *     // SELECT `user_id` AS `i`, `user_name` AS `n`
-     *     ->column(['user_id' => 'i', 'user_name' => 'n'])
      * </code>
      *
      * @param  string|array $colSpec column specification
@@ -152,13 +154,13 @@ interface SelectInterface
     )/*# : SelectQueryInterface */;
 
     /**
-     * Select column(s) with second argument as its alias(es)
+     * Select column[s] with second argument as its alias(es)
      *
      * <code>
-     *     // SELECT COUNT(`user_name`) AS `cnt`
+     *     // MODE_STRICT: SELECT COUNT(`user_name`) AS `cnt`
      *     ->columnAs('COUNT(user_name)', 'cnt')
      *
-     *     // SELECT `user_id` AS `id`, `user_name` AS `name`
+     *     // MODE_STRICT: SELECT `user_id` AS `id`, `user_name` AS `name`
      *     ->columnAs(['user_id', 'user_name'], ['id', 'name'])
      * </code>
      *
@@ -177,11 +179,11 @@ interface SelectInterface
      * Select distinct column, usage is same as self::column()
      *
      * <code>
-     *     // SELECT DISTINCT `gender`, `age`
+     *     // MODE_STRICT: SELECT DISTINCT `gender`, `age`
      *     select()->distinct('gender', 'age')
      *
-     *     // SELECT DISTINCT `gender`, `age`
-     *     select('gender', 'age')->distinct()
+     *     // SELECT DISTINCT `gender` AS `g`, `age`
+     *     select('gender AS g', 'age')->distinct()
      * </code>
      *
      * @param  string variable parameters
@@ -193,7 +195,7 @@ interface SelectInterface
     public function distinct()/*# : SelectQueryInterface */;
 
     /**
-     * Select into new table
+     * Select into new table (or alias)
      *
      * <code>
      *     // SELECT * INTO `users` FROM `old_users`
