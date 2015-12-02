@@ -11,30 +11,23 @@
 namespace Phossa\Query;
 
 /**
- * QueryBuilder interface
+ * Base query interface
  *
  * @interface
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     \Phossa\Query\OutputInterface
- * @see     \Phossa\Query\OptionInterface
- * @see     \Phossa\Query\LoggerInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface QueryBuilderInterface extends
-    OutputInterface,
-    OptionInterface,
-    LoggerInterface
+interface QueryInterface extends OutputInterface
 {
     /**
-     * Select query
+     * Get query parts
      *
      * @param  void
-     * @return Sql\SelectQuery
-     * @see    \Phossa\Query\Sql\SelectInterface::select()
+     * @return array
      * @access public
      * @api
      */
-    public function select()/*# : Sql\SelectQuery */;
+    public function getQueryParts()/*# : array */;
 }

@@ -11,16 +11,16 @@
 namespace Phossa\Query;
 
 /**
- * BuilderOption interface
+ * Builder's option interface
  *
  * @interface
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Phossa\Query\Driver\DriverCapableInterface
+ * @see     \Phossa\Query\Dialect\DialectCapableInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface BuilderOptionInterface extends Driver\DriverCapableInterface
+interface OptionInterface extends Dialect\DialectCapableInterface
 {
     /**
      * Set current query builder mode

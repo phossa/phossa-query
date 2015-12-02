@@ -8,7 +8,7 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Sql\Select;
+namespace Phossa\Query\Sql;
 
 /**
  * SQL function related interface

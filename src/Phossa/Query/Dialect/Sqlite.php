@@ -8,17 +8,17 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Driver;
+namespace Phossa\Query\Dialect;
 
 /**
- * Oracle driver
+ * SQLite dialect
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Oracle implements DriverInterface
+class Sqlite extends Common
 {
 
 }

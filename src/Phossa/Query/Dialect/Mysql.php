@@ -8,17 +8,24 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Driver;
+namespace Phossa\Query\Dialect;
 
 /**
- * SQLite driver
+ * Mysql dialect
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Sqlite implements DriverInterface
+class Mysql extends Common
 {
-
+    /**
+     * {@inheritDoc}
+     */
+    public function quoteIdentifier(
+        /*# string */ $input
+    )/*# : string */ {
+        return parent::quoteIdentifier($input, '`');
+    }
 }

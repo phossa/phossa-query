@@ -8,10 +8,10 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Driver;
+namespace Phossa\Query\Dialect;
 
 /**
- * DriverInterface
+ * DialectCapableInterface
  *
  * @interface
  * @package \Phossa\Query
@@ -19,27 +19,27 @@ namespace Phossa\Query\Driver;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DriverInterface
+interface DialectCapableInterface
 {
     /**
-     * Set identifer quotation
+     * Set the dialect
      *
-     * @param  bool $quote quote or not
+     * @param  DialectInterface $dialect specific dialect
      * @return this
      * @access public
      * @api
      */
-    public function setQuote(
-        /*# bool */ $quote = true
-    )/*# : DriverInterface */;
+    public function setDialect(
+        DialectInterface $dialect
+    )/*# : DialectCapableInterface */;
 
     /**
-     * Get current quote status
+     * Get the dialect. if not set, return a new Common dialect
      *
      * @param  void
-     * @return bool
+     * @return DialectInterface
      * @access public
      * @api
      */
-    public function getQuote()/*# : bool */;
+    public function getDialect()/*# : DialectInterface */;
 }

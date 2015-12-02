@@ -8,17 +8,17 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Driver;
+namespace Phossa\Query\Dialect;
 
 /**
- * Mysql driver
+ * Oracle dialect
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Mysql implements DriverInterface
+class Oracle extends Common
 {
 
 }

@@ -20,31 +20,25 @@ namespace Phossa\Query;
  */
 class QueryBuilder implements QueryBuilderInterface
 {
+    use \Psr\Log\LoggerAwareTrait;
+
     // <editor-fold defaultstate="collapsed" desc="properties">
 
     /**
      * Current query object
      *
-     * @var    QueryInterface
+     * @var    OutputInterface
      * @access protected
      */
     protected $query;
 
     /**
-     * Query object pool
+     * Dialect
      *
-     * @var    QueryInterface[]
+     * @var    Dialect\DialectInterface
      * @access protected
      */
-    protected $pool = [];
-
-    /**
-     * Driver
-     *
-     * @var    Driver\DriverInterface
-     * @access protected
-     */
-    protected $driver;
+    protected $dialect;
 
     /**
      * Table prefix
@@ -69,15 +63,9 @@ class QueryBuilder implements QueryBuilderInterface
      */
 
     /**
-     * strict mode, warns non-strict usage, such as 'user AS u'
+     * Spitting warning about non-standard sql features in the statement
      */
-    const MODE_STRICT       = 1;
-
-    /**
-     * warns about non-standard sql features in the statement such as
-     * SELECT HIGH_PRIORITY ...
-     */
-    const MODE_NONCOMPAT    = 2;
+    const MODE_NONCOMPAT    = 1;
 
     /**#@-*/
 
@@ -86,21 +74,21 @@ class QueryBuilder implements QueryBuilderInterface
     /**
      * Constructor
      *
-     * If no driver specified, only COMMON type of query returned
+     * If no dialect specified, only COMMON type of query returned
      * default is loose mode for different queries
      *
-     * @param  Driver\DriverInterface $driver (optional) db driver
+     * @param  Dialect\DialectInterface $dialect (optional) sql dialect
      * @param  string $prefix table prefix if any
      * @param  int $mode sql mode
      * @access public
      */
     public function __construct(
-        Driver\DriverInterface $driver = null,
+        Dialect\DialectInterface $dialect = null,
         /*# string */ $prefix = '',
         /*# int */ $mode = 0
     ) {
-        // set driver
-        if ($driver) $this->setDriver($driver);
+        // set dialect
+        if ($dialect) $this->setDialect($dialect);
 
         // set table prefix
         if ($prefix) $this->setTablePrefix($prefix);
@@ -117,7 +105,8 @@ class QueryBuilder implements QueryBuilderInterface
     public function setQueryMode(
         /*# int */ $mode
     )/*# : BuilderOptionInterface */ {
-        return $this->mode = (int) $mode;
+        $this->mode = (int) $mode;
+        return $this;
     }
 
     /**
@@ -131,22 +120,22 @@ class QueryBuilder implements QueryBuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function setDriver(
-        Driver\DriverInterface $driver
-    )/*# : DriverCapableInterface */ {
-        $this->driver = $driver;
+    public function setDialect(
+        Dialect\DialectInterface $dialect
+    )/*# : DialectCapableInterface */ {
+        $this->dialect = $dialect;
         return $this;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getDriver()/*# : Driver\DriverInterface */
+    public function getDialect()/*# : Dialect\DialectInterface */
     {
-        if ($this->driver === null) {
-            $this->driver = new Driver\Common();
+        if ($this->dialect === null) {
+            $this->dialect = new Dialect\Common();
         }
-        return $this->driver;
+        return $this->dialect;
     }
 
     /**
@@ -169,19 +158,33 @@ class QueryBuilder implements QueryBuilderInterface
 
     // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="BuilderLoggerInterface">
+
+    /**
+     * {@inheritDoc}
+     */
+    public function warning(
+        /*# string */ $message,
+        array $context = []
+    ) {
+        if ($this->logger) $this->logger->warning($message, $context);
+    }
+
+    // </editor-fold>
+
     // <editor-fold defaultstate="collapsed" desc="QueryInterface">
 
     /**
      * {@inheritDoc}
      */
     public function getStatement(
-        /*# string */ $tablePrefix = '',
-        Driver\DriverInterface $driver = null
+        Dialect\DialectInterface $dialect = null,
+        /*# string */ $tablePrefix = ''
     )/*# : string */ {
         if ($this->query) {
             return $this->query->getStatement(
-                $tablePrefix ?: $this->getTablePrefix(),
-                $driver ?: $this->getDriver()
+                $dialect ?: $this->getDialect(),
+                $tablePrefix ?: $this->getTablePrefix()
             );
         }
         return '';
@@ -210,16 +213,7 @@ class QueryBuilder implements QueryBuilderInterface
      */
     public function select()/*# : SelectQueryInterface */
     {
-        // create the SELECT query
-        $this->query  = new Select\SelectQuery($this);
-
-        // multiple query objects supported for UNION select etc.
-        $this->pool[] = $this->query;
-
-        // set columns
-        return call_user_func_array(
-            [ $this->query, 'select' ],
-            func_get_args()
-        );
+        $this->query = new Sql\SelectQuery($this);
+        return $this->query;
     }
 }

@@ -8,12 +8,12 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Sql;
+namespace Phossa\Query;
 
-use Phossa\Query\Driver;
+use Phossa\Query\Dialect;
 
 /**
- * Query output related interface
+ * Query output interface
  *
  * @interface
  * @package \Phossa\Query
@@ -21,20 +21,20 @@ use Phossa\Query\Driver;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface QueryInterface
+interface OutputInterface
 {
     /**
-     * Return the statement for $driver
+     * Return the statement for $dialect
      *
-     * @param  string $tablePrefix (optional) prefix to table
-     * @param  Driver\DriverInterface $driver (optional) specific driver
+     * @param  Dialect\DialectInterface $dialect (optional) specific dialect
+     * @param  string $tablePrefix (optional) table prefix
      * @return string
      * @access public
      * @api
      */
     public function getStatement(
-        /*# string */ $tablePrefix = '',
-        Driver\DriverInterface $driver = null
+        Dialect\DialectInterface $dialect = null,
+        /*# string */ $tablePrefix = ''
     )/*# : string */;
 
     /**

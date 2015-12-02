@@ -8,7 +8,7 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Sql\Select;
+namespace Phossa\Query\Sql;
 
 /**
  * Where clause related interface
@@ -29,16 +29,16 @@ interface WhereInterface
      *   // raw mode, WHERE age > 18
      *   ->where('age > 18')
      *
-     *   // field/value mode, WHERE age = 18
+     *   // MODE_STRICT: field/value mode, WHERE age = 18
      *   ->where('age', 18)
      *
-     *   // operator mode, WHERE age > 18
+     *   // MODE_STRICT: operator mode, WHERE age > 18
      *   ->where('age', '>', 18)
      *
-     *   // operator 'in', WHERE age IN (10,11,12)
+     *   // MODE_STRICT: operator 'in', WHERE age IN (10,11,12)
      *   ->where('age', 'in', [10, 11, 12])
      *
-     *   // operator 'between', WHERE age BETWEEN 10 AND 20
+     *   // MODE_STRICT: operator 'between', WHERE age BETWEEN 10 AND 20
      *   ->where('age', 'between', 10, 20)
      *
      *   // object mode {'age' => 18, ...}, WHERE age = 18 AND gender = 'male'

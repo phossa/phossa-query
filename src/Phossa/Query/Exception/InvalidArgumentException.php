@@ -8,17 +8,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Driver;
+namespace Phossa\Query\Exception;
 
 /**
- * PgSQL driver
+ * InvalidArgumentException for \Phossa\Query
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Shared\Exception\InvalidArgumentException
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Pgsql implements DriverInterface
+class InvalidArgumentException
+    extends \Phossa\Shared\Exception\InvalidArgumentException
+    implements ExceptionInterface
 {
 
 }
