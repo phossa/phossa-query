@@ -17,24 +17,27 @@ namespace Phossa\Query;
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     \Phossa\Query\OutputInterface
- * @see     \Phossa\Query\OptionInterface
+ * @see     \Phossa\Query\ConfigInterface
  * @see     \Phossa\Query\LoggerInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
 interface QueryBuilderInterface extends
     OutputInterface,
-    OptionInterface,
+    ConfigInterface,
     LoggerInterface
 {
     /**
-     * Select query
+     * SELECT query
      *
-     * @param  void
-     * @return Sql\SelectQuery
-     * @see    \Phossa\Query\Sql\SelectInterface::select()
+     * @param  array $options select query related options
+     * @return Sql\SelectQueryInterface
+     * @throws \Phossa\Query\Exception\LogicException
+     *         if $options['className'] not a valid selectQuery class
      * @access public
      * @api
      */
-    public function select()/*# : Sql\SelectQuery */;
+    public function select(
+        array $options = []
+    )/*# : Sql\SelectQueryInterface */;
 }

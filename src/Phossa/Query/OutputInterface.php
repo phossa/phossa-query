@@ -10,8 +10,6 @@
 
 namespace Phossa\Query;
 
-use Phossa\Query\Dialect;
-
 /**
  * Query output interface
  *
@@ -26,15 +24,25 @@ interface OutputInterface
     /**
      * Return the statement for $dialect
      *
-     * @param  Dialect\DialectInterface $dialect (optional) specific dialect
-     * @param  string $tablePrefix (optional) table prefix
+     * Default output settings are
+     * <code>
+     *     $settings = [
+     *          'autoQuote'     => true,
+     *          'tablePrefix'   => '',
+     *          'seperator'     => ' ',
+     *          'indent'        => '    ',
+     *     ];
+     * </code>
+     *
+     * @param  array $settings (optional) output settings
+     * @param  Dialect\DialectInterface $dialect (optional) insert dialect
      * @return string
      * @access public
      * @api
      */
     public function getStatement(
-        Dialect\DialectInterface $dialect = null,
-        /*# string */ $tablePrefix = ''
+        array $settings = [],
+        Dialect\DialectInterface $dialect = null
     )/*# : string */;
 
     /**

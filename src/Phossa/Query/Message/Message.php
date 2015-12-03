@@ -32,19 +32,19 @@ class Message extends MessageAbstract
     const INVALID_TBL_SPEC      = 1511091322;
 
     /**
-     * Invalid column spec "%s"
+     * Invalid field spec "%s"
      */
-    const INVALID_COL_SPEC      = 1511091323;
+    const INVALID_FLD_SPEC      = 1511091323;
 
     /**
-     * Non strict column spec "%s" found
+     * Invalid SELECT query class "%s" found
      */
-    const NONSTRICT_COL_SPEC    = 1511091324;
+    const INVALID_SELECT_CLASS  = 1511091324;
 
     /**
-     * Non strict table spec "%s" found
+     * Invalid dialect class "%s" found
      */
-    const NONSTRICT_TBL_SPEC    = 1511091325;
+    const INVALID_DIALECT_CLASS = 1511091325;
     /**#@-*/
 
     /**
@@ -52,8 +52,8 @@ class Message extends MessageAbstract
      */
     protected static $messages = [
         self::INVALID_TBL_SPEC      => 'Invalid table spec "%s"',
-        self::INVALID_COL_SPEC      => 'Invalid column spec "%s"',
-        self::NONSTRICT_COL_SPEC    => 'Non strict column spec "%s" found',
-        self::NONSTRICT_TBL_SPEC    => 'Non strict table spec "%s" found',
+        self::INVALID_FLD_SPEC      => 'Invalid field spec "%s"',
+        self::INVALID_SELECT_CLASS  => 'Invalid SELECT query class "%s" found',
+        self::INVALID_DIALECT_CLASS => 'Invalid dialect class "%s" found',
     ];
 }

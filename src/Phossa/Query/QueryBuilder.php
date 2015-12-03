@@ -10,181 +10,67 @@
 
 namespace Phossa\Query;
 
+use Phossa\Query\Exception;
+use Phossa\Query\Message\Message;
+
 /**
  * SQL query builder
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Query\QueryBuilderInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
 class QueryBuilder implements QueryBuilderInterface
 {
-    use \Psr\Log\LoggerAwareTrait;
+    // Implementation of ConfigInterface & LoggerInterface
+    use LoggerTrait, ConfigTrait;
 
-    // <editor-fold defaultstate="collapsed" desc="properties">
+    /**
+     * Spitting warning about non-standard sql features in the statement
+     * @const
+     */
+    const MODE_NONCOMPAT    = 1;
 
     /**
      * Current query object
      *
-     * @var    OutputInterface
+     * @var    QueryInterface
      * @access protected
      */
     protected $query;
 
     /**
-     * Dialect
-     *
-     * @var    Dialect\DialectInterface
-     * @access protected
-     */
-    protected $dialect;
-
-    /**
-     * Table prefix
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $prefix = '';
-
-    /**
-     * Query mode, strict or loose
-     *
-     * @var    int
-     * @access protected
-     */
-    protected $mode = 0;
-
-    /**#@+
-     * Query mode constant bits
-     *
-     * @const
-     */
-
-    /**
-     * Spitting warning about non-standard sql features in the statement
-     */
-    const MODE_NONCOMPAT    = 1;
-
-    /**#@-*/
-
-    // </editor-fold>
-
-    /**
      * Constructor
      *
-     * If no dialect specified, only COMMON type of query returned
-     * default is loose mode for different queries
-     *
-     * @param  Dialect\DialectInterface $dialect (optional) sql dialect
-     * @param  string $prefix table prefix if any
+     * @param  array $configs (optional) builder configs
+     * @param  Dialect\DialectInterface $dialect (optional) insert dialect
      * @param  int $mode sql mode
      * @access public
      */
     public function __construct(
-        Dialect\DialectInterface $dialect = null,
-        /*# string */ $prefix = '',
-        /*# int */ $mode = 0
+        array $configs = [],
+        Dialect\DialectInterface $dialect = null
     ) {
         // set dialect
         if ($dialect) $this->setDialect($dialect);
 
-        // set table prefix
-        if ($prefix) $this->setTablePrefix($prefix);
-
-        // set mode
-        if ($mode) $this->setQueryMode($mode);
+        // set configs
+        if ($configs) $this->setConfigs($configs);
     }
-
-    // <editor-fold defaultstate="collapsed" desc="BuilderOptionInterface">
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setQueryMode(
-        /*# int */ $mode
-    )/*# : BuilderOptionInterface */ {
-        $this->mode = (int) $mode;
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getQueryMode()/*# : int */
-    {
-        return $this->mode;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setDialect(
-        Dialect\DialectInterface $dialect
-    )/*# : DialectCapableInterface */ {
-        $this->dialect = $dialect;
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getDialect()/*# : Dialect\DialectInterface */
-    {
-        if ($this->dialect === null) {
-            $this->dialect = new Dialect\Common();
-        }
-        return $this->dialect;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setTablePrefix(
-        /*# string */ $prefix
-    )/*# : BuilderOptionInterface */ {
-        $this->prefix = $prefix;
-        return $this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getTablePrefix()/*# : string */
-    {
-        return $this->prefix;
-    }
-
-    // </editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="BuilderLoggerInterface">
-
-    /**
-     * {@inheritDoc}
-     */
-    public function warning(
-        /*# string */ $message,
-        array $context = []
-    ) {
-        if ($this->logger) $this->logger->warning($message, $context);
-    }
-
-    // </editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="QueryInterface">
 
     /**
      * {@inheritDoc}
      */
     public function getStatement(
-        Dialect\DialectInterface $dialect = null,
-        /*# string */ $tablePrefix = ''
+        array $settings = [],
+        Dialect\DialectInterface $dialect = null
     )/*# : string */ {
         if ($this->query) {
             return $this->query->getStatement(
-                $dialect ?: $this->getDialect(),
-                $tablePrefix ?: $this->getTablePrefix()
+                $settings,
+                $dialect ?: $this->getDialect()
             );
         }
         return '';
@@ -206,14 +92,30 @@ class QueryBuilder implements QueryBuilderInterface
         return $this->getStatement();
     }
 
-    // </editor-fold>
-
     /**
      * {@inheritDoc}
      */
-    public function select()/*# : SelectQueryInterface */
-    {
-        $this->query = new Sql\SelectQuery($this);
+    public function select(
+        array $options = []
+    )/*# : Sql\SelectQueryInterface */ {
+        // different select class
+        if (isset($options['className'])) {
+            $class = (string) $options['className'];
+            if (is_a(
+                $class,
+                '\Phossa\Query\Sql\SelectInterface',
+                true)
+            ) {
+                $this->query = new $class($this, $options);
+            } else {
+                throw new Exception\LogicException(
+                    Message::get(Message::INVALID_SELECT_CLASS, $class),
+                    Message::INVALID_SELECT_CLASS
+                );
+            }
+        } else {
+            $this->query = new Sql\SelectQuery($this, $options);
+        }
         return $this->query;
     }
 }

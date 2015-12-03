@@ -17,7 +17,10 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new QueryBuilder();
+        $this->object = new QueryBuilder([
+            //'dialectClass'  => '\Phossa\Query\Dialect\Common',
+            //'autoQuote'     => false,
+        ]);
     }
 
     /**
@@ -35,14 +38,13 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         var_dump(
             $this->object
-                 ->setQueryMode(QueryBuilder::MODE_NONCOMPAT)
                  ->select()
                  ->distinct()
                  ->field('wow', 'w')
                  ->field('yoy')
                  ->from('bingo', 'b')
                  ->from('xxx')
-                 ->getStatement(new Dialect\Mysql())
+                 ->getStatement()
         );
     }
 

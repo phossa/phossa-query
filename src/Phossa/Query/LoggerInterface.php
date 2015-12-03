@@ -15,7 +15,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Builder's logger interface
  *
- * For logging query or builder debuging messages
+ * For logging query or query builder warning messages
  *
  * @interface
  * @package \Phossa\Query
@@ -28,12 +28,14 @@ use Psr\Log\LoggerAwareInterface;
 interface LoggerInterface extends LoggerAwareInterface
 {
     /**
-     * Send warning message to the Psr logger
+     * Wrapper of the \Psr\Log\LoggerInterface::warning()
      *
      * @param  string $message warning messsage
-     * @param  array $context
+     * @param  array $context message context
      * @return void
+     * @see    \Psr\Log\LoggerInterface::warning()
      * @access public
+     * @api
      */
     public function warning(
         /*# string */ $message,

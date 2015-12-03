@@ -22,46 +22,48 @@ namespace Phossa\Query\Dialect;
 interface DialectInterface
 {
     /**
-     * Quote or not
+     * Set output settings
      *
-     * @param  bool $quote quote or not
+     * @param  array $settings set output settings
      * @return this
      * @access public
      * @api
      */
-    public function setQuote(
-        /*# bool */ $quote = true
+    public function setSettings(
+        array $settings
     )/*# : DialectInterface */;
 
     /**
-     * Beautify the result or not
+     * Get output settings
      *
-     * @param  bool $beautify beautify or not
-     * @return this
+     * @param  array $settings (optional) also merge with these settings
+     * @return array
      * @access public
      * @api
      */
-    public function setBeautify(
-        /*# bool */ $beautify = true
-    )/*# : DialectInterface */;
+    public function getSettings(
+        array $settings = []
+    )/*# : array */;
 
     /**
      * Quote identifier
      *
      * @param  string $input input string
+     * @param  bool $autoQuote true or false
      * @return string
      * @access public
      * @api
      */
     public function quoteIdentifier(
-        /*# string */ $input
+        /*# string */ $input,
+        /*# bool */ $autoQuote = true
     )/*# : string */;
 
     /**
      * Build and return the sql string
      *
      * @param  \Phossa\Query\QueryInterface $query the query object
-     * @param  string $prefix (optional) table prefix if any
+     * @param  array $settings (optional) output settings
      * @return string
      * @throws void
      * @access public
@@ -69,6 +71,6 @@ interface DialectInterface
      */
     public function buildSql(
         \Phossa\Query\QueryInterface $query,
-        /*# string */ $prefix = ''
+        array $settings = []
     )/*# : string */;
 }

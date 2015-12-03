@@ -8,25 +8,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Exception;
 
 /**
- * Mysql dialect
+ * LogicException for \Phossa\Query
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \LogicException
+ * @see     \Phossa\Shared\Exception\LogicException
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Mysql extends Common
+class LogicException extends \Phossa\Shared\Exception\LogicException implements
+    ExceptionInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function quoteIdentifier(
-        /*# string */ $input,
-        /*# bool */ $autoQuote = true
-    )/*# : string */ {
-        return parent::quoteIdentifier($input, $autoQuote, '`');
-    }
+
 }

@@ -50,7 +50,7 @@ interface SelectInterface
     public function from(
         $table,
         /*# string */ $as = ''
-    )/*# : SelectQueryInterface */;
+    )/*# : SelectInterface */;
 
     /**
      * Add field[s] to query
@@ -79,7 +79,7 @@ interface SelectInterface
     public function field(
         $field,
         /*# string */ $as = ''
-    )/*# : SelectQueryInterface */;
+    )/*# : SelectInterface */;
 
     /**
      * Set DISTINCT
@@ -89,7 +89,7 @@ interface SelectInterface
      * @access public
      * @api
      */
-    public function distinct()/*# : SelectQueryInterface */;
+    public function distinct()/*# : SelectInterface */;
 
     /**
      * Select into new table (or alias)
@@ -106,7 +106,7 @@ interface SelectInterface
      */
     public function into(
         /*# string */ $tblSpec
-    )/*# : SelectQueryInterface */;
+    )/*# : SelectInterface */;
 
     /**
      * Union selects
@@ -129,7 +129,7 @@ interface SelectInterface
      * @access public
      * @api
      */
-    public function union()/*# : SelectQueryInterface */;
+    public function union()/*# : SelectInterface */;
 
     /**
      * UNION ALL selects
@@ -140,59 +140,5 @@ interface SelectInterface
      * @access public
      * @api
      */
-    public function unionAll()/*# : SelectQueryInterface */;
-
-    /**
-     * Insert strings BEFORE specific query position
-     *
-     * <code>
-     *     // SELECT * INTO users FROM old_users
-     *     select()->before('from', 'INTO users')->from('old_users')
-     * </code>
-     *
-     * @param  string $location location in the query
-     * @param  string $string string to insert
-     * @return this
-     * @access public
-     * @api
-     */
-    public function before(
-        /*# : string */ $location,
-        /*# : string */ $string
-    )/*# : SelectQueryInterface */;
-
-    /**
-     * Insert strings AFTER specific query position
-     *
-     * <code>
-     *     // SELECT * FROM old_users PARTITION `x` WHERE user_id > 100
-     *     select()
-     *       ->from('old_users')
-     *       ->after('from', 'PARTITION x')
-     *       ->where('user_id', '>', 100)
-     * </code>
-     *
-     * @param  string $location location in the query
-     * @param  string $string string to insert
-     * @return this
-     * @access public
-     * @api
-     */
-    public function after(
-        /*# : string */ $location,
-        /*# : string */ $string
-    )/*# : SelectQueryInterface */;
-
-    /**
-     * Query related options
-     *
-     * @param  string|array $options query related options
-     * @return this
-     * @throws void
-     * @access public
-     * @api
-     */
-    public function options(
-        $options
-    )/*# : SelectQueryInterface */;
+    public function unionAll()/*# : SelectInterface */;
 }

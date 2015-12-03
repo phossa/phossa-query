@@ -8,25 +8,22 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Sql;
 
 /**
- * Mysql dialect
+ * Select query interface
  *
+ * @interface
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Query\QueryInterface
+ * @see     \Phossa\Query\Sql\SelectInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Mysql extends Common
+interface SelectQueryInterface extends
+    \Phossa\Query\QueryInterface,
+    SelectInterface
 {
-    /**
-     * {@inheritDoc}
-     */
-    public function quoteIdentifier(
-        /*# string */ $input,
-        /*# bool */ $autoQuote = true
-    )/*# : string */ {
-        return parent::quoteIdentifier($input, $autoQuote, '`');
-    }
+
 }

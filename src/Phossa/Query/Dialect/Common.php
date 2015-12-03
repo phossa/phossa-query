@@ -17,73 +17,64 @@ use Phossa\Query\Sql;
  *
  * @package \Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Query\Dialect\DialectInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
 class Common implements DialectInterface
 {
     /**
-     * quote or not
+     * dialect output settings
      *
-     * @var    bool
+     * @var    array
      * @access protected
      */
-    protected $quote    = true;
-
-    /**
-     * beautify result
-     *
-     * @var    bool
-     * @type   bool
-     * @access protected
-     */
-    protected $beautify = false;
-
-    /**
-     * table prefix
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $prefix   = '';
+    protected $settings = [
+        'autoQuote'     => true,
+        'tablePrefix'   => '',
+        'seperator'     => ' ',
+        'indent'        => '',
+    ];
 
     /**
      * {@inheritDoc}
      */
-    public function setQuote(
-        /*# bool */ $quote = true
+    public function setSettings(
+        array $settings
     )/*# : DialectInterface */ {
-        $this->quote = $quote;
+        $this->settings = array_replace($this->settings, $settings);
         return $this;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function setBeautify(
-        /*# bool */ $beautify = true
-    )/*# : DialectInterface */ {
-        $this->beautify = $beautify;
+    public function getSettings(
+        array $settings = []
+    )/*# : array */ {
+        return array_replace($this->settings, $settings);
     }
 
     /**
      * {@inheritDoc}
      */
     public function quoteIdentifier(
-        /*# string */ $input
+        /*# string */ $input,
+        /*# bool */ $autoQuote = true
     )/*# : string */ {
-        // no quote
-        if (!$this->quote) return $input;
+        if ($autoQuote) {
+            // quote chars
+            $prefix = $suffix = '"';
+            if (func_num_args() > 2) {
+                $args = func_get_args();
+                $prefix = $args[2];
+                $suffix = isset($args[3]) ? $args[3] : $prefix;
+            }
 
-        // quote chars
-        $prefix = $suffix = '"';
-        if (func_num_args() > 1) {
-            $args = func_get_args();
-            $prefix = $args[1];
-            $suffix = isset($args[2]) ? $args[2] : $prefix;
+            return sprintf('%s%s%s', $prefix, $input, $suffix);
+        } else {
+            return $input;
         }
-
-        return sprintf('%s%s%s', $prefix, $input, $suffix);
     }
 
     /**
@@ -91,14 +82,16 @@ class Common implements DialectInterface
      */
     public function buildSql(
         \Phossa\Query\QueryInterface $query,
-        /*# string */ $prefix = ''
+        array $settings = []
     )/*# : string */ {
-        // set table prefix
-        $this->prefix = $prefix;
+        // current settings
+        $s = $this->getSettings($settings);
+        $s['si']  = $s['seperator'] . $s['indent'];
+        $s['csi'] = ',' . $s['si'];
 
         // build SELECT
-        if ($query instanceof Sql\SelectInterface) {
-            return $this->buildSelect($query->getQueryParts());
+        if ($query instanceof Sql\SelectQueryInterface) {
+            return $this->buildSelect($query->getQueryParts(), $s);
         }
     }
 
@@ -106,49 +99,50 @@ class Common implements DialectInterface
      * Build SELECT
      *
      * @param  array &$parts sql parts
+     * @param  array &$settings current settings
      * @return string
      * @access protected
      */
-    protected function buildSelect(
-        array &$parts
-    ) {
+    protected function buildSelect(array &$parts, array &$settings)
+    {
         $sql = [];
 
         // field
-        $sql[] = $this->buildField($parts);
+        $sql[] = $this->buildField($parts, $settings);
 
         // from
-        $sql[] = $this->buildFrom($parts);
+        $sql[] = $this->buildFrom($parts, $settings);
 
         $prefix = "SELECT" .
                   (isset($parts['distinct']) ? " DISTINCT" : "") .
-                  ($this->beautify ? "\n    " : " ");
-        $join   = $this->beautify ? "\n" : " ";
+                  $settings['si'];
 
-        return $prefix . join($join, $sql);
+        return $prefix . join($settings['seperator'], $sql);
     }
 
     /**
      * Build SELECT fields
      *
      * @param  array &$parts sql parts
+     * @param  array &$settings current settings
      * @return string
      * @access protected
      * @api
      */
-    protected function buildField(array &$parts)
+    protected function buildField(array &$parts, array &$settings)
     {
         $fields = [];
 
         if (isset($parts['fld'])) {
+            $quote  = $settings['autoQuote'];
             foreach($parts['fld'] as $c) {
                 if (is_string($c)) {
-                    $fields[] = $this->quoteIdentifier($c);
+                    $fields[] = $this->quoteIdentifier($c, $quote);
                 } else {
                     $fields[] = sprintf(
                         "%s AS %s",
-                        $this->quoteIdentifier($c[0]),
-                        $this->quoteIdentifier($c[1])
+                        $this->quoteIdentifier($c[0], $quote),
+                        $this->quoteIdentifier($c[1], $quote)
                     );
                 }
             }
@@ -156,36 +150,34 @@ class Common implements DialectInterface
             $fields[] = '*';
         }
 
-        $join = $this->beautify ? ",\n    " : ", ";
-        return join($join, $fields);
+        return join($settings['csi'], $fields);
     }
 
     /**
      * Build FROM part
      *
      * @param  array &$parts sql parts
+     * @param  array &$settings current settings
      * @return string
      * @access protected
      * @api
      */
-    protected function buildFrom(array &$parts)
+    protected function buildFrom(array &$parts, array $settings)
     {
         $clause = [];
 
         foreach($parts['tbl'] as $f) {
+            $quote  = $settings['autoQuote'];
             if (is_string($f)) {
-                $clause[] = $this->quoteIdentifier($f);
+                $clause[] = $this->quoteIdentifier($f, $quote);
             } else {
                 $clause[] = sprintf(
                     "%s %s",
-                    $this->quoteIdentifier($f[0]),
-                    $this->quoteIdentifier($f[1])
+                    $this->quoteIdentifier($f[0], $quote),
+                    $this->quoteIdentifier($f[1], $quote)
                 );
             }
         }
-
-        $prefix = $this->beautify ? "FROM\n    " : "FROM ";
-        $join   = $this->beautify ? ",\n    " : ", ";
-        return $prefix . join($join, $clause);
+        return "FROM" . $settings['si'] . join($settings['csi'], $clause);
     }
 }

@@ -34,22 +34,32 @@ abstract class QueryAbstract implements QueryInterface
      * query parts
      *
      * @var    array
-     * @type   array
      * @access protected
      */
-    protected $parts = [];
+    protected $parts    = [];
+
+    /**
+     * query options
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $options  = [];
 
     /**
      * constructor
      *
      * @param  QueryBuilderInterface $builder the builder object
+     * @param  array $options (optional) query related options
      * @access public
      * @api
      */
     public function __construct(
-        QueryBuilderInterface $builder
+        QueryBuilderInterface $builder,
+        array $options = []
     ) {
         $this->builder = $builder;
+        $this->options = $options;
     }
 
     /**
@@ -64,20 +74,22 @@ abstract class QueryAbstract implements QueryInterface
      * {@inheritDoc}
      */
     public function getStatement(
-        Dialect\DialectInterface $dialect = null,
-        /*# string */ $tablePrefix = ''
+        array $settings = [],
+        Dialect\DialectInterface $dialect = null
     )/*# : string */ {
-        // get table prefix
-        if ($tablePrefix === '') {
-            $tablePrefix = $this->builder->getTablePrefix();
-        }
-
         // get dialect
         if ($dialect === null) {
             $dialect = $this->builder->getDialect();
         }
 
-        return $dialect->buildSql($this, $tablePrefix);
+        // build sql
+        return $dialect->buildSql(
+            $this,
+            array_replace(
+                $this->builder->getConfigs(), // builder configs
+                $settings // extra output settings
+            )
+        );
     }
 
     /**

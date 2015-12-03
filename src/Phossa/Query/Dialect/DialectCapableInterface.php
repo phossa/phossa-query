@@ -34,10 +34,12 @@ interface DialectCapableInterface
     )/*# : DialectCapableInterface */;
 
     /**
-     * Get the dialect. if not set, return a new Common dialect
+     * Get the dialect. if not set, return a new default dialect
      *
      * @param  void
      * @return DialectInterface
+     * @throws \Phossa\Query\Exception\LogicException
+     *         if the default dialect class not right
      * @access public
      * @api
      */
