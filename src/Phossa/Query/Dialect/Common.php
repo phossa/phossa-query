@@ -59,10 +59,28 @@ class Common implements DialectInterface
      * {@inheritDoc}
      */
     public function quoteIdentifier(
-        /*# string */ $input,
-        /*# bool */ $autoQuote = true
+        $input,
+        /*# int */ $quote = DialectInterface::QUOTE_YES
     )/*# : string */ {
-        if ($autoQuote) {
+
+        // wrap non-string and return
+        if (!is_string($input)) {
+            return '('. $input . ')';
+        }
+
+        // complex case
+        $complex = false;
+        if (preg_match("/[ \n(),]/", $input)) {
+            $complex = true;
+            if ($quote & DialectInterface::QUOTE_SPACE) {
+                $quote |= DialectInterface::QUOTE_YES;
+            } else {
+                return $input;
+            }
+        }
+
+        // quote
+        if ($quote & DialectInterface::QUOTE_YES) {
             // quote chars
             $prefix = $suffix = '"';
             if (func_num_args() > 2) {
@@ -71,7 +89,20 @@ class Common implements DialectInterface
                 $suffix = isset($args[3]) ? $args[3] : $prefix;
             }
 
-            return sprintf('%s%s%s', $prefix, $input, $suffix);
+            // dot expr
+            if (!$complex &&
+                preg_match('/^([^.]++)[.]([^.]++)$/', $input, $m)
+            ) {
+                return sprintf(
+                    '%s%s%s.%s%s%s',
+                    $prefix, $m[1], $suffix,
+                    $prefix, $m[2], $suffix
+                );
+            } else {
+                return sprintf('%s%s%s', $prefix, $input, $suffix);
+            }
+
+        // no quote
         } else {
             return $input;
         }
@@ -110,6 +141,9 @@ class Common implements DialectInterface
         // field
         $sql[] = $this->buildField($parts, $settings);
 
+        // into
+        $sql[] = $this->buildInto($parts, $settings);
+
         // from
         $sql[] = $this->buildFrom($parts, $settings);
 
@@ -117,7 +151,10 @@ class Common implements DialectInterface
                   (isset($parts['distinct']) ? " DISTINCT" : "") .
                   $settings['si'];
 
-        return $prefix . join($settings['seperator'], $sql);
+        return $prefix . join($settings['seperator'],
+            array_filter($sql, function($var) {
+                return !empty($var);
+            }));
     }
 
     /**
@@ -127,23 +164,26 @@ class Common implements DialectInterface
      * @param  array &$settings current settings
      * @return string
      * @access protected
-     * @api
      */
     protected function buildField(array &$parts, array &$settings)
     {
         $fields = [];
 
         if (isset($parts['fld'])) {
-            $quote  = $settings['autoQuote'];
+            $quote  = $settings['autoQuote'] ?
+                DialectInterface::QUOTE_YES :
+                DialectInterface::QUOTE_NO;
             foreach($parts['fld'] as $c) {
-                if (is_string($c)) {
-                    $fields[] = $this->quoteIdentifier($c, $quote);
-                } else {
+                if (is_array($c)) {
                     $fields[] = sprintf(
                         "%s AS %s",
                         $this->quoteIdentifier($c[0], $quote),
-                        $this->quoteIdentifier($c[1], $quote)
+                        $this->quoteIdentifier(
+                            $c[1], $quote | DialectInterface::QUOTE_SPACE
+                        )
                     );
+                } else {
+                    $fields[] = $this->quoteIdentifier($c, $quote);
                 }
             }
         } else {
@@ -154,28 +194,51 @@ class Common implements DialectInterface
     }
 
     /**
+     * Build INTO part
+     *
+     * @param  array &$parts sql parts
+     * @param  array &$settings current settings
+     * @return string
+     * @access protected
+     */
+    protected function buildInto(array &$parts, array $settings)
+    {
+        if (!isset($parts['into'])) return '';
+
+        return "INTO" .
+            $settings['si'] .
+            $this->quoteIdentifier($parts['into'], $settings['autoQuote']);
+    }
+
+    /**
      * Build FROM part
      *
      * @param  array &$parts sql parts
      * @param  array &$settings current settings
      * @return string
      * @access protected
-     * @api
      */
     protected function buildFrom(array &$parts, array $settings)
     {
         $clause = [];
 
+        // missing FROM clause
+        if (!isset($parts['tbl'])) return '';
+
         foreach($parts['tbl'] as $f) {
-            $quote  = $settings['autoQuote'];
-            if (is_string($f)) {
-                $clause[] = $this->quoteIdentifier($f, $quote);
-            } else {
+            $quote  = $settings['autoQuote'] ?
+                DialectInterface::QUOTE_YES :
+                DialectInterface::QUOTE_NO;
+            if (is_array($f)) {
                 $clause[] = sprintf(
                     "%s %s",
                     $this->quoteIdentifier($f[0], $quote),
-                    $this->quoteIdentifier($f[1], $quote)
+                    $this->quoteIdentifier(
+                        $f[1], $quote | DialectInterface::QUOTE_SPACE
+                    )
                 );
+            } else {
+                $clause[] = $this->quoteIdentifier($f, $quote);
             }
         }
         return "FROM" . $settings['si'] . join($settings['csi'], $clause);

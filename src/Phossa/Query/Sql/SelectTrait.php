@@ -10,9 +10,6 @@
 
 namespace Phossa\Query\Sql;
 
-use Phossa\Query\Exception;
-use Phossa\Query\Message\Message;
-
 /**
  * Implementation of SelectInterface
  *
@@ -29,7 +26,7 @@ trait SelectTrait
      * {@inheritDoc}
      */
     public function from(
-        $table,
+        $table = '',
         /*# string */ $as = ''
     )/*# : SelectInterface */ {
         // array input
@@ -42,20 +39,16 @@ trait SelectTrait
                 }
             }
 
-        // string input
-        } else if (is_string($table)) {
+        } else if (0 === func_num_args()) {
+            $this->parts['tbl'] = [];
+
+        // scalar input (convert to string)
+        } else {
             if ($as) {
                 $this->parts['tbl'][] = [ $table, $as ];
             } else {
                 $this->parts['tbl'][] = $table;
             }
-
-        // wrong input
-        } else {
-            throw new Exception\InvalidArgumentException(
-                Message::get(Message::INVALID_TBL_SPEC, gettype($table)),
-                Message::INVALID_TBL_SPEC
-            );
         }
 
         return $this;
@@ -65,7 +58,7 @@ trait SelectTrait
      * {@inheritDoc}
      */
     public function field(
-        $field,
+        $field = '',
         /*# string */ $as = ''
     )/*# : SelectInterface */ {
         //array input
@@ -78,20 +71,17 @@ trait SelectTrait
                 }
             }
 
+        // reset fields
+        } else if (0 === func_num_args()) {
+            $this->parts['fld'] = [];
+
         // string input
-        } else if (is_string($field)) {
+        } else {
             if ($as) {
                 $this->parts['fld'][] = [ $field, $as ];
             } else {
                 $this->parts['fld'][] = $field;
             }
-
-        // wrong input
-        } else {
-            throw new Exception\InvalidArgumentException(
-                Message::get(Message::INVALID_FLD_SPEC, gettype($field)),
-                Message::INVALID_FLD_SPEC
-            );
         }
 
         return $this;

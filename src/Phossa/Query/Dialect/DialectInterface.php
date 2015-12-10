@@ -21,6 +21,29 @@ namespace Phossa\Query\Dialect;
  */
 interface DialectInterface
 {
+    /**#@+
+     * quote
+     *
+     * @const
+     */
+
+    /**
+     * do NOT quote anything
+     */
+    const QUOTE_NO      = 0;
+
+    /**
+     * auto quote, string with spaces not quoted
+     */
+    const QUOTE_YES     = 1;
+
+    /**
+     * quote string with spaces also, event if QUOTE_NO set
+     */
+    const QUOTE_SPACE   = 2;
+
+    /**#@-*/
+
     /**
      * Set output settings
      *
@@ -48,15 +71,15 @@ interface DialectInterface
     /**
      * Quote identifier
      *
-     * @param  string $input input string
-     * @param  bool $autoQuote true or false
+     * @param  string|object $input input string
+     * @param  int $quote 0 no, 1 yes, 2 quote spaces
      * @return string
      * @access public
      * @api
      */
     public function quoteIdentifier(
-        /*# string */ $input,
-        /*# bool */ $autoQuote = true
+        $input,
+        /*# int */ $quote = DialectInterface::QUOTE_YES
     )/*# : string */;
 
     /**

@@ -25,45 +25,44 @@ interface JoinInterface
      * Inner join the table
      *
      * <code>
-     *     // simplest mode, if table structure known, same columns matched
-     *     // INNER JOIN `users` ON sale.usr_id = users.usr_id
+     *     // INNER JOIN `users`
      *     ->join('users')
      *
-     *     // mode: join('table', 'column')
-     *     // result: INNER JOIN `users` ON `sale`.`usr_id` = `users`.`usr_id`
-     *     ->join('users', 'usr_id')
+     *     // INNER JOIN `users` `u`
+     *     ->join('users', 'u')
      *
-     *     // mode: join('table', 'condition')
-     *     // result: INNER JOIN `users` ON sale.usr_id = users.usr_id
-     *     ->join('users', 'sale.usr_id = users.usr_id')
+     *     // INNER JOIN `users` `u` ON (`u`.`usr_id` = `sales`.`usr_id`)
+     *     ->join('users', 'u', 'usr_id')
      *
-     *     // mode: join('table', 'column1', 'column2')
-     *     // result: INNER JOIN `users` ON `sale`.`sale_usr` = `users`.`usr_id`
-     *     ->join('users', 'sale_usr', 'usr_id')
+     *     // INNER JOIN `users` ON sale.usr_id = users.usr_id
+     *     ->join('users', '', 'sale.usr_id = users.usr_id')
      *
-     *     // mode: join('table', 'column1', 'column2', 'operator')
-     *     // result: INNER JOIN `users` ON `sale`.`sale_usr` = `users`.`usr_id`
-     *     ->join('users', 'sale_usr', 'usr_id', '=')
+     *     // INNER JOIN `users` ON `sale`.`sale_usr` = `users`.`usr_id`
+     *     ->join('users', '', 'sale_usr', 'usr_id', '=')
      *
      *     // mode: follow by 'andOn' or 'orOn'
      *     ->join('users', 'sale_usr', 'usr_id')->orOn('accnt_id', 'usr_id')
-     *
      * </code>
      *
      * @param  string $table table specification
+     * @param  string $alias (optional) join table alias
+     * @param  string $field (optional) field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @access public
      * @api
      */
     public function join(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $alias = '',
+        /*# string */ $field = ''
     )/*# : SelectQueryInterface */;
 
     /**
      * Alias of self::join()
      *
      * @param  string $table table specification
+     * @param  string $field field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @see    self::join()
@@ -71,13 +70,15 @@ interface JoinInterface
      * @api
      */
     public function innerJoin(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $field
     )/*# : SelectQueryInterface */;
 
     /**
      * Left join the table
      *
      * @param  string $table table specification
+     * @param  string $field field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @see    self::join()
@@ -85,13 +86,15 @@ interface JoinInterface
      * @api
      */
     public function leftJoin(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $field
     )/*# : SelectQueryInterface */;
 
     /**
      * Left outer join the table
      *
      * @param  string $table table specification
+     * @param  string $field field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @see    self::join()
@@ -99,13 +102,15 @@ interface JoinInterface
      * @api
      */
     public function leftOuterJoin(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $field
     )/*# : SelectQueryInterface */;
 
     /**
      * Right join the table
      *
      * @param  string $table table specification
+     * @param  string $field field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @see    self::join()
@@ -113,13 +118,15 @@ interface JoinInterface
      * @api
      */
     public function rightJoin(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $field
     )/*# : SelectQueryInterface */;
 
     /**
      * Right outer join the table
      *
      * @param  string $table table specification
+     * @param  string $field field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @see    self::join()
@@ -127,13 +134,15 @@ interface JoinInterface
      * @api
      */
     public function rightOuterJoin(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $field
     )/*# : SelectQueryInterface */;
 
     /**
      * Outer join the table
      *
      * @param  string $table table specification
+     * @param  string $field field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @see    self::join()
@@ -141,13 +150,15 @@ interface JoinInterface
      * @api
      */
     public function outerJoin(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $field
     )/*# : SelectQueryInterface */;
 
     /**
      * Cross join the table
      *
      * @param  string $table table specification
+     * @param  string $field field to join with
      * @param  mixed ... variable parameters
      * @return this
      * @see    self::join()
@@ -155,7 +166,8 @@ interface JoinInterface
      * @api
      */
     public function crossJoin(
-        /*# string */ $table
+        /*# string */ $table,
+        /*# string */ $field
     )/*# : SelectQueryInterface */;
 
     /**

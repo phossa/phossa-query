@@ -10,6 +10,7 @@
 
 namespace Phossa\Query\Sql;
 
+use Phossa\Query\Dialect;
 use Phossa\Query\Exception;
 
 /**
@@ -26,6 +27,8 @@ interface SelectInterface
     /**
      * From table[s]
      *
+     * If no arguments provided, reset FROM
+     *
      * <code>
      *     // FROM `users`
      *     ->from('users')
@@ -40,20 +43,21 @@ interface SelectInterface
      *     ->from(['users', 'accounts' => 'a'])
      * </code>
      *
-     * @param  string|string[] $table table specification[s]
+     * @param  string|string[]|object (optional) $table table specification[s]
      * @param  string $as (optional) table alias name
      * @return this
-     * @throws Exception\InvalidArgumentException
      * @access public
      * @api
      */
     public function from(
-        $table,
+        $table = '',
         /*# string */ $as = ''
     )/*# : SelectInterface */;
 
     /**
      * Add field[s] to query
+     *
+     * If no arguments provided, reset fields
      *
      * <code>
      *     // SELECT `user_name`
@@ -69,15 +73,14 @@ interface SelectInterface
      *     ->field(['user_id', 'user_name' => 'n'])
      * </code>
      *
-     * @param  string|string[] $field field specification
+     * @param  string|string[]|object (optional) $field field specification
      * @param  string $as (optional) field alias name
      * @return this
-     * @throws Exception\InvalidArgumentException
      * @access public
      * @api
      */
     public function field(
-        $field,
+        $field = '',
         /*# string */ $as = ''
     )/*# : SelectInterface */;
 
