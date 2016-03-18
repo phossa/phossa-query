@@ -13,10 +13,10 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Statement;
 
 /**
- * DialectInterface
+ * SelectInterface
  *
  * @interface
  * @package Phossa\Query
@@ -24,6 +24,7 @@ namespace Phossa\Query\Dialect;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DialectInterface
+interface SelectInterface extends StatementInterface
 {
+
 }

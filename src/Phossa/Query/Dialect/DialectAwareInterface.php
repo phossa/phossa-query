@@ -16,7 +16,7 @@
 namespace Phossa\Query\Dialect;
 
 /**
- * DialectInterface
+ * DialectAwareInterface
  *
  * @interface
  * @package Phossa\Query
@@ -24,6 +24,24 @@ namespace Phossa\Query\Dialect;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DialectInterface
+interface DialectAwareInterface
 {
+    /**
+     * Set the dialect
+     *
+     * @param  DialectInterface $dialect
+     * @return static
+     * @access public
+     * @api
+     */
+    public function setDialect(DialectInterface $dialect = null);
+
+    /**
+     * Get the dialect, if not set yet, create and return the default
+     *
+     * @return DialectInterface
+     * @access public
+     * @api
+     */
+    public function getDialect();
 }

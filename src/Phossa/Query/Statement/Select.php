@@ -4,7 +4,7 @@
  *
  * PHP version 5.4
  *
- * @category  Library
+ * @category  Package
  * @package   Phossa\Query
  * @author    Hong Zhang <phossa@126.com>
  * @copyright 2015 phossa.com
@@ -13,17 +13,18 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Statement;
 
 /**
- * DialectInterface
+ * SelectStatement
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     StatementAbstract
+ * @see     SelectInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DialectInterface
+class Select extends StatementAbstract implements SelectInterface
 {
 }

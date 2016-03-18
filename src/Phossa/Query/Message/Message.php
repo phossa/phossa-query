@@ -1,10 +1,15 @@
 <?php
-/*
+/**
  * Phossa Project
  *
- * @see         http://www.phossa.com/
- * @copyright   Copyright (c) 2015 phossa.com
- * @license     http://mit-license.org/ MIT License
+ * PHP version 5.4
+ *
+ * @category  Package
+ * @package   Phossa\Query
+ * @author    Hong Zhang <phossa@126.com>
+ * @copyright 2015 phossa.com
+ * @license   http://mit-license.org/ MIT License
+ * @link      http://www.phossa.com/
  */
 /*# declare(strict_types=1); */
 
@@ -15,8 +20,9 @@ use Phossa\Shared\Message\MessageAbstract;
 /**
  * Message class for Phossa\Query
  *
- * @package \Phossa\Query
+ * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Shared\Message\MessageAbstract
  * @version 1.0.0
  * @since   1.0.0 added
  */
@@ -27,33 +33,15 @@ class Message extends MessageAbstract
      */
 
     /**
-     * Invalid table spec "%s"
+     * Query "%s" duplicated for method "%s"
      */
-    const INVALID_TBL_SPEC      = 1511091322;
+    const ROUTE_DUPLICATED      = 1603111803;
 
-    /**
-     * Invalid field spec "%s"
-     */
-    const INVALID_FLD_SPEC      = 1511091323;
-
-    /**
-     * Invalid SELECT query class "%s" found
-     */
-    const INVALID_SELECT_CLASS  = 1511091324;
-
-    /**
-     * Invalid dialect class "%s" found
-     */
-    const INVALID_DIALECT_CLASS = 1511091325;
     /**#@-*/
 
     /**
      * {@inheritdoc}
      */
     protected static $messages = [
-        self::INVALID_TBL_SPEC      => 'Invalid table spec "%s"',
-        self::INVALID_FLD_SPEC      => 'Invalid field spec "%s"',
-        self::INVALID_SELECT_CLASS  => 'Invalid SELECT query class "%s" found',
-        self::INVALID_DIALECT_CLASS => 'Invalid dialect class "%s" found',
     ];
 }
