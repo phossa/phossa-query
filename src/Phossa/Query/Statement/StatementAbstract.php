@@ -44,14 +44,11 @@ abstract class StatementAbstract implements StatementInterface
      * Constructor
      *
      * @param  BuilderInterface $builder
-     * @param  array $settings
      * @access public
      */
-    public function __construct(
-        BuilderInterface $builder,
-        array $settings = []
-    ) {
-        $this->setSettings($settings)->builder = $builder;
+    public function __construct(BuilderInterface $builder)
+    {
+        $this->builder = $builder;
     }
 
     /**
@@ -62,8 +59,8 @@ abstract class StatementAbstract implements StatementInterface
         DialectInterface $dialect = null
     )/*# : string */ {
         array_replace(
-            $this->builder->getSettings(),
             $this->settings,
+            $this->builder->getSettings(),
             $settings
         );
         $dialect ?: $this->builder->getDialect();

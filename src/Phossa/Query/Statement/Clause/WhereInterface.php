@@ -45,37 +45,31 @@ interface WhereInterface extends ClauseInterface
      *   ->where('age', 'in', [10, 11, 12])
      *
      *   // MODE_STRICT: operator 'between', WHERE age BETWEEN 10 AND 20
-     *   ->where('age', 'between', 10, 20)
+     *   ->where('age', 'between', [10, 20])
      *
-     *   // object mode {'age' => 18, ...}, WHERE age = 18 AND gender = 'male'
-     *   ->where($user)
-     *
-     *   // mixed mode, WHERE age > 18 AND gender = 'male'
-     *   ->where('age > 18', ['gender', 'male'])
-     *
-     *   // array mode, WHERE age > 18 AND gender = 'male'
-     *   ->where(['age', '>', 18], ['gender', 'male'])
-     *
-     *   // associate array mode, WHERE age = 18 AND gender = 'male'
+     *   // array mode, WHERE age = 18 AND gender = 'male'
      *   ->where(['age' => 18, 'gender' => 'male'])
      *
      *   // associate array mode, WHERE age > 18 AND score <= 100
      *   ->where(['age' => 18, 'score' => ['<=', 100]])
      *
-     *   // callback mode, grouped where, WHERE (age = 18 OR score > 70)
-     *   ->where(function($b) {
-     *         $b->where('age', 18)
-     *           ->orWhere('score', '>', 70);
-     *     })
-     *
      *   // subquery mode
      *   ->where('age', 'in', $subquery)
      * </code>
      *
-     * @param  mixed variable parameters
      * @return this
      * @access public
      * @api
      */
     public function where()/*# :  */;
+
+    /**
+     * Generic WHERE clause with 'OR' logic
+     *
+     * @return this
+     * @see    self::where()
+     * @access public
+     * @api
+     */
+    public function orWhere();
 }

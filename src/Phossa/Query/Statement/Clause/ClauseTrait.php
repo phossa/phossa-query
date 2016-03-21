@@ -16,33 +16,22 @@
 namespace Phossa\Query\Statement\Clause;
 
 /**
- * FromTrait
+ * ClauseTrait
  *
  * @trait
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     FromInterface
+ * @see     ClauseInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-trait FromTrait
+trait ClauseTrait
 {
-    use ClauseTrait;
-
     /**
-     * @inheritDoc
+     * clause parts
+     *
+     * @var    array
+     * @access protected
      */
-    public function from($table, /*# string */ $as = '')
-    {
-        if (is_array($table)) {
-            $this->clause['from'] = $table;
-        } else {
-            if (empty($as)) {
-                $this->clause['from'][] = (string) $table;
-            } else {
-                $this->clause['from'][(string) $table] = (string) $as;
-            }
-        }
-        return $this;
-    }
+    protected $clause = [];
 }

@@ -39,16 +39,13 @@ interface BuilderInterface extends Dialect\DialectAwareInterface, SettingsInterf
      * @api
      */
     public function table($tables);
-    
+
     /**
      * Build SELECT statement
      *
-     * @param  array $settings SELECT related extra settings
-     * @return Statement\SelectStatement
+     * @return Statement\SelectInterface
      * @access public
      * @api
      */
-    public function select(
-        array $settings = []
-    )/*# : Statement\SelectStatement */;
+    public function select()/*# : Statement\SelectInterface */;
 }

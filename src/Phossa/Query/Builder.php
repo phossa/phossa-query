@@ -63,11 +63,10 @@ class Builder implements BuilderInterface
     /**
      * @inheritDoc
      */
-    public function select(
-        array $settings = []
-    )/*# : Statement\SelectStatement */ {
+    public function select()/*# : Statement\SelectInterface */
+    {
         // SELECT statement
-        $select = new Statement\SelectStatement($this, $settings);
+        $select = new Statement\Select($this);
 
         // set from
         if (count($this->tables)) {
