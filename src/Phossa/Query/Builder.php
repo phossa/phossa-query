@@ -73,6 +73,14 @@ class Builder implements BuilderInterface
             $select->from($this->tables);
         }
 
+        // fields
+        if (func_num_args() > 0) {
+            $select->field(
+                func_get_arg(0),
+                func_num_args() > 1 ? func_get_arg(1) : ''
+            );
+        }
+        
         return $select;
     }
 }

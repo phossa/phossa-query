@@ -43,9 +43,30 @@ interface BuilderInterface extends Dialect\DialectAwareInterface, SettingsInterf
     /**
      * Build SELECT statement
      *
+     * Add field[s] to SELECT query
+     *
+     * ```php
+     *     // SELECT `user_name`
+     *     ->select('user_name')
+     *
+     *     // SELECT `user_name` AS `n`
+     *     ->select('user_name', 'n')
+     *
+     *     // SELECT `user_id`, `user_name`
+     *     ->select(['user_id', 'user_name'])
+     *
+     *     // SELECT `user_id`, `user_name` AS `n`
+     *     ->select(['user_id', 'user_name' => 'n'])
+     * ```
+     *
+     * @param  string|array $field field specification
+     * @param  string $as field alias name
      * @return Statement\SelectInterface
      * @access public
      * @api
      */
-    public function select()/*# : Statement\SelectInterface */;
+    public function select(
+        $field,
+        /*# string */ $as = ''
+    )/*# : Statement\SelectInterface */;
 }

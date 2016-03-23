@@ -27,49 +27,59 @@ namespace Phossa\Query\Statement\Clause;
  */
 interface WhereInterface extends ClauseInterface
 {
+    /**#@+
+     * AND|OR
+     *
+     * @const
+     */
+    const LOGIC_AND = '__AND__';
+    const LOGIC_OR  = '__OR__';
+    /**#@-*/
+
     /**
      * Generic WHERE clause with 'AND' logic
      *
-     * e.g.
-     * <code>
-     *   // raw mode, WHERE age > 18
-     *   ->where('age > 18')
+     * ```php
+     * // raw mode, WHERE age > 18
+     * ->where('age > 18')
      *
-     *   // MODE_STRICT: field/value mode, WHERE age = 18
-     *   ->where('age', 18)
+     * // MODE_STRICT: field/value mode, WHERE age = 18
+     * ->where('age', 18)
      *
-     *   // MODE_STRICT: operator mode, WHERE age > 18
-     *   ->where('age', '>', 18)
+     * // MODE_STRICT: operator mode, WHERE age > 18
+     * ->where('age', 18, '>')
      *
-     *   // MODE_STRICT: operator 'in', WHERE age IN (10,11,12)
-     *   ->where('age', 'in', [10, 11, 12])
+     * // MODE_STRICT: operator 'in', WHERE age IN (10,11,12)
+     * ->where('age', [10, 11, 12], 'in')
      *
-     *   // MODE_STRICT: operator 'between', WHERE age BETWEEN 10 AND 20
-     *   ->where('age', 'between', [10, 20])
+     * // MODE_STRICT: operator 'between', WHERE age BETWEEN 10 AND 20
+     * ->where('age', [10, 20], 'between')
      *
-     *   // array mode, WHERE age = 18 AND gender = 'male'
-     *   ->where(['age' => 18, 'gender' => 'male'])
+     * // array mode, WHERE age = 18 AND gender = 'male'
+     * ->where(['age' => 18, 'gender' => 'male'])
      *
-     *   // associate array mode, WHERE age > 18 AND score <= 100
-     *   ->where(['age' => 18, 'score' => ['<=', 100]])
+     * // associate array mode, WHERE age > 18 AND score <= 100
+     * ->where(['age' => 18, 'score' => 100], ['age' => '>', 'score' => '<='])
      *
-     *   // subquery mode
-     *   ->where('age', 'in', $subquery)
-     * </code>
+     * // subquery mode
+     * ->where('age', $subquery, 'in')
+     * ```
      *
+     * @param  string|array $field field or fields
      * @return this
      * @access public
      * @api
      */
-    public function where()/*# :  */;
+    public function where($field);
 
     /**
      * Generic WHERE clause with 'OR' logic
      *
+     * @param  string|array $field field or fields
      * @return this
      * @see    self::where()
      * @access public
      * @api
      */
-    public function orWhere();
+    public function orWhere($field);
 }

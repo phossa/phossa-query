@@ -21,7 +21,7 @@ namespace Phossa\Query\Statement\Clause;
  * @trait
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     FromInterface
+ * @see     FieldInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */

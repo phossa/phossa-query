@@ -15,8 +15,6 @@
 
 namespace Phossa\Query\Statement;
 
-use Phossa\Query\Statement\Clause\FromTrait;
-
 /**
  * SelectStatement
  *
@@ -29,5 +27,5 @@ use Phossa\Query\Statement\Clause\FromTrait;
  */
 class Select extends StatementAbstract implements SelectInterface
 {
-    use FromTrait;
+    use Clause\FromTrait, Clause\FieldTrait;
 }
