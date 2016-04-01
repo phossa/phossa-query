@@ -5,6 +5,7 @@
 /.settings
 /.project
 /.buildpath
+/.externalToolBuilders
 
 # composer stuff
 composer.lock

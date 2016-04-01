@@ -12,9 +12,9 @@ Introduction
 It requires PHP 5.4 and supports PHP 7.0+, HHVM. It is compliant with
 [PSR-1][PSR-1], [PSR-2][PSR-2], [PSR-4][PSR-4].
 
-[PSR-1]: http://www.php-fig.org/psr/psr-1/ "PSR-1: Basic Coding Standard"
-[PSR-2]: http://www.php-fig.org/psr/psr-2/ "PSR-2: Coding Style Guide"
-[PSR-4]: http://www.php-fig.org/psr/psr-4/ "PSR-4: Autoloader"
+[PSR-1]: http://www.php-fig.org/psr/psr-1/ "PSR-1: Basic Coding Standard"
+[PSR-2]: http://www.php-fig.org/psr/psr-2/ "PSR-2: Coding Style Guide"
+[PSR-4]: http://www.php-fig.org/psr/psr-4/ "PSR-4: Autoloader"
 
 Features
 ---
