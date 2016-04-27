@@ -28,15 +28,6 @@ namespace Phossa\Query\Dialect;
 trait DialectAwareTrait
 {
     /**
-     * default dialect
-     *
-     * @static
-     * @var    string
-     * @access public
-     */
-    public static $default_dialect = 'Mysql';
-
-    /**
      * dialect
      *
      * @var    DialectInterface
@@ -45,21 +36,21 @@ trait DialectAwareTrait
     protected $dialect;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function setDialect(DialectInterface $dialect = null)
+    public function setDialect(DialectInterface $dialect)
     {
         $this->dialect = $dialect;
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getDialect()
     {
         if (is_null($this->dialect)) {
-            $class = __NAMESPACE__ . '\\' . static::$default_dialect;
+            $class = __NAMESPACE__ . '\\Mysql';
             $this->dialect = new $class;
         }
         return $this->dialect;

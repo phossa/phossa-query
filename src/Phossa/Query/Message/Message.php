@@ -43,5 +43,6 @@ class Message extends MessageAbstract
      * {@inheritdoc}
      */
     protected static $messages = [
+
     ];
 }

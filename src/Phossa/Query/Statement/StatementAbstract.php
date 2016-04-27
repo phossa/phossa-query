@@ -15,6 +15,7 @@
 
 namespace Phossa\Query\Statement;
 
+use Phossa\Query\SettingsTrait;
 use Phossa\Query\BuilderInterface;
 use Phossa\Query\Dialect\DialectInterface;
 
@@ -30,7 +31,7 @@ use Phossa\Query\Dialect\DialectInterface;
  */
 abstract class StatementAbstract implements StatementInterface
 {
-    use \Phossa\Query\SettingsTrait;
+    use SettingsTrait;
 
     /**
      * builder object
@@ -39,6 +40,22 @@ abstract class StatementAbstract implements StatementInterface
      * @access protected
      */
     protected $builder;
+
+    /**
+     * clause parts
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clauses = [];
+
+    /**
+     * Binding values
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $bindings = [];
 
     /**
      * Constructor
@@ -52,25 +69,39 @@ abstract class StatementAbstract implements StatementInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function getStatement(
+    public function getSql(
         array $settings = [],
         DialectInterface $dialect = null
     )/*# : string */ {
+
+        // update settings
         array_replace(
             $this->settings,
             $this->builder->getSettings(),
             $settings
         );
+
+        // set dialect
         $dialect ?: $this->builder->getDialect();
+
+        // @todo
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     */
+    public function getBindings()/*# : array */
+    {
+        return $this->bindings;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function __toString()/*# : string */
     {
-        return $this->getStatement();
+        return $this->getSql();
     }
 }

@@ -4,10 +4,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/vpre/phossa/phossa-query.svg?style=flat)](https://packagist.org/packages/phossa/phossa-query)
 [![License](https://poser.pugx.org/phossa/phossa-query/license)](http://mit-license.org/)
 
-Introduction
----
-
-**phossa-query** is a sql query builder for PHP.
+**phossa-query** is a SQL query builder for PHP.
 
 It requires PHP 5.4 and supports PHP 7.0+, HHVM. It is compliant with
 [PSR-1][PSR-1], [PSR-2][PSR-2], [PSR-4][PSR-4].
@@ -16,31 +13,50 @@ It requires PHP 5.4 and supports PHP 7.0+, HHVM. It is compliant with
 [PSR-2]: http://www.php-fig.org/psr/psr-2/ "PSR-2: Coding Style Guide"
 [PSR-4]: http://www.php-fig.org/psr/psr-4/ "PSR-4: Autoloader"
 
-Features
+Installation
 ---
 
-Getting started
----
+Install via the [`composer`](https://getcomposer.org/) utility.
 
-- **Installation**
+```
+composer require "phossa/phossa-query=1.*"
+```
 
-  Install via the [`composer`](https://getcomposer.org/) utility.
+or add the following lines to your `composer.json`
 
-  ```
-  composer require "phossa/phossa-query=1.*"
-  ```
-
-  or add the following lines to your `composer.json`
-
-  ```json
-  {
-      "require": {
+```json
+{
+    "require": {
         "phossa/phossa-query": "^1.0.0"
-      }
-  }
+    }
+}
+```
+
+Usage
+---
+
+- Getting started
+
+  Create a query builder first, then the query.
+
+  ```php
+  // a user table related builder
+  $user = new Builder('Users');
+
+  // SELECT * FROM `Users` LIMIT 0, 10
+  $sql  = $user->select()->limit(10)->getSql();
+
+  // INSERT INTO `Users` ('usr_name') VALUES ('phossa')
+  $sql  = $user->insert('usr_name' => 'phossa')->getSql();
+
+  // switch to another table
+  $sale = $user->table('Sale');
+
+  // SELECT * FROM `Sale` LIMIT 0, 10
+  $sql  = $sale->select()->limit(10)->getSql();
   ```
 
-- **Simple usage**
+- `SELECT`
 
   ```php
 

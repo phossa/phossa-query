@@ -31,26 +31,31 @@ use Phossa\Query\Dialect\DialectInterface;
 interface StatementInterface extends SettingsInterface
 {
     /**
-     * Return the statement base on settings and the dialect
-
+     * Return the SQL base on settings and the dialect
      *
      * @param  array $settings settings
      * @param  DialectInterface $dialect
      * @return string
      * @access public
-     * @api
      */
-    public function getStatement(
+    public function getSql(
         array $settings = [],
         DialectInterface $dialect = null
     )/*# : string */;
+
+    /**
+     * Return binding values
+     *
+     * @return array
+     * @access public
+     */
+    public function getBindings()/*# : array */;
 
     /**
      * Get the statement with default settings & dialect
      *
      * @return string
      * @access public
-     * @api
      */
     public function __toString()/*# : string */;
 }

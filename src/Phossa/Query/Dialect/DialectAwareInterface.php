@@ -30,18 +30,16 @@ interface DialectAwareInterface
      * Set the dialect
      *
      * @param  DialectInterface $dialect
-     * @return static
+     * @return $this
      * @access public
-     * @api
      */
-    public function setDialect(DialectInterface $dialect = null);
+    public function setDialect(DialectInterface $dialect);
 
     /**
      * Get the dialect, if not set yet, create and return the default
      *
      * @return DialectInterface
      * @access public
-     * @api
      */
-    public function getDialect();
+    public function getDialect()/*# : DialectInterface */;
 }

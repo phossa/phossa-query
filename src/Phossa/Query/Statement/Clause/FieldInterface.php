@@ -30,9 +30,8 @@ interface FieldInterface extends ClauseInterface
     /**
      * Set DISTINCT
      *
-     * @return this
+     * @return $this
      * @access public
-     * @api
      */
     public function distinct();
 
@@ -54,10 +53,9 @@ interface FieldInterface extends ClauseInterface
      * ```
      *
      * @param  string|array $field field specification
-     * @param  string $as field alias name
-     * @return this
+     * @param  string $fieldAlias field alias name
+     * @return $this
      * @access public
-     * @api
      */
-    public function field($field, /*# string */ $as = '');
+    public function field($field, /*# string */ $fieldAlias = '');
 }

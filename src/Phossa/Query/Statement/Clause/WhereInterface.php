@@ -27,59 +27,52 @@ namespace Phossa\Query\Statement\Clause;
  */
 interface WhereInterface extends ClauseInterface
 {
-    /**#@+
-     * AND|OR
-     *
-     * @const
-     */
-    const LOGIC_AND = '__AND__';
-    const LOGIC_OR  = '__OR__';
-    /**#@-*/
-
     /**
      * Generic WHERE clause with 'AND' logic
      *
      * ```php
-     * // raw mode, WHERE age > 18
+     * // raw mode, WHERE `age` > 18
      * ->where('age > 18')
      *
-     * // MODE_STRICT: field/value mode, WHERE age = 18
+     * // MODE_STRICT: field/value mode, WHERE `age` = 18
      * ->where('age', 18)
      *
-     * // MODE_STRICT: operator mode, WHERE age > 18
+     * // MODE_STRICT: operator mode, WHERE `age` > 18
      * ->where('age', 18, '>')
      *
-     * // MODE_STRICT: operator 'in', WHERE age IN (10,11,12)
+     * // MODE_STRICT: operator 'in', WHERE `age` IN (10,11,12)
      * ->where('age', [10, 11, 12], 'in')
      *
-     * // MODE_STRICT: operator 'between', WHERE age BETWEEN 10 AND 20
+     * // MODE_STRICT: operator 'between', WHERE `age` BETWEEN 10 AND 20
      * ->where('age', [10, 20], 'between')
      *
-     * // array mode, WHERE age = 18 AND gender = 'male'
+     * // array mode, WHERE `age` = 18 AND `gender` = 'male'
      * ->where(['age' => 18, 'gender' => 'male'])
      *
-     * // associate array mode, WHERE age > 18 AND score <= 100
-     * ->where(['age' => 18, 'score' => 100], ['age' => '>', 'score' => '<='])
+     * // associate array mode, WHERE `age` > 18 AND `score` <= 100
+     * ->where(['age' => [ 18, '>' ], 'score' => [ 100, '<='] ])
      *
      * // subquery mode
      * ->where('age', $subquery, 'in')
      * ```
      *
      * @param  string|array $field field or fields
-     * @return this
+     * @param  mixed|null $value
+     * @param  string $operator
+     * @return $this
      * @access public
-     * @api
      */
-    public function where($field);
+    public function where($field, $value, $operator = '=');
 
     /**
      * Generic WHERE clause with 'OR' logic
      *
      * @param  string|array $field field or fields
-     * @return this
+     * @param  mixed|null $value
+     * @param  string $operator
+     * @return $this
      * @see    self::where()
      * @access public
-     * @api
      */
-    public function orWhere($field);
+    public function orWhere($field, $value, $operator = '=');
 }

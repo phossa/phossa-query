@@ -18,7 +18,6 @@ namespace Phossa\Query\Statement\Clause;
 /**
  * FromInterface
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     ClauseInterface
@@ -30,27 +29,26 @@ interface FromInterface extends ClauseInterface
     /**
      * From table[s]
      *
-     * If array provided, overwrite exiting from[s]
+     * If array provided, overwrite exiting from[s] !!
      *
-     * <code>
-     *     // FROM `users`
-     *     ->from('users')
+     * ```php
+     * // FROM `users`
+     * select()->from('users')
      *
-     *     // FROM `users` `u`
-     *     ->from('users', 'u')
+     * // FROM `users` `u`
+     * select()->from('users', 'u')
      *
-     *     // FROM `users`, `accounts`
-     *     ->from(['users', 'accounts'])
+     * // FROM `users`, `accounts`
+     * select()->from(['users', 'accounts'])
      *
-     *     // FROM `users`, `accounts` `a`
-     *     ->from(['users', 'accounts' => 'a'])
-     * </code>
+     * // FROM `users`, `accounts` `a`
+     * select()->from(['users', 'accounts' => 'a'])
+     * ```
      *
      * @param  string|array $table table specification[s]
-     * @param  string $as (optional) table alias name
-     * @return static
+     * @param  string $tableAlias alias to be used later in the query
+     * @return $this
      * @access public
-     * @api
      */
-    public function from($table, /*# string */ $as = '');
+    public function from($table, /*# string */ $tableAlias = '');
 }

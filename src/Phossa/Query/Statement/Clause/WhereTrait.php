@@ -54,12 +54,12 @@ trait WhereTrait
 
             }
         } else {
-            $this->clause['where'][] = [
+            $this->clauses['where'][] = [
                 $logic,
                 (string) $field,
                 isset($args[2]) ? strtoupper($args[2]) : '=',
             ];
-            $this->clause['param'][] = $args[1];
+            $this->clauses['param'][] = $args[1];
         }
     }
 

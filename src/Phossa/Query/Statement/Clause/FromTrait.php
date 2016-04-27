@@ -27,20 +27,18 @@ namespace Phossa\Query\Statement\Clause;
  */
 trait FromTrait
 {
-    use ClauseTrait;
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function from($table, /*# string */ $as = '')
+    public function from($table, /*# string */ $tableAlias = '')
     {
         if (is_array($table)) {
-            $this->clause['from'] = $table;
+            $this->clauses['from'] = $table;
         } else {
-            if (empty($as)) {
-                $this->clause['from'][] = (string) $table;
+            if (empty($tableAlias)) {
+                $this->clauses['from'][] = (string) $table;
             } else {
-                $this->clause['from'][(string) $table] = (string) $as;
+                $this->clauses['from'][(string) $table] = (string) $tableAlias;
             }
         }
         return $this;

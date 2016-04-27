@@ -36,7 +36,7 @@ trait SettingsTrait
     protected $settings = [];
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function setSettings(array $settings)
     {
@@ -45,7 +45,7 @@ trait SettingsTrait
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getSettings()/*# : array */
     {

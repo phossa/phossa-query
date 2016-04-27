@@ -18,7 +18,6 @@ namespace Phossa\Query\Statement\Clause;
 /**
  * ClauseInterface
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0

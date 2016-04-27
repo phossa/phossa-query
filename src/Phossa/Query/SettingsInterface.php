@@ -40,9 +40,8 @@ interface SettingsInterface
      * ```
      *
      * @param  array $settings
-     * @return static
+     * @return $this
      * @access public
-     * @api
      */
     public function setSettings(array $settings);
 
@@ -51,7 +50,6 @@ interface SettingsInterface
      *
      * @return array
      * @access public
-     * @api
      */
     public function getSettings()/*# : array */;
 }

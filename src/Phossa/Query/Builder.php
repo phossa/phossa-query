@@ -15,8 +15,23 @@
 
 namespace Phossa\Query;
 
+use Phossa\Query\Statement\Select;
+use Phossa\Query\Dialect\DialectInterface;
+use Phossa\Query\Dialect\DialectAwareTrait;
+
 /**
- * Builder
+ * Query Builder
+ *
+ * ```php
+ * // create a builder with table specified
+ * $user = (new Builder())->table('User');
+ *
+ * // SELECT * FROM `User`
+ * $select = $user->select();
+ *
+ * // INSERT INTO `User` ...
+ * $insert = $user->insert()->...
+ * ```
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
@@ -26,8 +41,7 @@ namespace Phossa\Query;
  */
 class Builder implements BuilderInterface
 {
-    use SettingsTrait,
-        Dialect\DialectAwareTrait;
+    use SettingsTrait, DialectAwareTrait;
 
     /**
      * tables
@@ -40,47 +54,78 @@ class Builder implements BuilderInterface
     /**
      * Constructor
      *
+     * ```php
+     * // FROM `users`
+     * $user = new Builder('users')
+     *
+     * // FROM `users`, `accounts`
+     * $user = new Builder(['users', 'accounts'])
+     *
+     * // FROM `users`, `accounts` `a`
+     * $user = new Builder(['users', 'accounts' => 'a'])
+     * ```
+     *
+     * @param  string|array $table table to build upon
      * @param  array $settings builder settings
-     * @param  Dialect\DialectInterface $dialect
+     * @param  DialectInterface $dialect
      * @access public
      */
     public function __construct(
+        $table = '',
         array $settings = [],
-        Dialect\DialectInterface $dialect = null
+        DialectInterface $dialect = null
     ) {
-        $this->setSettings($settings)->setDialect($dialect);
+        $this->setSettings($settings)
+             ->setDialect($dialect)
+             ->table($table);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function table($tables)
+    public function table($table, /*# string */ $tableAlias = '')
     {
-        $this->tables = is_array($tables) ? $tables : [ $tables ];
-        return $this;
+        // switch to a new builder if table changed
+        if (!empty($this->tables)) {
+            $clone = clone $this;
+        } else {
+            $clone = $this;
+        }
+
+        // set tables
+        if (!empty($table)) {
+            if (is_array($table)) {
+                $clone->tables = $table;
+            } else {
+                $clone->tables = empty($tableAlias) ?
+                    [ $table ] :
+                    [ $table => $tableAlias ];
+            }
+        }
+        return $clone;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function select()/*# : Statement\SelectInterface */
+    public function select()/*# : SelectInterface */
     {
         // SELECT statement
-        $select = new Statement\Select($this);
+        $select = new Select($this);
 
-        // set from
+        // set tables
         if (count($this->tables)) {
             $select->from($this->tables);
         }
 
-        // fields
+        // set fields
         if (func_num_args() > 0) {
             $select->field(
                 func_get_arg(0),
                 func_num_args() > 1 ? func_get_arg(1) : ''
             );
         }
-        
+
         return $select;
     }
 }

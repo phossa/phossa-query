@@ -15,6 +15,10 @@
 
 namespace Phossa\Query;
 
+use Phossa\Query\Statement\SelectInterface;
+use Phossa\Query\Dialect\DialectAwareInterface;
+use Phossa\Query\Statement\Clause\FromInterface;
+
 /**
  * BuilderInterface
  *
@@ -24,28 +28,40 @@ namespace Phossa\Query;
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     SettingsInterface
- * @see     Dialect\DialectAwareInterface
+ * @see     DialectAwareInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface BuilderInterface extends Dialect\DialectAwareInterface, SettingsInterface
+interface BuilderInterface extends DialectAwareInterface, SettingsInterface
 {
     /**
      * Set tables
      *
-     * @param  string|array $tables table to use
-     * @return static
+     * ```php
+     * // a user table query builder
+     * $user = $builder->table('MyUserTable', 'u');
+     *
+     * // working on user table
+     * $user->select()->...
+     * ```
+     *
+     * @param  string|array $table(s) table to use
+     * @param  string $tableAlias alias to be used later in the query
+     * @return $this
+     * @see    FromInterface
      * @access public
-     * @api
      */
-    public function table($tables);
+    public function table($table, /*# string */ $tableAlias = '');
 
     /**
-     * Build SELECT statement
+     * Build a SELECT statement
      *
      * Add field[s] to SELECT query
      *
      * ```php
+     *     // SELECT DISTINCT
+     *     ->select()->distinct()
+     *
      *     // SELECT `user_name`
      *     ->select('user_name')
      *
@@ -59,14 +75,13 @@ interface BuilderInterface extends Dialect\DialectAwareInterface, SettingsInterf
      *     ->select(['user_id', 'user_name' => 'n'])
      * ```
      *
-     * @param  string|array $field field specification
-     * @param  string $as field alias name
-     * @return Statement\SelectInterface
+     * @param  string|array $field field specification[s]
+     * @param  string $fieldAlias alias name for $field
+     * @return SelectInterface
      * @access public
-     * @api
      */
     public function select(
         $field,
-        /*# string */ $as = ''
-    )/*# : Statement\SelectInterface */;
+        /*# string */ $fieldAlias = ''
+    )/*# : SelectInterface */;
 }

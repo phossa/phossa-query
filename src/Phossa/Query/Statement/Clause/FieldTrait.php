@@ -27,33 +27,31 @@ namespace Phossa\Query\Statement\Clause;
  */
 trait FieldTrait
 {
-    use ClauseTrait;
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function distinct()
     {
-        $this->clause['distinct'] = true;
+        $this->clauses['distinct'] = true;
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function field($field, /*# string */ $as = '')
+    public function field($field, /*# string */ $fieldAlias = '')
     {
         if (is_array($field)) {
             foreach ($field as $key => $val) {
                 if (is_numeric($key)) {
-                    $this->clause['field'][$val] = true;
+                    $this->clauses['field'][$val] = true;
                 } else {
-                    $this->clause['field'][$key] = $val;
+                    $this->clauses['field'][$key] = $val;
                 }
             }
         } else {
-            $this->clause['field'][(string) $field] =
-                '' === $as ? true : (string) $as;
+            $this->clauses['field'][(string) $field] =
+                '' === $fieldAlias ? true : (string) $fieldAlias;
         }
         return $this;
     }
