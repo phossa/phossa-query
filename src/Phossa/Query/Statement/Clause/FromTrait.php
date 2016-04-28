@@ -30,17 +30,29 @@ trait FromTrait
     /**
      * {@inheritDoc}
      */
-    public function from($table, /*# string */ $tableAlias = '')
-    {
+    public function from(
+        $table,
+        /*# string */ $tableAlias = ''
+    )/* : FromInterface */ {
         if (is_array($table)) {
             $this->clauses['from'] = $table;
         } else {
             if (empty($tableAlias)) {
-                $this->clauses['from'][] = (string) $table;
+                $this->clauses['from'][] = $table;
             } else {
-                $this->clauses['from'][(string) $table] = (string) $tableAlias;
+                $this->clauses['from'][(string) $tableAlias] = $table;
             }
         }
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function table(
+        $table,
+        /*# string */ $tableAlias = ''
+    )/* : FromInterface */ {
+        return $this->from($table, $tableAlias);
     }
 }

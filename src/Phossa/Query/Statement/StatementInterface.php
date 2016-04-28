@@ -52,6 +52,14 @@ interface StatementInterface extends SettingsInterface
     public function getBindings()/*# : array */;
 
     /**
+     * Get the clauses array
+     *
+     * @return array
+     * @access public
+     */
+    public function getClauses()/*# : array */;
+
+    /**
      * Get the statement with default settings & dialect
      *
      * @return string

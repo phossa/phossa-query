@@ -16,6 +16,9 @@
 namespace Phossa\Query;
 
 use Phossa\Query\Statement\SelectInterface;
+use Phossa\Query\Statement\DeleteInterface;
+use Phossa\Query\Statement\InsertInterface;
+use Phossa\Query\Statement\UpdateInterface;
 use Phossa\Query\Dialect\DialectAwareInterface;
 use Phossa\Query\Statement\Clause\FromInterface;
 
@@ -29,34 +32,41 @@ use Phossa\Query\Statement\Clause\FromInterface;
  * @author  Hong Zhang <phossa@126.com>
  * @see     SettingsInterface
  * @see     DialectAwareInterface
+ * @see     FromInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface BuilderInterface extends DialectAwareInterface, SettingsInterface
+interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface
 {
     /**
-     * Set tables
+     * Indicating start a group with '()'
      *
-     * ```php
-     * // a user table query builder
-     * $user = $builder->table('MyUserTable', 'u');
-     *
-     * // working on user table
-     * $user->select()->...
-     * ```
-     *
-     * @param  string|array $table(s) table to use
-     * @param  string $tableAlias alias to be used later in the query
-     * @return $this
-     * @see    FromInterface
+     * @return SelectInterface
      * @access public
      */
-    public function table($table, /*# string */ $tableAlias = '');
+    public function group()/*# : SelectInterface */;
+
+    /**
+     * Set schema
+     *
+     * @param  string $schema
+     * @return $this
+     * @access public
+     */
+    public function with(/*# string */ $schema);
+
+    /**
+     * Get current schema
+     *
+     * @return string|null
+     * @access public
+     */
+    public function getSchema();
 
     /**
      * Build a SELECT statement
      *
-     * Add field[s] to SELECT query
+     * Add col[s] to SELECT query
      *
      * ```php
      *     // SELECT DISTINCT
@@ -75,13 +85,39 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface
      *     ->select(['user_id', 'user_name' => 'n'])
      * ```
      *
-     * @param  string|array $field field specification[s]
-     * @param  string $fieldAlias alias name for $field
+     * @param  string|array $col column specification[s]
+     * @param  string $colAlias alias name for $col
      * @return SelectInterface
      * @access public
      */
     public function select(
-        $field,
-        /*# string */ $fieldAlias = ''
+        $col = '',
+        /*# string */ $colAlias = ''
     )/*# : SelectInterface */;
+
+    /**
+     * Build an INSERT statement
+     *
+     * @param  array $values
+     * @return InsertInterface
+     * @access public
+     */
+    public function insert(array $values = [])/*# : InsertInterface */;
+
+    /**
+     * Build an UPDATE statement
+     *
+     * @param  array $values
+     * @return UpdateInterface
+     * @access public
+     */
+    public function update(array $values = [])/*# : UpdateInterface */;
+
+    /**
+     * Build a DELETE statement
+     *
+     * @return DeleteInterface
+     * @access public
+     */
+    public function delete()/*# : DeleteInterface */;
 }

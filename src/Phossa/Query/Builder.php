@@ -44,6 +44,14 @@ class Builder implements BuilderInterface
     use SettingsTrait, DialectAwareTrait;
 
     /**
+     * current schema
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $schema;
+
+    /**
      * tables
      *
      * @var    array
@@ -55,14 +63,14 @@ class Builder implements BuilderInterface
      * Constructor
      *
      * ```php
-     * // FROM `users`
-     * $user = new Builder('users')
+     * // FROM `Users`
+     * $user = new Builder('Users')
      *
-     * // FROM `users`, `accounts`
-     * $user = new Builder(['users', 'accounts'])
+     * // FROM `Users`, `Accounts`
+     * $user = new Builder(['Users', 'Accounts'])
      *
-     * // FROM `users`, `accounts` `a`
-     * $user = new Builder(['users', 'accounts' => 'a'])
+     * // FROM `Users`, `Accounts` `a`
+     * $user = new Builder(['Users', 'Accounts' => 'a'])
      * ```
      *
      * @param  string|array $table table to build upon
@@ -77,13 +85,74 @@ class Builder implements BuilderInterface
     ) {
         $this->setSettings($settings)
              ->setDialect($dialect)
-             ->table($table);
+             ->from($table);
+    }
+
+    /**
+     * Indicating start a grouped WHERE with '()'
+     *
+     * ```php
+     * $users = new Builder('Users');
+     *
+     * // SELECT *
+     * //     FROM Users
+     * //     WHERE
+     * //         (age < 18 OR gender = 'female') OR
+     * //         (age > 60 OR (age > 55 AND gender = 'female'))
+     * $users->select()
+     * ->where(
+     *     $users->group()->where('age', '<', 18)->orWhere('gender', 'female');
+     * )->orWhere(
+     *     $users->group()->where('age', '>' , 60)->orWhere(
+     *         $users->where('age', '>', 55)->where('gender', 'female')
+     *     );
+     * );
+     * ```
+     *
+     * {@inheritDoc}
+     */
+    public function group()/*# : SelectInterface */
+    {
+        return new Select($this);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function table($table, /*# string */ $tableAlias = '')
+    public function with(/*# string */ $schema)
+    {
+        if (null !== $this->schema) {
+            $clone = clone $this;
+        } else {
+            $clone = $this;
+        }
+        $clone->schema = $schema;
+
+        return $clone;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSchema()
+    {
+        return $this->schema;
+    }
+
+    /**
+     * Set table, only one table is allowed !
+     *
+     * ```php
+     * // a user table query builder
+     * $user = $builder->table('MyUserTable', 'u');
+     *
+     * // working on user table
+     * $user->select()->...
+     * ```
+     *
+     * {@inheritDoc}
+     */
+    public function from($table, /*# string */ $tableAlias = '')
     {
         // switch to a new builder if table changed
         if (!empty($this->tables)) {
@@ -99,17 +168,30 @@ class Builder implements BuilderInterface
             } else {
                 $clone->tables = empty($tableAlias) ?
                     [ $table ] :
-                    [ $table => $tableAlias ];
+                    [ $tableAlias => $table ];
             }
         }
         return $clone;
     }
 
     /**
+     * Alias of self::from()
+     *
+     * @see    self::from()
+     */
+    public function table($table, /*# string */ $tableAlias = '')
+    {
+        return $this->from($table, $tableAlias);
+    }
+
+    /**
      * {@inheritDoc}
      */
-    public function select()/*# : SelectInterface */
-    {
+    public function select(
+        $col = '',
+        /*# string */ $colAlias = ''
+    )/*# : SelectInterface */ {
+
         // SELECT statement
         $select = new Select($this);
 
@@ -118,14 +200,38 @@ class Builder implements BuilderInterface
             $select->from($this->tables);
         }
 
-        // set fields
+        // set columns
         if (func_num_args() > 0) {
-            $select->field(
+            $select->col(
                 func_get_arg(0),
                 func_num_args() > 1 ? func_get_arg(1) : ''
             );
         }
 
         return $select;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function insert(array $values = [])/*# : InsertInterface */
+    {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function update(array $values = [])/*# : UpdateInterface */
+    {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function delete()/*# : DeleteInterface */
+    {
+
     }
 }

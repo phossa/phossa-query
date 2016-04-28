@@ -100,6 +100,14 @@ abstract class StatementAbstract implements StatementInterface
     /**
      * {@inheritDoc}
      */
+    public function getClauses()/*# : array */
+    {
+        return $this->clauses;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()/*# : string */
     {
         return $this->getSql();

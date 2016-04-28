@@ -15,8 +15,9 @@
 
 namespace Phossa\Query\Statement;
 
+use Phossa\Query\Statement\Clause\ColInterface;
 use Phossa\Query\Statement\Clause\FromInterface;
-use Phossa\Query\Statement\Clause\FieldInterface;
+use Phossa\Query\Statement\Clause\WhereInterface;
 
 /**
  * SelectInterface
@@ -27,6 +28,6 @@ use Phossa\Query\Statement\Clause\FieldInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface SelectInterface extends StatementInterface, FromInterface, FieldInterface
+interface SelectInterface extends StatementInterface, FromInterface, ColInterface, WhereInterface
 {
 }

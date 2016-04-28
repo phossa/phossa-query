@@ -13,17 +13,17 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Statement;
 
 /**
- * Common dialect
+ * DeleteInterface
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     DialectInterface
+ * @see     StatementInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Common implements DialectInterface
+interface DeleteInterface extends StatementInterface
 {
 }

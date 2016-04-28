@@ -15,6 +15,8 @@
 
 namespace Phossa\Query\Statement\Clause;
 
+use Phossa\Query\Statement\SelectInterface;
+
 /**
  * FromInterface
  *
@@ -43,12 +45,28 @@ interface FromInterface extends ClauseInterface
      *
      * // FROM `users`, `accounts` `a`
      * select()->from(['users', 'accounts' => 'a'])
+     *
+     * // FROM (SELECT id FROM users WHERE id < 10) AS sub
+     * select()->from($users->select('id')->where('id < 10'), 'sub');
      * ```
      *
-     * @param  string|array $table table specification[s]
+     * @param  string|array|SelectInterface $table table specification[s]
      * @param  string $tableAlias alias to be used later in the query
      * @return $this
      * @access public
      */
-    public function from($table, /*# string */ $tableAlias = '');
+    public function from(
+        $table,
+        /*# string */ $tableAlias = ''
+    );
+
+    /**
+     * Alias to self::from()
+     *
+     * @see    self::from()
+     */
+    public function table(
+        $table,
+        /*# string */ $tableAlias = ''
+    );
 }
