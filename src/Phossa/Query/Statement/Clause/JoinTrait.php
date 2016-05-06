@@ -16,6 +16,7 @@
 namespace Phossa\Query\Statement\Clause;
 
 use Phossa\Query\Statement\SelectInterface;
+use Phossa\Query\Statement\ExpressionInterface;
 
 /**
  * JoinTrait
@@ -31,63 +32,107 @@ trait JoinTrait
     /**
      * {@inheritDoc}
      */
-    public function join(
-        /*# string */ $table,
-        $firstTableCol,
+    public function realJoin(
+        /*# string */ $joinType,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE,
-        /*# string */ $joinType = 'INNER',
         /*# bool */ $rawMode = false
     ) {
-        $join = $joinType . ' JOIN';
+        $join = strtoupper($joinType) . ' JOIN';
 
-        // raw
-        if ($rawMode) {
-            $this->clauses['join'] = [$rawMode, $table];
-            return $this;
+        // raw mode
+        if ($rawMode || '' === $firstTableCol) {
+            $rawMode = true;
+            $on = null;
 
         // groupd on/orOn
         } elseif (is_object($firstTableCol) &&
-            $firstTableCol instanceof SelectInterface
+                $firstTableCol instanceof ExpressionInterface
         ) {
+            // object ExpressionInterface
             $on = $firstTableCol;
+
+        } elseif ($this->isRaw($firstTableCol)) {
+            $rawMode = true;
+
+            // raw string
+            $on = $firstTableCol;
+
+        // col provided
         } else {
-            $or = false;
+            // only ONE colName provided
             if (WhereInterface::NO_OPERATOR === $operator) {
-                $on = [$or, $firstTableCol, '=', $firstTableCol];
+                $on = [$firstTableCol, '=', $firstTableCol];
+
+            // 2 colNames provides
             } elseif (WhereInterface::NO_VALUE === $secondTableCol) {
-                $on = [$or, $firstTableCol, '=', $operator];
+                $on = [$firstTableCol, '=', $operator];
+
+            // 2 colNames and operator provided
             } else {
-                $on = [$or, $firstTableCol, $operator, $secondTableCol];
+                $on = [$firstTableCol, $operator, $secondTableCol];
             }
         }
-        $this->clauses['join'] = [$rawMode, $join, $table, $on];
+
+        // check table alias
+        if (is_object($table) && $table instanceof SelectInterface) {
+            // subquery MUST have alias
+            $alias = $table->getAlias();
+        } else {
+            // find alias in the $table
+            $splitted = $this->splitAlias($table);
+            if (!$rawMode && isset($splitted[1])) {
+                $table = $splitted[0];
+                $alias = $splitted[1];
+            } else {
+                $alias = null;
+            }
+        }
+
+        $this->clauses['join'][] = [$rawMode, $join, $table, $on, $alias];
+
         return $this;
     }
 
     /**
      * {@inheritDoc}
      */
+    public function join(
+        $table,
+        $firstTableCol = '',
+        /*# string */ $operator = WhereInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        ) {
+            return $this->realJoin('INNER', $table, $firstTableCol, $operator,
+                $secondTableCol);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function innerJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join($table, $firstTableCol, $operator, $secondTableCol);
+        return $this->realJoin('INNER', $table, $firstTableCol, $operator,
+            $secondTableCol);
     }
 
     /**
      * {@inheritDoc}
      */
     public function outerJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join(
-            $table, $firstTableCol, $operator, $secondTableCol, 'OUTER'
+        return $this->realJoin(
+            'OUTER', $table, $firstTableCol, $operator, $secondTableCol
         );
     }
 
@@ -95,13 +140,13 @@ trait JoinTrait
      * {@inheritDoc}
      */
     public function leftJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join(
-            $table, $firstTableCol, $operator, $secondTableCol, 'LEFT'
+        return $this->realJoin(
+            'LEFT', $table, $firstTableCol, $operator, $secondTableCol
         );
     }
 
@@ -109,13 +154,13 @@ trait JoinTrait
      * {@inheritDoc}
      */
     public function leftOuterJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join(
-            $table, $firstTableCol, $operator, $secondTableCol, 'LEFT OUTER'
+        return $this->realJoin(
+            'LEFT OUTER', $table, $firstTableCol, $operator, $secondTableCol
         );
     }
 
@@ -123,13 +168,13 @@ trait JoinTrait
      * {@inheritDoc}
      */
     public function rightJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join(
-            $table, $firstTableCol, $operator, $secondTableCol, 'RIGHT'
+        return $this->realJoin(
+            'RIGHT', $table, $firstTableCol, $operator, $secondTableCol
         );
     }
 
@@ -137,13 +182,13 @@ trait JoinTrait
      * {@inheritDoc}
      */
     public function rightOuterJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join(
-            $table, $firstTableCol, $operator, $secondTableCol, 'RIGHT OUTER'
+        return $this->realJoin(
+            'RIGHT OUTER', $table, $firstTableCol, $operator, $secondTableCol
         );
     }
 
@@ -151,13 +196,13 @@ trait JoinTrait
      * {@inheritDoc}
      */
     public function fullOuterJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join(
-            $table, $firstTableCol, $operator, $secondTableCol, 'FULL OUTER'
+        return $this->realJoin(
+            'FULL OUTER', $table, $firstTableCol, $operator, $secondTableCol
         );
     }
 
@@ -165,55 +210,105 @@ trait JoinTrait
      * {@inheritDoc}
      */
     public function crossJoin(
-        /*# string */ $table,
-        $firstTableCol,
+        $table,
+        $firstTableCol = '',
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = WhereInterface::NO_VALUE
     ) {
-        return $this->join(
-            $table, $firstTableCol, $operator, $secondTableCol, 'CROSS'
+        return $this->realJoin(
+            'CROSS', $table, $firstTableCol, $operator, $secondTableCol
         );
     }
 
     /**
-     * {@inheritDoc}
+     * Build JOIN
+     *
+     * @return array
+     * @access protected
      */
-    public function joinRaw(/*# string */ $join)
+    protected function buildJoin()/*# : array */
     {
-        return $this->join($join, '', '', '', '', true);
-    }
+        $result = [];
+        if (isset($this->clauses['join'])) {
+            foreach ($this->clauses['join'] as $join) {
 
-    /**
-     * {@inheritDoc}
-     */
-    public function on(
-        /*# string */ $firstTableCol,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE,
-        /*# bool */ $or = false
-    ) {
-        if (WhereInterface::NO_OPERATOR === $operator) {
-            $on = [$or, $firstTableCol, '=', $firstTableCol];
-        } elseif (WhereInterface::NO_VALUE === $secondTableCol) {
-            $on = [$or, $firstTableCol, '=', $operator];
-        } else {
-            $on = [$or, $firstTableCol, $operator, $secondTableCol];
+                // join type, INNER JOIN etc.
+                $res = [ $join[1] ];
+
+                // raw mode
+                if ($join[0]) {
+                    $res[] = $join[2];
+
+                } else {
+                    // join table
+                    $tbl = $join[2];
+                    if (is_object($tbl) && $tbl instanceof SelectInterface) {
+                        $res[] = '('. $tbl->getSql([], $this->getDialect(), false) .')';
+                    } else {
+                        $res[] = $this->quote($tbl);
+                    }
+
+                    // table alias if any
+                    if ($join[4]) {
+                        $tbl = $join[4];
+                        $res[] = 'AS ' . $this->quote($tbl);
+                    }
+
+                    // on clause
+                    $res[] = $this->buildJoinOn($join[3], $tbl);
+                }
+
+                $result[] = join(' ', $res);
+            }
         }
-        $this->clauses['on'] = $on;
-
-        return $this;
+        return $result;
     }
 
     /**
-     * {@inheritDoc}
+     * Build ON
+     *
+     * @param  string|array|object|null $input
+     * @param  string $table joined table or table alias
+     * @return string
+     * @access protected
      */
-    public function orOn(
-        /*# string */ $firstTableCol,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
-    ) {
-        return $this->on(
-            $firstTableCol, $operator, $secondTableCol, true
-        );
+    protected function buildJoinOn($input, $table)/*# : string */
+    {
+        // original table
+        $tbl1 = $this->getTableName();
+
+        if (is_array($input)) {
+            $res = ['ON'];
+
+            // first table
+            if (false === strpos($input[0], '.')) {
+                $res[] = $this->quote($tbl1 . '.' . $input[0]);
+            } else {
+                $res[] = $this->quote($input[0]);
+            }
+
+            // operator
+            $res[] = $input[1];
+
+            // second table
+            if (false === strpos($input[2], '.')) {
+                $res[] = $this->quote($table . '.' . $input[2]);
+            } else {
+                $res[] = $this->quote($input[2]);
+            }
+        } elseif (is_object($input)) {
+            $res[] = $input->getSql([], $this->getDialect(), false);
+
+        } elseif (is_string($input)) {
+            $res = ['ON', $input];
+        }
+
+        return join(' ', $res);
     }
+
+    abstract public function getDialect()/*# : DialectInterface */;
+    abstract protected function isRaw(/*# string */ $string)/*# : bool */;
+    abstract protected function quote(/*# string */ $str)/*# : string */;
+    abstract protected function getTableName($returnAlias = false)/*# : string */;
+    abstract protected function splitAlias(/*# string */ $string)/*# : array */;
 }

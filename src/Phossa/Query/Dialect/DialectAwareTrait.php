@@ -47,12 +47,8 @@ trait DialectAwareTrait
     /**
      * {@inheritDoc}
      */
-    public function getDialect()
+    public function getDialect()/*# : DialectInterface */
     {
-        if (is_null($this->dialect)) {
-            $class = __NAMESPACE__ . '\\Mysql';
-            $this->dialect = new $class;
-        }
         return $this->dialect;
     }
 }

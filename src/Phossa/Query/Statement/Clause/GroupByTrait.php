@@ -29,9 +29,17 @@ trait GroupByTrait
     /**
      * {@inheritDoc}
      */
-    public function groupBy(/*# string */ $col, /*# bool */ $rawMode = false)
+    public function groupBy($col, /*# bool */ $rawMode = false)
     {
-        $this->clauses['groupby'][] = [$rawMode, $col];
+        if (is_array($col)) {
+            foreach ($col as $c) {
+                $this->groupBy($c, $rawMode);
+            }
+        } else {
+            $this->clauses['groupby'][] = [
+                $rawMode ?: $this->isRaw($col), $col
+            ];
+        }
         return $this;
     }
 
@@ -42,4 +50,24 @@ trait GroupByTrait
     {
         return $this->groupBy($groupby, true);
     }
+
+    /**
+     * Build GROUP BY
+     *
+     * @return array
+     * @access protected
+     */
+    protected function buildGroupBy()/*# : array */
+    {
+        $result = [];
+        if (isset($this->clauses['groupby'])) {
+            foreach ($this->clauses['groupby'] as $grp) {
+                $result[] = $grp[0] ? $grp[1] : $this->quote($grp[1]);
+            }
+        }
+        return $result;
+    }
+
+    abstract protected function isRaw(/*# string */ $string)/*# : bool */;
+    abstract protected function quote(/*# string */ $str)/*# : string */;
 }

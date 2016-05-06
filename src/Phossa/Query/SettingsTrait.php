@@ -28,17 +28,38 @@ namespace Phossa\Query;
 trait SettingsTrait
 {
     /**
-     * settings
+     * default settings
      *
      * @var    array
      * @access protected
      */
-    protected $settings = [];
+    protected $settings = [
+        // auto quote db identifier
+        'autoQuote'         => true,
+
+        // replace value with '?'
+        'positionedParam'   => false,
+
+        // clause seperator
+        'seperator'         => ' ',
+
+        // subline indention
+        'indent'            => ''
+    ];
 
     /**
      * {@inheritDoc}
      */
     public function setSettings(array $settings)
+    {
+        $this->settings = $settings;
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function combineSettings(array $settings)
     {
         $this->settings = array_replace($this->settings, $settings);
         return $this;

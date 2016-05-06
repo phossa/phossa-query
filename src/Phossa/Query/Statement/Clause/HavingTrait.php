@@ -32,19 +32,23 @@ trait HavingTrait
     public function having(
         /*# string */ $col,
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $value = WhereInterface::NO_VALUE,
-        /*# bool */ $rawMode = false
+        /*# string */ $value  = WhereInterface::NO_VALUE,
+        /*# bool */ $logicAnd = true
     ) {
-        if ($rawMode) {
-            $this->clauses['having'][] = [$rawMode, $col];
-        } else {
-            if (WhereInterface::NO_VALUE === $value) {
-                $value = $operator;
-                $operator = '=';
-            }
-            $this->clauses['having'][] = [$rawMode, $col, $operator, $value];
-        }
-        return $this;
+        return $this->where(
+            $col, $operator, $value, $logicAnd, false, false, 'having'
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function orHaving(
+        /*# string */ $col,
+        /*# string */ $operator = WhereInterface::NO_OPERATOR,
+        /*# string */ $value = WhereInterface::NO_VALUE
+    ) {
+        return $this->having($col, $operator, $value, false);
     }
 
     /**
@@ -52,11 +56,38 @@ trait HavingTrait
      */
     public function havingRaw(/*# string */ $having)
     {
-        return $this->having(
-            $having,
-            WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE,
-            true
-        );
+        return $this->having($having);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function orHavingRaw(/*# string */ $having)
+    {
+        return $this->having($having, WhereInterface::NO_OPERATOR,
+            WhereInterface::NO_VALUE, false);
+    }
+
+    /**
+     * Build HAVING
+     *
+     * @return array
+     * @access protected
+     */
+    protected function buildHaving()/*# : array */
+    {
+        return $this->buildWhere('having');
+    }
+
+    abstract public function where(
+        $col,
+        $operator = self::NO_OPERATOR,
+        $value    = self::NO_VALUE,
+        /*# bool */ $logicAnd = true,
+        /*# bool */ $whereNot = false,
+        /*# bool */ $rawMode  = false,
+        /*# string */ $clause = 'where'
+    );
+
+    abstract protected function buildWhere(/*# string */ $clause = 'where');
 }

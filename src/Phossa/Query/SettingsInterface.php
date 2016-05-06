@@ -28,14 +28,14 @@ namespace Phossa\Query;
 interface SettingsInterface
 {
     /**
-     * Settings
+     * Set settings
      *
      * ```php
      * $settings = [
      *     'autoQuote'      => true,
-     *     'tablePrefix'    => 'tbl_',
-     *     'columnPrefix'   => 'col_',
-     *     'indent'         => '    ',
+     *     'tablePrefix'    => "tbl_",
+     *     'seperator'      => "\n",
+     *     'indent'         => "    ",
      * ];
      * ```
      *
@@ -44,6 +44,15 @@ interface SettingsInterface
      * @access public
      */
     public function setSettings(array $settings);
+
+    /**
+     * Combine with settings
+     *
+     * @param  array $settings
+     * @return $this
+     * @access public
+     */
+    public function combineSettings(array $settings);
 
     /**
      * Get builder settings

@@ -13,39 +13,34 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Statement;
 
 /**
- * Standard Query Language dialect
+ * Pass as raw string
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     DialectInterface
+ * @see     RawInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Standard implements DialectInterface
+class Raw implements RawInterface
 {
     /**
+     * raw string
      *
-     *
-     * @var    array
+     * @var    string
      * @access protected
      */
-    protected $clauses = [];
+    protected $str = '';
 
-    /**
-     * Build 'FROM' clause
-     *
-     * @return string
-     * @access protected
-     */
-    protected function buildFromClause()
+    public function __construct(/*# string */ $string)
     {
-        $res = '';
-        if (isset($this->clauses['from'])) {
+        $this->str = (string) $string;
+    }
 
-        }
-        return $res;
+    public function __toString()
+    {
+        return $this->str;
     }
 }

@@ -33,12 +33,12 @@ interface GroupByInterface
      * ->groupBy('year')
      * ```
      *
-     * @param  string $col
+     * @param  string|array $col
      * @param  bool $rawMode
      * @return $this
      * @access public
      */
-    public function groupBy(/*# string */ $col, /*# bool */ $rawMode = false);
+    public function groupBy($col, /*# bool */ $rawMode = false);
 
     /**
      * Generic GROUP BY Raw mode

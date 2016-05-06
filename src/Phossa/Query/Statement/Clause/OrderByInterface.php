@@ -60,30 +60,16 @@ interface OrderByInterface
     public function orderByAsc(/*# string */ $col);
 
     /**
-     * Raw mode ORDER BY DESC
+     * Raw mode ORDER BY
      *
      * ```php
      * // ORDER BY col NULLS LAST DESC
-     * ->orderByDescRaw('col NULLS LAST')
+     * ->orderByRaw('col NULLS LAST DESC')
      * ```
      *
      * @param  string $orderby
      * @return $this
      * @access public
      */
-    public function orderByDescRaw(/*# string */ $orderby);
-
-    /**
-     * Raw mode ORDER BY ASC
-     *
-     * ```php
-     * // ORDER BY col NULLS LAST ASC
-     * ->orderByAscRaw('col NULLS LAST')
-     * ```
-     *
-     * @param  string $orderby
-     * @return $this
-     * @access public
-     */
-    public function orderByAscRaw(/*# string */ $orderby);
+    public function orderByRaw(/*# string */ $orderby);
 }

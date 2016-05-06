@@ -15,7 +15,10 @@
 
 namespace Phossa\Query\Statement\Clause;
 
+use Phossa\Query\Statement\SelectInterface;
+use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Statement\StatementInterface;
+use Phossa\Query\Statement\RawInterface;
 
 /**
  * WhereTrait
@@ -34,44 +37,50 @@ trait WhereTrait
      */
     public function where(
         $col,
-        $operator = self::NO_OPERATOR,
-        $value    = self::NO_VALUE,
+        $operator = WhereInterface::NO_OPERATOR,
+        $value    = WhereInterface::NO_VALUE,
         /*# bool */ $logicAnd = true,
         /*# bool */ $whereNot = false,
-        /*# bool */ $rawMode  = false
+        /*# bool */ $rawMode  = false,
+        /*# string */ $clause = 'where'
     ) {
-        // grouped () where
-        if (is_object($col) && $col instanceof StatementInterface) {
-            $xwhere = $col->getClauses()['where'];
-            $this->clauses['where'][] = [$xwhere];
-
-        // array
-        } elseif (is_array($col)) {
+        // $col is an array
+        if (is_array($col)) {
             foreach ($col as $fld => $val) {
                 $this->where(
-                    $col, $val, self::NO_VALUE, $logicAnd, $whereNot, $rawMode
+                    $fld, $val, self::NO_VALUE, $logicAnd, $whereNot, $rawMode
                 );
             }
 
-        // string
-        } elseif (is_string($col)) {
+        // $col is string or object
+        } else {
+            // grouped where
+            if (is_object($col) && $col instanceof ExpressionInterface) {
+                $operator = null;
+                $value    = null;
 
             // 1 param provided, raw where provided
-            if (WhereInterface::NO_OPERATOR === $operator) {
-                $rawMode = true;
+            } elseif (WhereInterface::NO_OPERATOR === $operator) {
+                $rawMode  = true;
+                $operator = null;
+                $value    = null;
 
             //  2 params provided
             } elseif (WhereInterface::NO_VALUE === $value) {
                 if (is_array($operator)) {
-                    $value = $operator[1];
+                    $value    = $operator[1];
                     $operator = $operator[0];
                 } else {
-                    $value = $operator;
+                    $value    = $operator;
                     $operator = '=';
                 }
+
+            // short version provided
+            } elseif (WhereInterface::SHORT_FORM === $value) {
+                $value = null;
             }
 
-            $this->clauses['where'][] = [
+            $this->clauses[$clause][] = [
                 $rawMode, $whereNot, $logicAnd, $col, $operator, $value
             ];
         }
@@ -106,14 +115,8 @@ trait WhereTrait
      */
     public function whereRaw($where)
     {
-        return $this->where(
-            $where,
-            WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE,
-            true,
-            false,
-            true
-        );
+        return $this->where($where, WhereInterface::NO_OPERATOR,
+            WhereInterface::NO_VALUE, true, false, true);
     }
 
     /**
@@ -121,13 +124,8 @@ trait WhereTrait
      */
     public function orWhereRaw($where)
     {
-        return $this->where(
-            $where,
-            WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE,
-            false,
-            false,
-            true
+        return $this->where($where, WhereInterface::NO_OPERATOR,
+            WhereInterface::NO_VALUE, false, false, true
         );
     }
 
@@ -156,9 +154,10 @@ trait WhereTrait
     /**
      * {@inheritDoc
      */
-    public function whereIn($col, array $value)
+    public function whereIn($col, array $value, $and = true, $not = false)
     {
-        return $this->where($col, 'IN', $value);
+        $in = ($not ? 'NOT IN (' : 'IN (') . join(',', $value) . ')';
+        return $this->where($col, $in, WhereInterface::SHORT_FORM, $and);
     }
 
     /**
@@ -166,7 +165,7 @@ trait WhereTrait
      */
     public function orWhereIn($col, array $value)
     {
-        return $this->where($col, 'IN', $value, false);
+        return $this->whereIn($col, $value, false);
     }
 
     /**
@@ -174,7 +173,7 @@ trait WhereTrait
      */
     public function whereNotIn($col, array $value)
     {
-        return $this->where($col, 'NOT IN', $value);
+        return $this->whereIn($col, $value, true, true);
     }
 
     /**
@@ -182,15 +181,16 @@ trait WhereTrait
      */
     public function orWhereNotIn($col, array $value)
     {
-        return $this->where($col, 'NOT IN', $value, false);
+        return $this->whereIn($col, $value, false, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function whereBetween($col, $value1, $value2)
+    public function whereBetween($col, $val1, $val2, $and = true, $not = false)
     {
-        return $this->where($col, 'BETWEEN', [$value1, $value2]);
+        $bet = sprintf('%sBETWEEN %s AND %s', $not ? 'NOT ' : '', $val1, $val2);
+        return $this->where($col, $bet, WhereInterface::SHORT_FORM, $and);
     }
 
     /**
@@ -198,7 +198,7 @@ trait WhereTrait
      */
     public function orWhereBetween($col, $value1, $value2)
     {
-        return $this->where($col, 'BETWEEN', [$value1, $value2], false);
+        return $this->whereBetween($col, $value1, $value2, false);
     }
 
     /**
@@ -206,23 +206,24 @@ trait WhereTrait
      */
     public function whereNotBetween($col, $value1, $value2)
     {
-        return $this->where($col, 'NOT BETWEEN', [$value1, $value2]);
+        return $this->whereBetween($col, $value1, $value2, true, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function orWhereNotBetween($col, $value1, $value2)
+    public function orWhereNotBetween($col, $val1, $val2)
     {
-        return $this->where($col, 'NOT BETWEEN', [$value1, $value2], false);
+        return $this->whereBetween($col, $val1, $val2, false, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function whereNull($col)
+    public function whereNull($col, $and = true, $not = false)
     {
-        return $this->where($col, 'IS', null);
+        return $this->where($col, $not ? 'IS NOT NULL' : 'IS NULL',
+            WhereInterface::SHORT_FORM, $and);
     }
 
     /**
@@ -230,7 +231,7 @@ trait WhereTrait
      */
     public function orWhereNull($col)
     {
-        return $this->where($col, 'IS', null, false);
+        return $this->whereNull($col, false);
     }
 
     /**
@@ -238,7 +239,7 @@ trait WhereTrait
      */
     public function whereNotNull($col)
     {
-        return $this->where($col, 'IS NOT', null);
+        return $this->whereNull($col, true, true);
     }
 
     /**
@@ -246,38 +247,101 @@ trait WhereTrait
      */
     public function orWhereNotNull($col)
     {
-        return $this->where($col, 'IS NOT', null, false);
+        return $this->whereNull($col, false, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function whereExists($col)
-    {
-        return $this->where($col, 'EXISTS');
+    public function whereExists(
+        SelectInterface $sel, $and = true, $not = false
+    ) {
+        $ext = $not ? 'NOT EXISTS' : 'EXISTS';
+        return $this->where(null, $ext, $sel, $and);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function orWhereExists($col)
+    public function orWhereExists(SelectInterface $sel)
     {
-        return $this->where($col, 'EXISTS', null, false);
+        return $this->whereExists($sel, false);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function whereNotExists($col)
+    public function whereNotExists(SelectInterface $sel)
     {
-        return $this->where($col, 'NOT EXISTS');
+        return $this->whereExists($sel, true, true);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function orWhereNotExists($col)
+    public function orWhereNotExists(SelectInterface $sel)
     {
-        return $this->where($col, 'NOT EXISTS', null, false);
+        return $this->whereExists($sel, false, true);
     }
+
+    /**
+     * Build WHERE
+     *
+     * @param  string $clause 'where|having'
+     * @return array
+     * @access protected
+     */
+    protected function buildWhere(/*# string */ $clause = 'where')/*# : array */
+    {
+        $result = [];
+        if (!empty($this->clauses[$clause])) {
+            // $rawMode, $whereNot, $logicAnd, $col, $operator, $value
+            foreach ($this->clauses[$clause] as $idx => $where) {
+                $cls = [];
+
+                // AND OR
+                if ($idx) {
+                    $cls[] = $where[2] ? 'AND' : 'OR';
+                }
+
+                // NOT
+                if ($where[1]) {
+                    $cls[] = 'NOT';
+                }
+
+                // grouped where
+                if (is_object($where[3])) {
+                    $cls[] = $where[3]->getSql([], $this->getDialect(), false);
+
+                } elseif (!is_null($where[3])) {
+                    $cls[] = $where[0] ? $where[3] : $this->quote($where[3]);
+                }
+
+                // operator
+                if (!is_null($where[4])) {
+                    $cls[] = (empty($col) ? '' : ' ') . $where[4];
+                }
+
+                // val part
+                if (is_object($where[5])) {
+                    // subquery (SELECT ...)
+                    if ($where[5] instanceof StatementInterface) {
+                        $cls[] = '(' . $where[5]->getSql([],
+                            $this->getDialect(), false) .')';
+                    } elseif ($where[5] instanceof RawInterface) {
+                        $cls[] = $where[5] . '';
+                    }
+                } elseif (!is_null($where[5])) {
+                    $cls[] = $this->getPlaceholder($where[5]);
+                }
+
+                $result[] = join(' ', $cls);
+            }
+        }
+        return $result;
+    }
+
+    abstract public function getDialect()/*# : DialectInterface */;
+    abstract protected function quote(/*# string */ $str)/*# : string */;
+    abstract protected function getPlaceholder($value)/*# : string */;
 }

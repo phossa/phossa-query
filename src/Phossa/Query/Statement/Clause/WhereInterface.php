@@ -15,7 +15,7 @@
 
 namespace Phossa\Query\Statement\Clause;
 
-use Phossa\Query\Statement\StatementInterface;
+use Phossa\Query\Statement\SelectInterface;
 
 /**
  * WhereInterface
@@ -33,6 +33,7 @@ interface WhereInterface extends ClauseInterface
      *
      * @var    string
      */
+    const SHORT_FORM    = '__SHORT_FORM__';
     const NO_VALUE      = '__NO_SUCH_VALUE__';
     const NO_OPERATOR   = '__NO_SUCH_OPERATOR__';
 
@@ -40,7 +41,7 @@ interface WhereInterface extends ClauseInterface
      * Generic WHERE clause with 'AND' logic
      *
      * ```php
-     * // raw mode, WHERE `age` > 18
+     * // auto raw mode, WHERE `age` > 18
      * ->where('age > 18')
      *
      * // MODE_STRICT: col/value mode, WHERE `age` = 18
@@ -49,20 +50,11 @@ interface WhereInterface extends ClauseInterface
      * // MODE_STRICT: operator mode, WHERE `age` > 18
      * ->where('age', '>', 18)
      *
-     * // MODE_STRICT: operator 'in', WHERE `age` IN (10,11,12)
-     * ->where('age', 'in', [10, 11, 12])
-     *
-     * // MODE_STRICT: operator 'between', WHERE `age` BETWEEN 10 AND 20
-     * ->where('age', 'between', [10, 20])
-     *
-     * // array mode, WHERE `age` = 18 AND `gender` = 'male'
+     * // array mode, WHERE `age` = 18 AND `score` = 100
      * ->where(['age' => 18, 'score' => 100])
      *
      * // associate array mode, WHERE `age` > 18 AND `score` <= 100
      * ->where(['age' => [ '>', 18 ], 'score' => [ '<=', 100 ])
-     *
-     * // subquery mode
-     * ->where('age', 'in', $subquery)
      * ```
      *
      * @param  string|array $col col or cols
@@ -71,6 +63,7 @@ interface WhereInterface extends ClauseInterface
      * @param  bool $logicAnd 'AND'
      * @param  bool $whereNot 'WHERE NOT'
      * @param  bool $rawMode
+     * @param  string $clause 'where' or 'having'
      * @return $this
      * @access public
      */
@@ -80,7 +73,8 @@ interface WhereInterface extends ClauseInterface
         $value    = self::NO_VALUE,
         /*# bool */ $logicAnd = true,
         /*# bool */ $whereNot = false,
-        /*# bool */ $rawMode  = false
+        /*# bool */ $rawMode  = false,
+        /*# string */ $clause = 'where'
     );
 
     /**
@@ -170,13 +164,21 @@ interface WhereInterface extends ClauseInterface
     /**
      * WHERE IN with 'AND' logic
      *
+     * // MODE_STRICT: operator 'in', WHERE `age` IN (10,11,12)
+     * ->whereIn('age', [10, 11, 12])
+     *
+     * // subquery mode
+     * ->whereIn('age', $subquery)
+     *
      * @param  string $col
      * @param  array $value
+     * @param  bool $and logic 'and' or 'or'
+     * @param  bool $not not in
      * @return $this
      * @see    self::where()
      * @access public
      */
-    public function whereIn($col, array $value);
+    public function whereIn($col, array $value, $and = true, $not = false);
 
     /**
      * WHERE IN with 'OR' logic
@@ -214,14 +216,19 @@ interface WhereInterface extends ClauseInterface
     /**
      * WHERE BETWEEN with 'AND' logic
      *
+     * // WHERE `age` BETWEEN 10 AND 20
+     * ->whereBetween('age', 10, 20)
+     *
      * @param  string $col
-     * @param  mixed $value1
-     * @param  mixed $value2
+     * @param  mixed $val1
+     * @param  mixed $val2
+     * @param  bool $and and or
+     * @param  bool not between
      * @return $this
      * @see    self::where()
      * @access public
      */
-    public function whereBetween($col, $value1, $value2);
+    public function whereBetween($col, $val1, $val2, $and = true, $not = false);
 
     /**
      * WHERE BETWEEN with 'OR' logic
@@ -263,11 +270,13 @@ interface WhereInterface extends ClauseInterface
      * WHERE IS NULL with 'AND' logic
      *
      * @param  string $col
+     * @param  bool $and and or
+     * @param  bool $not not null
      * @return $this
      * @see    self::where()
      * @access public
      */
-    public function whereNull($col);
+    public function whereNull($col, $and = true, $not = false);
 
     /**
      * WHERE IS NULL with 'OR' logic
@@ -302,40 +311,44 @@ interface WhereInterface extends ClauseInterface
     /**
      * WHERE EXISTS with 'AND' logic
      *
-     * @param  StatementInterface|callable $col
+     * @param  SelectInterface $sel
+     * @param  bool $and and or
+     * @param  bool $not not exists
      * @return $this
      * @see    self::where()
      * @access public
      */
-    public function whereExists($col);
+    public function whereExists(
+        SelectInterface $sel, $and = true, $not = false
+    );
 
     /**
      * WHERE EXISTS with 'OR' logic
      *
-     * @param  StatementInterface|callable $col
+     * @param  SelectInterface $sel
      * @return $this
      * @see    self::where()
      * @access public
      */
-    public function orWhereExists($col);
+    public function orWhereExists(SelectInterface $sel);
 
     /**
      * WHERE NOT EXISTS with 'AND' logic
      *
-     * @param  StatementInterface|callable $col
+     * @param  SelectInterface $sel
      * @return $this
      * @see    self::where()
      * @access public
      */
-    public function whereNotExists($col);
+    public function whereNotExists(SelectInterface $sel);
 
     /**
      * WHERE NOT EXISTS with 'OR' logic
      *
-     * @param  StatementInterface|callable $col
+     * @param  SelectInterface $sel
      * @return $this
      * @see    self::where()
      * @access public
      */
-    public function orWhereNotExists($col);
+    public function orWhereNotExists(SelectInterface $sel);
 }

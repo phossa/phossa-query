@@ -36,7 +36,7 @@ interface DialectAwareInterface
     public function setDialect(DialectInterface $dialect);
 
     /**
-     * Get the dialect, if not set yet, create and return the default
+     * Get the dialect
      *
      * @return DialectInterface
      * @access public

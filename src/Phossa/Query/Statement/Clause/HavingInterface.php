@@ -34,12 +34,15 @@ interface HavingInterface
      *
      * // HAVING `count` > 10
      * ->having('count', '>', 10)
+     *
+     * // auto raw mode
+     * ->having('count > 10')
      * ```
      *
      * @param  string $col
      * @param  string $operator
      * @param  mixed $value
-     * @param  bool $rawMode
+     * @param  bool $logicAnd 'AND'
      * @return $this
      * @access public
      */
@@ -47,20 +50,39 @@ interface HavingInterface
         /*# string */ $col,
         /*# string */ $operator = WhereInterface::NO_OPERATOR,
         /*# string */ $value = WhereInterface::NO_VALUE,
-        /*# bool */ $rawMode = false
+        /*# bool */ $logicAnd = true
     );
 
     /**
-     * Raw mode HAVING
+     * OR HAVING
      *
-     * ```php
-     * // HAVING count > 10
-     * ->havingRaw('count > 10')
-     * ```
+     * @param  string $col
+     * @param  string $operator
+     * @param  mixed $value
+     * @return $this
+     * @access public
+     */
+    public function orHaving(
+        /*# string */ $col,
+        /*# string */ $operator = WhereInterface::NO_OPERATOR,
+        /*# string */ $value = WhereInterface::NO_VALUE
+    );
+
+    /**
+     * Raw mode Having
      *
      * @param  string $having
      * @return $this
      * @access public
      */
     public function havingRaw(/*# string */ $having);
+
+    /**
+     * Raw mode OR Having
+     *
+     * @param  string $having
+     * @return $this
+     * @access public
+     */
+    public function orHavingRaw(/*# string */ $having);
 }

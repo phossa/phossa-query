@@ -18,6 +18,7 @@ namespace Phossa\Query\Statement;
 use Phossa\Query\SettingsTrait;
 use Phossa\Query\BuilderInterface;
 use Phossa\Query\Dialect\DialectInterface;
+use Phossa\Query\Dialect\DialectAwareTrait;
 
 /**
  * StatementAbstract
@@ -31,15 +32,8 @@ use Phossa\Query\Dialect\DialectInterface;
  */
 abstract class StatementAbstract implements StatementInterface
 {
-    use SettingsTrait;
-
-    /**
-     * builder object
-     *
-     * @var    BuilderInterface
-     * @access protected
-     */
-    protected $builder;
+    use SettingsTrait, DialectAwareTrait, BuilderAwareTrait, PreviousTrait,
+        ParameterTrait, UtilityTrait;
 
     /**
      * clause parts
@@ -50,14 +44,6 @@ abstract class StatementAbstract implements StatementInterface
     protected $clauses = [];
 
     /**
-     * Binding values
-     *
-     * @var    array
-     * @access protected
-     */
-    protected $bindings = [];
-
-    /**
      * Constructor
      *
      * @param  BuilderInterface $builder
@@ -65,7 +51,7 @@ abstract class StatementAbstract implements StatementInterface
      */
     public function __construct(BuilderInterface $builder)
     {
-        $this->builder = $builder;
+        $this->setBuilder($builder);
     }
 
     /**
@@ -73,28 +59,38 @@ abstract class StatementAbstract implements StatementInterface
      */
     public function getSql(
         array $settings = [],
-        DialectInterface $dialect = null
+        DialectInterface $dialect = null,
+        /*# bool */ $replace = true
     )/*# : string */ {
+        // update dialect
+        $this->setDialect($dialect ?: $this->builder->getDialect());
 
         // update settings
-        array_replace(
-            $this->settings,
-            $this->builder->getSettings(),
-            $settings
-        );
+        $this->combineSettings(array_replace(
+            $this->builder->getSettings(), $settings
+        ));
 
-        // set dialect
-        $dialect ?: $this->builder->getDialect();
+        // build previous statement if any
+        $res = [];
+        if ($this->hasPrevious()) {
+            $res[] = $this->getPrevious()->getSql(
+                $this->getSettings(), $this->getDialect(), false
+            );
+        }
 
-        // @todo
-    }
+        // build current statement
+        $res[] = $this->build();
+        $sql   = join($this->getSettings()['seperator'], $res);
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getBindings()/*# : array */
-    {
-        return $this->bindings;
+        // replace those placeholders
+        if ($replace) {
+            $sql = $this->rebindParam(
+                $sql,
+                $this->getSettings()['positionedParam']
+            );
+        }
+
+        return $sql;
     }
 
     /**
@@ -112,4 +108,12 @@ abstract class StatementAbstract implements StatementInterface
     {
         return $this->getSql();
     }
+
+    /**
+     * Build the statement
+     *
+     * @return string
+     * @access protected
+     */
+    abstract protected function build()/*# : string */;
 }

@@ -52,16 +52,42 @@ interface ColInterface extends ClauseInterface
      * ->col(['user_id', 'user_name' => 'n'])
      * ```
      *
-     * @param  string|array $col column specification
+     * @param  mixed $col column specification
      * @param  string $colAlias column alias name
-     * @param  bool $rawMode
      * @return $this
      * @access public
      */
     public function col(
-        $col,
-        /*# string */ $colAlias = '',
-        $rawMode = false
+        $col = '',
+        /*# string */ $colAlias = ''
+    );
+
+    /**
+     * Alias of col()
+     *
+     * @param  mixed $col column specification
+     * @param  string $colAlias column alias name
+     * @return $this
+     * @see    self::col()
+     * @access public
+     */
+    public function select(
+        $col = '',
+        /*# string */ $colAlias = ''
+    );
+
+    /**
+     * Alias of col()
+     *
+     * @param  mixed $col column specification
+     * @param  string $colAlias column alias name
+     * @return $this
+     * @see    self::col()
+     * @access public
+     */
+    public function field(
+        $col = '',
+        /*# string */ $colAlias = ''
     );
 
     /**
@@ -77,4 +103,14 @@ interface ColInterface extends ClauseInterface
      * @access public
      */
     public function colRaw($string, /*# string */ $alias = '');
+
+    /**
+     * Alias of colRaw()
+     *
+     * @param  string $string
+     * @param  string $alias
+     * @return $this
+     * @access public
+     */
+    public function fieldRaw($string, /*# string */ $alias = '');
 }

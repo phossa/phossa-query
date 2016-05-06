@@ -28,22 +28,28 @@ trait FunctionTrait
     /**
      * {@inheritDoc}
      */
-    public function count(
+    public function func(
+        /*# string */ $function,
         /*# string */ $col,
-        /*# string */ $alias = '',
-        /*# string */ $function = 'COUNT(%s)'
+        /*# string */ $alias = ''
     ) {
-        // auto raw mode detection @todo
-        $rawMode = false;
-
+        $rawMode = $this->isRaw($col);
         if ('' === $alias) {
             $this->clauses['col'][] = [$rawMode, $col, $function];
         } else {
-            $this->clauses[(string) $alias] = [$rawMode, $col, $function];
+            $this->clauses['col'][(string) $alias] = [$rawMode, $col, $function];
         }
-        $this->clauses['col'][] = [$rawMode, $col, $function];
-
         return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function count(
+        /*# string */ $col,
+        /*# string */ $alias = ''
+    ) {
+        return $this->func('COUNT(%s)', $col, $alias);
     }
 
     /**
@@ -51,7 +57,7 @@ trait FunctionTrait
      */
     public function min(/*# string */ $col, /*# string */ $alias = '')
     {
-        return $this->count($col, $alias, 'MIN(%s)');
+        return $this->func('MIN(%s)', $col, $alias);
     }
 
     /**
@@ -59,7 +65,7 @@ trait FunctionTrait
      */
     public function max(/*# string */ $col, /*# string */ $alias = '')
     {
-        return $this->count($col, $alias, 'MAX(%s)');
+        return $this->func('MAX(%s)', $col, $alias);
     }
 
     /**
@@ -67,7 +73,7 @@ trait FunctionTrait
      */
     public function avg(/*# string */ $col, /*# string */ $alias = '')
     {
-        return $this->count($col, $alias, 'AVG(%s)');
+        return $this->func('AVG(%s)', $col, $alias);
     }
 
     /**
@@ -75,7 +81,7 @@ trait FunctionTrait
      */
     public function sum(/*# string */ $col, /*# string */ $alias = '')
     {
-        return $this->count($col, $alias, 'SUM(%s)');
+        return $this->func('SUM(%s)', $col, $alias);
     }
 
     /**
@@ -83,6 +89,8 @@ trait FunctionTrait
      */
     public function sumDistinct(/*# string */ $col, /*# string */ $alias = '')
     {
-        return $this->count($col, $alias, 'SUM(DISTINCT %s)');
+        return $this->func('SUM(DISTINCT %s)', $col, $alias);
     }
+
+    abstract protected function isRaw(/*# string */ $string)/*# : bool */;
 }

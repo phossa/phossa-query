@@ -17,7 +17,16 @@ namespace Phossa\Query\Statement;
 
 use Phossa\Query\Statement\Clause\ColTrait;
 use Phossa\Query\Statement\Clause\FromTrait;
+use Phossa\Query\Statement\Clause\JoinTrait;
+use Phossa\Query\Statement\Clause\LimitTrait;
+use Phossa\Query\Statement\Clause\UnionTrait;
 use Phossa\Query\Statement\Clause\WhereTrait;
+use Phossa\Query\Statement\Clause\AliasTrait;
+use Phossa\Query\Statement\Clause\HavingTrait;
+use Phossa\Query\Statement\Clause\GroupByTrait;
+use Phossa\Query\Statement\Clause\OrderByTrait;
+use Phossa\Query\Statement\Clause\FunctionTrait;
+use Phossa\Query\Statement\Clause\BeforeAfterTrait;
 
 /**
  * SelectStatement
@@ -31,5 +40,142 @@ use Phossa\Query\Statement\Clause\WhereTrait;
  */
 class Select extends StatementAbstract implements SelectInterface
 {
-    use FromTrait, ColTrait, WhereTrait;
+    use ColTrait, FromTrait, FunctionTrait, GroupByTrait, HavingTrait,
+        JoinTrait, LimitTrait, OrderByTrait, UnionTrait, WhereTrait,
+        BeforeAfterTrait, AliasTrait;
+
+    /**
+     * clauses ordering
+     *
+     * @var    int
+     * @access protected
+     */
+    const ORDER_DISTINCT    = 10;
+    const ORDER_COLUMN      = 20;
+    const ORDER_FROM        = 30;
+    const ORDER_JOIN        = 40;
+    const ORDER_WHERE       = 50;
+    const ORDER_GROUPBY     = 60;
+    const ORDER_HAVING      = 70;
+    const ORDER_ORDERBY     = 80;
+    const ORDER_LIMIT       = 90;
+    const ORDER_UNION       = 1000;
+
+    /**
+     * order, prefix, join char
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $config = [
+        // distinct
+        self::ORDER_DISTINCT  => [
+            'prefix'    => '',
+            'func'      => 'buildDistinct',
+            'join'      => '',
+            'indent'    => false,
+        ],
+
+        // columns
+        self::ORDER_COLUMN => [
+            'prefix'    => '',
+            'func'      => 'buildCol',
+            'join'      => ',',
+            'indent'    => true, // hornor indent settings
+        ],
+        // from
+        self::ORDER_FROM => [
+            'prefix'    => 'FROM',
+            'func'      => 'buildFrom',
+            'join'      => ',',
+            'indent'    => false,
+        ],
+        // join
+        self::ORDER_JOIN => [
+            'prefix'    => '',
+            'func'      => 'buildJoin',
+            'join'      => '',
+            'indent'    => true,
+        ],
+        // where
+        self::ORDER_WHERE => [
+            'prefix'    => 'WHERE',
+            'func'      => 'buildWhere',
+            'join'      => '',
+            'indent'    => false,
+        ],
+        // group by
+        self::ORDER_GROUPBY => [
+            'prefix'    => 'GROUP BY',
+            'func'      => 'buildGroupBy',
+            'join'      => ',',
+            'indent'    => false,
+        ],
+        // having
+        self::ORDER_HAVING => [
+            'prefix'    => 'HAVING',
+            'func'      => 'buildHaving',
+            'join'      => '',
+            'indent'    => false,
+        ],
+        // order by
+        self::ORDER_ORDERBY => [
+            'prefix'    => 'ORDER BY',
+            'func'      => 'buildOrderBy',
+            'join'      => ',',
+            'indent'    => false,
+        ],
+        // limit
+        self::ORDER_LIMIT => [
+            'prefix'    => '',
+            'func'      => 'buildLimit',
+            'join'      => '',
+            'indent'    => false,
+        ],
+        // union
+        self::ORDER_UNION => [
+            'prefix'    => '',
+            'func'      => 'buildUnion',
+            'join'      => '',
+            'indent'    => false,
+        ],
+    ];
+
+    protected function build()/*# : string */
+    {
+        $result = [ 'SELECT' ];
+        $sep = $this->settings['seperator'] . $this->settings['indent'];
+
+        foreach ($this->config as $pos => $part) {
+            // before
+            if (isset($this->before[$pos])) {
+                $result[] = join(
+                    $this->settings['seperator'],
+                    $this->before[$pos]
+                );
+            }
+
+            $built = call_user_func([$this, $part['func']]);
+            if (!empty($built)) {
+                // line prefix
+                $prefix = $part['prefix'] . (
+                    empty($part['prefix']) ?
+                        ($part['indent'] ? $this->settings['indent'] : '') :
+                        $sep
+                );
+                $result[] = $prefix . join($part['join'] . $sep, $built);
+            }
+
+            // after
+            if (isset($this->after[$pos])) {
+                $result[] = join(
+                    $this->settings['seperator'],
+                    $this->after[$pos]
+                );
+            }
+        }
+
+        // join as SELECT
+        return join($this->settings['seperator'], $result);
+    }
 }

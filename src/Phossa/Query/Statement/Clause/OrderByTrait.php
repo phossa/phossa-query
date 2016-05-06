@@ -34,7 +34,9 @@ trait OrderByTrait
         /*# bool */ $rawMode = false,
         /*# sting */ $desc = 'DESC'
     ) {
-        $this->clauses['orderby'][] = [$rawMode, $col, $desc];
+        $this->clauses['orderby'][] = [
+            $rawMode ?: $this->isRaw($col), $col, $desc
+        ];
         return $this;
     }
 
@@ -49,16 +51,29 @@ trait OrderByTrait
     /**
      * {@inheritDoc}
      */
-    public function orderByDescRaw(/*# string */ $orderby)
+    public function orderByRaw(/*# string */ $orderby)
     {
-        return $this->orderByDesc($orderby, true, 'DESC');
+        return $this->orderByDesc($orderby, true);
     }
 
     /**
-     * {@inheritDoc}
+     * Build ORDER BY
+     *
+     * @return array
+     * @access protected
      */
-    public function orderByAscRaw(/*# string */ $orderby)
+    protected function buildOrderBy()/*# : array */
     {
-        return $this->orderByDesc($orderby, true, 'ASC');
+        $result = [];
+        if (isset($this->clauses['orderby'])) {
+            foreach ($this->clauses['orderby'] as $ord) {
+                $result[] = $ord[0] ? $ord[1] :
+                    ($this->quote($ord[1]) . ' ' . $ord[2]);
+            }
+        }
+        return $result;
     }
+
+    abstract protected function isRaw(/*# string */ $string)/*# : bool */;
+    abstract protected function quote(/*# string */ $str)/*# : string */;
 }

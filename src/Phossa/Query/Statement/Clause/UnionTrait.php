@@ -15,6 +15,7 @@
 
 namespace Phossa\Query\Statement\Clause;
 
+use Phossa\Query\Statement\Select;
 use Phossa\Query\Statement\SelectInterface;
 
 /**
@@ -23,6 +24,7 @@ use Phossa\Query\Statement\SelectInterface;
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     UnionInterface
+ * @see     SelectInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
@@ -31,19 +33,37 @@ trait UnionTrait
     /**
      * {@inheritDoc}
      */
-    public function union(
-        SelectInterface $select,
-        /*# bool */ $unionAll = false
-    ) {
-        $this->clauses['union'] = [$unionAll, $select];
-        return $this;
+    public function union()/*# : SelectInterace */
+    {
+        $this->clauses['union'][] = 'UNION';
+        return (new Select($this->getBuilder()))->setPrevious($this);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function unionAll(SelectInterface $select)
+    public function unionAll()/*# : SelectInterace */
     {
-        return $this->union($select, true);
+        $this->clauses['union'][] = 'UNION ALL';
+        return (new Select($this->getBuilder()))->setPrevious($this);
     }
+
+    /**
+     * Build UNION/UNION ALL
+     *
+     * @return array
+     * @access protected
+     */
+    protected function buildUnion()/*# : array */
+    {
+        $result = [];
+        if (isset($this->clauses['union'])) {
+            foreach ($this->clauses['union'] as $union) {
+                $result[] = $union;
+            }
+        }
+        return $result;
+    }
+
+    abstract public function getBuilder()/*# : BuilderInterface */;
 }

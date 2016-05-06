@@ -33,9 +33,9 @@ class Message extends MessageAbstract
      */
 
     /**
-     * Query "%s" duplicated for method "%s"
+     * Query position "%s" unknown
      */
-    const ROUTE_DUPLICATED      = 1603111803;
+    const SQL_UNKNOWN_POS   = 1605051116;
 
     /**#@-*/
 
@@ -43,6 +43,6 @@ class Message extends MessageAbstract
      * {@inheritdoc}
      */
     protected static $messages = [
-
+        self::SQL_UNKNOWN_POS       => 'Query position "%s" unknown',
     ];
 }

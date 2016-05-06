@@ -15,9 +15,14 @@
 
 namespace Phossa\Query;
 
+use Phossa\Query\Statement\Raw;
+use Phossa\Query\Dialect\Common;
 use Phossa\Query\Statement\Select;
+use Phossa\Query\Statement\Expression;
+use Phossa\Query\Statement\RawInterface;
 use Phossa\Query\Dialect\DialectInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
+use Phossa\Query\Statement\ExpressionInterface;
 
 /**
  * Query Builder
@@ -42,14 +47,6 @@ use Phossa\Query\Dialect\DialectAwareTrait;
 class Builder implements BuilderInterface
 {
     use SettingsTrait, DialectAwareTrait;
-
-    /**
-     * current schema
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $schema;
 
     /**
      * tables
@@ -83,60 +80,33 @@ class Builder implements BuilderInterface
         array $settings = [],
         DialectInterface $dialect = null
     ) {
-        $this->setSettings($settings)
-             ->setDialect($dialect)
+        $this->combineSettings($settings)
+             ->setDialect($dialect ?: new Common())
              ->from($table);
     }
 
     /**
-     * Indicating start a grouped WHERE with '()'
-     *
-     * ```php
-     * $users = new Builder('Users');
-     *
-     * // SELECT *
-     * //     FROM Users
-     * //     WHERE
-     * //         (age < 18 OR gender = 'female') OR
-     * //         (age > 60 OR (age > 55 AND gender = 'female'))
-     * $users->select()
-     * ->where(
-     *     $users->group()->where('age', '<', 18)->orWhere('gender', 'female');
-     * )->orWhere(
-     *     $users->group()->where('age', '>' , 60)->orWhere(
-     *         $users->where('age', '>', 55)->where('gender', 'female')
-     *     );
-     * );
-     * ```
-     *
      * {@inheritDoc}
      */
-    public function group()/*# : SelectInterface */
+    public function expr()/*# : ExpressionInterface */
     {
-        return new Select($this);
+        return new Expression($this);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function with(/*# string */ $schema)
+    public function raw(/*# string */ $string)/*# : RawInterface */
     {
-        if (null !== $this->schema) {
-            $clone = clone $this;
-        } else {
-            $clone = $this;
-        }
-        $clone->schema = $schema;
-
-        return $clone;
+        return new Raw($string);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getSchema()
+    public function param(/*# string */ $template)/*# : RawInterface */
     {
-        return $this->schema;
+        return new Raw($template);
     }
 
     /**
@@ -196,7 +166,7 @@ class Builder implements BuilderInterface
         $select = new Select($this);
 
         // set tables
-        if (count($this->tables)) {
+        if (false !== $col && count($this->tables)) {
             $select->from($this->tables);
         }
 
@@ -216,7 +186,6 @@ class Builder implements BuilderInterface
      */
     public function insert(array $values = [])/*# : InsertInterface */
     {
-
     }
 
     /**
@@ -224,7 +193,6 @@ class Builder implements BuilderInterface
      */
     public function update(array $values = [])/*# : UpdateInterface */
     {
-
     }
 
     /**
@@ -232,6 +200,5 @@ class Builder implements BuilderInterface
      */
     public function delete()/*# : DeleteInterface */
     {
-
     }
 }

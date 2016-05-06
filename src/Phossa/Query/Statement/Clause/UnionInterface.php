@@ -30,22 +30,16 @@ interface UnionInterface
     /**
      * Union with another SELECT
      *
-     * @param  SelectInterface $select
-     * @param  bool $unionAll
-     * @return $this;
+     * @return SelectInterface
      * @access public
      */
-    public function union(
-        SelectInterface $select,
-        /*# bool */ $unionAll = false
-    );
+    public function union()/*# : SelectInterace */;
 
     /**
      * Union all with another SELECT
      *
-     * @param  SelectInterface $select
-     * @return $this;
+     * @return SelectInterface
      * @access public
      */
-    public function unionAll(SelectInterface $select);
+    public function unionAll()/*# : SelectInterace */;
 }

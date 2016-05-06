@@ -15,10 +15,12 @@
 
 namespace Phossa\Query;
 
+use Phossa\Query\Statement\RawInterface;
 use Phossa\Query\Statement\SelectInterface;
 use Phossa\Query\Statement\DeleteInterface;
 use Phossa\Query\Statement\InsertInterface;
 use Phossa\Query\Statement\UpdateInterface;
+use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Dialect\DialectAwareInterface;
 use Phossa\Query\Statement\Clause\FromInterface;
 
@@ -39,34 +41,57 @@ use Phossa\Query\Statement\Clause\FromInterface;
 interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface
 {
     /**
-     * Indicating start a group with '()'
+     * Create an expression
      *
-     * @return SelectInterface
+     * ```php
+     * $users = new Builder('Users');
+     *
+     * // SELECT *
+     * //     FROM Users
+     * //     WHERE
+     * //         (age < 18 OR gender = 'female') OR
+     * //         (age > 60 OR (age > 55 AND gender = 'female'))
+     * $users->select()
+     * ->where(
+     *     $users->expr()->where('age', '<', 18)->orWhere('gender', 'female');
+     * )->orWhere(
+     *     $users->expr()->where('age', '>' , 60)->orWhere(
+     *         $users->where('age', '>', 55)->where('gender', 'female')
+     *     );
+     * );
+     * ```
+     *
+     * @return ExpressionInterface
      * @access public
      */
-    public function group()/*# : SelectInterface */;
+    public function expr()/*# : ExpressionInterface */;
 
     /**
-     * Set schema
+     * Pass as raw, do NOT quote
      *
-     * @param  string $schema
-     * @return $this
+     * @param  string $string
+     * @return RawInterface
      * @access public
      */
-    public function with(/*# string */ $schema);
+    public function raw(/*# string */ $string)/*# : RawInterface */;
 
     /**
-     * Get current schema
+     * Pass as positioned parameters
      *
-     * @return string|null
+     * ```php
+     * $builder->select()->col($builder->param('RANGE(?, ?)', 1, 10);
+     * ```
+     *
+     * @param  string $template
+     * @return RawInterface
      * @access public
      */
-    public function getSchema();
+    public function param(/*# string */ $template)/*# : RawInterface */;
 
     /**
      * Build a SELECT statement
      *
-     * Add col[s] to SELECT query
+     * Add col[s] to SELECT query. IF $col is FALSE, clear tables!!
      *
      * ```php
      *     // SELECT DISTINCT
@@ -85,7 +110,7 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      *     ->select(['user_id', 'user_name' => 'n'])
      * ```
      *
-     * @param  string|array $col column specification[s]
+     * @param  string|array|bool $col column specification[s]
      * @param  string $colAlias alias name for $col
      * @return SelectInterface
      * @access public

@@ -26,19 +26,29 @@ namespace Phossa\Query\Statement\Clause;
 interface FunctionInterface
 {
     /**
+     * Function used in column field
+     *
+     * @param  string $function
+     * @param  string $col
+     * @param  string $alias
+     * @return $this
+     * @access public
+     */
+    public function func(
+        /*# string */ $function,
+        /*# string */ $col,
+        /*# string */ $alias = ''
+    );
+
+    /**
      * COUNT()
      *
      * @param  string $col
      * @param  string $alias
-     * @param  string $function
      * @return $this
      * @access public
      */
-    public function count(
-        /*# string */ $col,
-        /*# string */ $alias = '',
-        /*# string */ $function = 'COUNT(%s)'
-    );
+    public function count(/*# string */ $col, /*# string */ $alias = '');
 
     /**
      * MIN()
