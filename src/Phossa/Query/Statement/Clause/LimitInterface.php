@@ -29,7 +29,7 @@ interface LimitInterface
      * Limit return rows, if $count is -1, means to the end
      *
      * @param  int $count
-     * @return $this
+     * @return this
      * @access public
      */
     public function limit(/*# int */ $count, /*# int */ $offset = 0);
@@ -38,7 +38,7 @@ interface LimitInterface
      * Offset
      *
      * @param  int $offset
-     * @return $this
+     * @return this
      * @access public
      */
     public function offset(/*# int */ $offset);
@@ -48,7 +48,7 @@ interface LimitInterface
      *
      * @param  int $pageNumber start from 1
      * @param  int $perPage rows per page
-     * @return $this
+     * @return this
      * @access public
      */
     public function page(/*# int */ $pageNumber, /*# int */ $perPage = 30);

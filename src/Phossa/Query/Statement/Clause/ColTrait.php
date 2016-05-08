@@ -154,7 +154,7 @@ trait ColTrait
                 // col alias
                 $alias = is_int($as) ? '' : (' AS ' . $this->quoteSpace($as));
 
-                // $col[0]: rawMode
+                // rawMode
                 $field = $col[0] ? $col[1] : $this->quote($col[1]);
 
                 // function ?

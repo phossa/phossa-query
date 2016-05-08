@@ -30,7 +30,7 @@ interface ColInterface extends ClauseInterface
     /**
      * Set DISTINCT
      *
-     * @return $this
+     * @return this
      * @access public
      */
     public function distinct();
@@ -54,7 +54,7 @@ interface ColInterface extends ClauseInterface
      *
      * @param  mixed $col column specification
      * @param  string $colAlias column alias name
-     * @return $this
+     * @return this
      * @access public
      */
     public function col(
@@ -67,7 +67,7 @@ interface ColInterface extends ClauseInterface
      *
      * @param  mixed $col column specification
      * @param  string $colAlias column alias name
-     * @return $this
+     * @return this
      * @see    self::col()
      * @access public
      */
@@ -81,7 +81,7 @@ interface ColInterface extends ClauseInterface
      *
      * @param  mixed $col column specification
      * @param  string $colAlias column alias name
-     * @return $this
+     * @return this
      * @see    self::col()
      * @access public
      */
@@ -99,7 +99,7 @@ interface ColInterface extends ClauseInterface
      *
      * @param  string $string
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function colRaw($string, /*# string */ $alias = '');
@@ -109,7 +109,7 @@ interface ColInterface extends ClauseInterface
      *
      * @param  string $string
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function fieldRaw($string, /*# string */ $alias = '');

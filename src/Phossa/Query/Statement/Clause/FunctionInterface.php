@@ -31,7 +31,7 @@ interface FunctionInterface
      * @param  string $function
      * @param  string $col
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function func(
@@ -45,7 +45,7 @@ interface FunctionInterface
      *
      * @param  string $col
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function count(/*# string */ $col, /*# string */ $alias = '');
@@ -55,7 +55,7 @@ interface FunctionInterface
      *
      * @param  string $col
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function min(/*# string */ $col, /*# string */ $alias = '');
@@ -65,7 +65,7 @@ interface FunctionInterface
      *
      * @param  string $col
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function max(/*# string */ $col, /*# string */ $alias = '');
@@ -75,7 +75,7 @@ interface FunctionInterface
      *
      * @param  string $col
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function avg(/*# string */ $col, /*# string */ $alias = '');
@@ -85,7 +85,7 @@ interface FunctionInterface
      *
      * @param  string $col
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function sum(/*# string */ $col, /*# string */ $alias = '');
@@ -95,7 +95,7 @@ interface FunctionInterface
      *
      * @param  string $col
      * @param  string $alias
-     * @return $this
+     * @return this
      * @access public
      */
     public function sumDistinct(/*# string */ $col, /*# string */ $alias = '');

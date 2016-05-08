@@ -120,7 +120,7 @@ trait FromTrait
     /**
      * Split "users u" into "users" and alias "u"
      *
-     * @param  string $table
+     * @param  string $string
      * @return array
      * @access protected
      */

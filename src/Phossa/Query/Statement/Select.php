@@ -40,9 +40,9 @@ use Phossa\Query\Statement\Clause\BeforeAfterTrait;
  */
 class Select extends StatementAbstract implements SelectInterface
 {
-    use ColTrait, FromTrait, FunctionTrait, GroupByTrait, HavingTrait,
-        JoinTrait, LimitTrait, OrderByTrait, UnionTrait, WhereTrait,
-        BeforeAfterTrait, AliasTrait;
+    use FromTrait, FunctionTrait, GroupByTrait, HavingTrait, JoinTrait,
+        LimitTrait, OrderByTrait, UnionTrait, WhereTrait, BeforeAfterTrait,
+        AliasTrait;
 
     /**
      * clauses ordering

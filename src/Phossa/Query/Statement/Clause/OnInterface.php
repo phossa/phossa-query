@@ -32,7 +32,7 @@ interface OnInterface
      * @param  string $operator
      * @param  string $secondTableCol
      * @param  bool $or
-     * @return $this
+     * @return this
      * @access public
      */
     public function on(
@@ -48,7 +48,7 @@ interface OnInterface
      * @param  string $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function orOn(
@@ -61,7 +61,7 @@ interface OnInterface
      * Raw mode ON
      *
      * @param  string $on
-     * @return $this
+     * @return this
      * @access public
      */
     public function onRaw(/*# string */ $on);
@@ -70,7 +70,7 @@ interface OnInterface
      * Raw mode OR ON
      *
      * @param  string $on
-     * @return $this
+     * @return this
      * @access public
      */
     public function orOnRaw(/*# string */ $on);

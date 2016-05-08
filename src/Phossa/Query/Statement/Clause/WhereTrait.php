@@ -303,11 +303,10 @@ trait WhereTrait
     {
         $result = [];
         if (!empty($this->clause_{$clause})) {
-            // $rawMode, $whereNot, $logicAnd, $col, $operator, $value
             foreach ($this->clause_{$clause} as $idx => $where) {
                 $cls = [];
 
-                // AND OR
+                // logic
                 if ($idx) {
                     $cls[] = $where[2] ? 'AND' : 'OR';
                 }

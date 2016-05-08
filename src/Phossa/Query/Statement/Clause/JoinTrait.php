@@ -303,7 +303,7 @@ trait JoinTrait
                 $res[] = $this->quote($input[2]);
             }
         } elseif (is_object($input)) {
-            $res[] = $input->getSql([], $this->getDialect(), false);
+            $res = [ $input->getSql([], $this->getDialect(), false) ];
 
         } elseif (is_string($input)) {
             $res = ['ON', $input];

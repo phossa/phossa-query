@@ -25,6 +25,8 @@ namespace Phossa\Query\Statement\Clause;
  */
 trait FunctionTrait
 {
+    use ColTrait;
+
     /**
      * {@inheritDoc}
      */

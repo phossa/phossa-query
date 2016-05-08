@@ -31,7 +31,7 @@ interface BuilderAwareInterface
      * Set the builder
      *
      * @param  BuilderInterface $builder
-     * @return $this;
+     * @return this;
      * @access public
      */
     public function setBuilder(BuilderInterface $builder);

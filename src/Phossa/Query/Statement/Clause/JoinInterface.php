@@ -50,7 +50,7 @@ interface JoinInterface
      * @param  string $operator
      * @param  string $secondTableCol
      * @param  bool $rawMode
-     * @return $this
+     * @return this
      * @access public
      */
     public function realJoin(
@@ -69,7 +69,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function join(
@@ -86,7 +86,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function innerJoin(
@@ -103,7 +103,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function outerJoin(
@@ -120,7 +120,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function leftJoin(
@@ -137,7 +137,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function leftOuterJoin(
@@ -154,7 +154,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function rightJoin(
@@ -171,7 +171,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function rightOuterJoin(
@@ -188,7 +188,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function fullOuterJoin(
@@ -205,7 +205,7 @@ interface JoinInterface
      * @param  string|SelectInterface $firstTableCol
      * @param  string $operator
      * @param  string $secondTableCol
-     * @return $this
+     * @return this
      * @access public
      */
     public function crossJoin(

@@ -35,7 +35,7 @@ interface GroupByInterface
      *
      * @param  string|array $col
      * @param  bool $rawMode
-     * @return $this
+     * @return this
      * @access public
      */
     public function groupBy($col, /*# bool */ $rawMode = false);
@@ -49,7 +49,7 @@ interface GroupByInterface
      * ```
      *
      * @param  string $groupby
-     * @return $this
+     * @return this
      * @access public
      */
     public function groupByRaw(/*# string */ $groupby);

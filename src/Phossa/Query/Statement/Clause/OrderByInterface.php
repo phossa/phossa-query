@@ -36,7 +36,7 @@ interface OrderByInterface
      * @param  string $col
      * @param  bool $rawMode
      * @param  string $desc 'DESC' or 'ASC'
-     * @return $this
+     * @return this
      * @access public
      */
     public function orderByDesc(
@@ -54,7 +54,7 @@ interface OrderByInterface
      * ```
      *
      * @param  string $col
-     * @return $this
+     * @return this
      * @access public
      */
     public function orderByAsc(/*# string */ $col);
@@ -68,7 +68,7 @@ interface OrderByInterface
      * ```
      *
      * @param  string $orderby
-     * @return $this
+     * @return this
      * @access public
      */
     public function orderByRaw(/*# string */ $orderby);

@@ -30,7 +30,7 @@ interface DialectAwareInterface
      * Set the dialect
      *
      * @param  DialectInterface $dialect
-     * @return $this
+     * @return this
      * @access public
      */
     public function setDialect(DialectInterface $dialect);
