@@ -28,7 +28,7 @@ use Phossa\Query\Dialect\DialectAwareInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface StatementInterface extends DialectAwareInterface, SettingsInterface, BuilderAwareInterface, PreviousInterface, ParameterInterface
+interface StatementInterface extends DialectAwareInterface, SettingsInterface, BuilderAwareInterface, ParameterAwareInterface, PreviousInterface
 {
     /**
      * Return the SQL base on settings and the dialect
@@ -44,14 +44,6 @@ interface StatementInterface extends DialectAwareInterface, SettingsInterface, B
         DialectInterface $dialect = null,
         /*# bool */ $replace = true
     )/*# : string */;
-
-    /**
-     * Get the clauses array
-     *
-     * @return array
-     * @access public
-     */
-    public function getClauses()/*# : array */;
 
     /**
      * Get the statement with default settings & dialect

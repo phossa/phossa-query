@@ -30,15 +30,6 @@ interface SettingsInterface
     /**
      * Set settings
      *
-     * ```php
-     * $settings = [
-     *     'autoQuote'      => true,
-     *     'tablePrefix'    => "tbl_",
-     *     'seperator'      => "\n",
-     *     'indent'         => "    ",
-     * ];
-     * ```
-     *
      * @param  array $settings
      * @return $this
      * @access public
@@ -55,7 +46,7 @@ interface SettingsInterface
     public function combineSettings(array $settings);
 
     /**
-     * Get builder settings
+     * Get current settings
      *
      * @return array
      * @access public

@@ -27,15 +27,23 @@ namespace Phossa\Query\Statement\Clause;
 trait LimitTrait
 {
     /**
+     * LIMIT
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_limit = [];
+
+    /**
      * {@inheritDoc}
      */
     public function limit(/*# int */ $count, /*# int */ $offset = 0)
     {
         if ($count || $offset) {
-            if (isset($this->clauses['limit'])) {
-                $this->clauses['limit'][0] = (int) $count;
+            if (!empty($this->clause_limit)) {
+                $this->clause_limit[0] = (int) $count;
             } else {
-                $this->clauses['limit'] = [(int) $count, (int) $offset];
+                $this->clause_limit = [(int) $count, (int) $offset];
             }
         }
         return $this;
@@ -46,10 +54,10 @@ trait LimitTrait
      */
     public function offset(/*# int */ $offset)
     {
-        if (isset($this->clauses['limit'])) {
-            $this->clauses['limit'][1] = (int) $offset;
+        if (!empty($this->clause_limit)) {
+            $this->clause_limit[1] = (int) $offset;
         } else {
-            $this->clauses['limit'] = [ 0, (int) $offset];
+            $this->clause_limit = [ 0, (int) $offset];
         }
         return $this;
     }
@@ -59,7 +67,7 @@ trait LimitTrait
      */
     public function page(/*# int */ $pageNumber, /*# int */ $perPage = 30)
     {
-        $this->clauses['limit'] = [(int) $perPage, ($pageNumber - 1) * $perPage];
+        $this->clause_limit = [(int) $perPage, ($pageNumber - 1) * $perPage];
         return $this;
     }
 
@@ -72,15 +80,15 @@ trait LimitTrait
     protected function buildLimit()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['limit'])) {
+        if (!empty($this->clause_limit)) {
             $res = [];
 
-            if ($this->clauses['limit'][0]) {
-                $res[] = 'LIMIT ' . $this->clauses['limit'][0];
+            if ($this->clause_limit[0]) {
+                $res[] = 'LIMIT ' . $this->clause_limit[0];
             }
 
-            if ($this->clauses['limit'][1]) {
-                $res[] = 'OFFSET ' . $this->clauses['limit'][1];
+            if ($this->clause_limit[1]) {
+                $res[] = 'OFFSET ' . $this->clause_limit[1];
             }
 
             if (!empty($res)) {

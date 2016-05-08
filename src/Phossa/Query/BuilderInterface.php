@@ -35,10 +35,11 @@ use Phossa\Query\Statement\Clause\FromInterface;
  * @see     SettingsInterface
  * @see     DialectAwareInterface
  * @see     FromInterface
+ * @see     ParameterInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface
+interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface, ParameterInterface
 {
     /**
      * Create an expression
@@ -69,24 +70,15 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
     /**
      * Pass as raw, do NOT quote
      *
+     * ```php
+     * $builder->select()->col($builder->raw('RANGE(?, ?)', 1, 10);
+     * ```
+     *
      * @param  string $string
      * @return RawInterface
      * @access public
      */
     public function raw(/*# string */ $string)/*# : RawInterface */;
-
-    /**
-     * Pass as positioned parameters
-     *
-     * ```php
-     * $builder->select()->col($builder->param('RANGE(?, ?)', 1, 10);
-     * ```
-     *
-     * @param  string $template
-     * @return RawInterface
-     * @access public
-     */
-    public function param(/*# string */ $template)/*# : RawInterface */;
 
     /**
      * Build a SELECT statement

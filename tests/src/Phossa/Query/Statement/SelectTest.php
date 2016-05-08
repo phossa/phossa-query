@@ -514,5 +514,25 @@ EOT;
                 ->getSql($this->settings)
         );
     }
+
+    /**
+     * pass parameters
+     *
+     * @covers Phossa\Query\Statement\Select::select()
+     */
+    public function testSelect20()
+    {
+        $str = 'SELECT * FROM "students" WHERE "age" IN RANGE(?, ?)';
+
+        $sel = $this->builder->select()
+                ->from("students")
+                ->where("age", "IN", $this->builder->raw('RANGE(?, ?)', 1, 1.2));
+        $this->assertEquals(
+            preg_replace("/\r\n/","\n", $str),
+            $sel->getSql(['positionedParam' => true])
+        );
+
+        $this->assertEquals([1,1.2], $sel->getBindings());
+    }
 }
 

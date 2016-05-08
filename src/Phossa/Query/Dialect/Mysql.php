@@ -26,4 +26,19 @@ namespace Phossa\Query\Dialect;
  */
 class Mysql extends Common
 {
+    /**
+     * quote prefix
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $quote_prefix = '`';
+
+    /**
+     * quote suffix
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $quote_suffix = '`';
 }

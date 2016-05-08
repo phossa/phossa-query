@@ -13,7 +13,7 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query;
 
 /**
  * ParameterInterface
@@ -28,19 +28,19 @@ namespace Phossa\Query\Statement;
 interface ParameterInterface
 {
     /**
-     * Return binding values
+     * Generate and return a placeholder for the value
+     *
+     * @param  mixed $value
+     * @return string the placeholder
+     * @access public
+     */
+    public function generatePlaceholder($value)/*# : string */;
+
+    /**
+     * Get the placeholder to value mappings
      *
      * @return array
      * @access public
      */
-    public function getBindings()/*# : array */;
-
-    /**
-     * Set default escape function
-     *
-     * @param  callable $function
-     * @return $this
-     * @access public
-     */
-    public function setEscapeFunction(callable $function);
+    public function getPlaceholderMapping()/*# : array */;
 }

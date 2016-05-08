@@ -31,7 +31,7 @@ use Phossa\Query\Dialect\DialectInterface;
 trait UtilityTrait
 {
     /**
-     * If $string contains any char other than '[0-9,a-z,A-Z$_.]', we consider
+     * If $string contains any char other than '[0-9a-zA-Z$_.]', we consider
      * it is a raw string case
      *
      * @param  string|object $string
@@ -49,7 +49,7 @@ trait UtilityTrait
     }
 
     /**
-     * Quote base on settings
+     * Quote SQL identifier base on settings
      *
      * @param  string $string
      * @return string

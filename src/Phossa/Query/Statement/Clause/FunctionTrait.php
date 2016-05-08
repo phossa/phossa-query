@@ -35,9 +35,9 @@ trait FunctionTrait
     ) {
         $rawMode = $this->isRaw($col);
         if ('' === $alias) {
-            $this->clauses['col'][] = [$rawMode, $col, $function];
+            $this->clause_column[] = [$rawMode, $col, $function];
         } else {
-            $this->clauses['col'][(string) $alias] = [$rawMode, $col, $function];
+            $this->clause_column[(string) $alias] = [$rawMode, $col, $function];
         }
         return $this;
     }
@@ -92,5 +92,6 @@ trait FunctionTrait
         return $this->func('SUM(DISTINCT %s)', $col, $alias);
     }
 
+    /* utilities from UtilityTrait */
     abstract protected function isRaw(/*# string */ $string)/*# : bool */;
 }

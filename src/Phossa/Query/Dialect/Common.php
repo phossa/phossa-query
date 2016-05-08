@@ -26,7 +26,6 @@ namespace Phossa\Query\Dialect;
  */
 class Common implements DialectInterface
 {
-
     /**
      * quote prefix
      *

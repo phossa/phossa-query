@@ -46,7 +46,7 @@ use Phossa\Query\Statement\ExpressionInterface;
  */
 class Builder implements BuilderInterface
 {
-    use SettingsTrait, DialectAwareTrait;
+    use SettingsTrait, DialectAwareTrait, ParameterTrait;
 
     /**
      * tables
@@ -98,15 +98,22 @@ class Builder implements BuilderInterface
      */
     public function raw(/*# string */ $string)/*# : RawInterface */
     {
-        return new Raw($string);
-    }
+        // get values from argument list
+        if (func_num_args() > 1) {
+            $values = func_get_args();
+            array_shift($values);
 
-    /**
-     * {@inheritDoc}
-     */
-    public function param(/*# string */ $template)/*# : RawInterface */
-    {
-        return new Raw($template);
+            // replacement
+            $pat = $rep = [];
+            foreach ($values as $val) {
+                $pat[] = '/\?/';
+                $rep[] = $this->generatePlaceholder($val);
+            }
+
+            return new Raw(preg_replace($pat, $rep, $string, 1));
+        } else {
+            return new Raw($string);
+        }
     }
 
     /**

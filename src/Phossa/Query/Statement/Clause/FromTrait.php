@@ -29,6 +29,14 @@ use Phossa\Query\Statement\SelectInterface;
 trait FromTrait
 {
     /**
+     * TABLES
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_table = [];
+
+    /**
      * {@inheritDoc}
      */
     public function from(
@@ -45,9 +53,9 @@ trait FromTrait
             }
         } else {
             if (empty($tableAlias)) {
-                $this->clauses['from'][] = $table;
+                $this->clause_table[] = $table;
             } else {
-                $this->clauses['from'][(string) $tableAlias] = $table;
+                $this->clause_table[(string) $tableAlias] = $table;
             }
         }
         return $this;
@@ -72,21 +80,19 @@ trait FromTrait
     protected function buildFrom()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['from'])) {
-            foreach ($this->clauses['from'] as $as => $tbl) {
-                // table alias
-                $alias = is_int($as) ? '' : (' AS ' . $this->quoteSpace($as));
+        foreach ($this->clause_table as $as => $tbl) {
+            // table alias
+            $alias = is_int($as) ? '' : (' AS ' . $this->quoteSpace($as));
 
-                // subselect
-                if (is_object($tbl) && $tbl instanceof SelectInterface) {
-                    $tbl = '(' . $tbl->getSql([], $this->getDialect(), false) . ')';
+            // subselect
+            if (is_object($tbl) && $tbl instanceof SelectInterface) {
+                $tbl = '(' . $tbl->getSql([], $this->getDialect(), false) . ')';
 
-                // normal table
-                } else {
-                    $tbl = $this->quote($tbl);
-                }
-                $result[] = $tbl . $alias;
+            // normal table
+            } else {
+                $tbl = $this->quote($tbl);
             }
+            $result[] = $tbl . $alias;
         }
         return $result;
     }
@@ -101,13 +107,11 @@ trait FromTrait
     protected function getTableName($returnAlias = false)/*# : string */
     {
         $result = '';
-        if (isset($this->clauses['from'])) {
-            foreach ($this->clauses['from'] as $k => $v) {
-                if (!is_int($k) && $returnAlias) {
-                    return $k;
-                } else {
-                    return $v;
-                }
+        foreach ($this->clause_table as $k => $v) {
+            if (!is_int($k) && $returnAlias) {
+                return $k;
+            } else {
+                return $v;
             }
         }
         return $result;
@@ -125,7 +129,10 @@ trait FromTrait
         return preg_split('/\s+/', $string, 2, PREG_SPLIT_NO_EMPTY);
     }
 
+    /* for subqueries */
     abstract public function getDialect()/*# : DialectInterface */;
+
+    /* utilities from UtilityTrait */
     abstract protected function quote(/*# string */ $str)/*# : string */;
     abstract protected function quoteSpace(/*# string */ $str)/*# : string */;
 }

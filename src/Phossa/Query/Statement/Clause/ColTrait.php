@@ -28,11 +28,27 @@ namespace Phossa\Query\Statement\Clause;
 trait ColTrait
 {
     /**
+     * DISTINCT
+     *
+     * @var    bool
+     * @access protected
+     */
+    protected $clause_distinct = false;
+
+    /**
+     * FIELDS or COLUMNS
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_column   = [];
+
+    /**
      * {@inheritDoc}
      */
     public function distinct()
     {
-        $this->clauses['distinct'] = true;
+        $this->clause_distinct = true;
         return $this;
     }
 
@@ -102,7 +118,7 @@ trait ColTrait
 
             // clear columns
         } else if ('*' === $col) {
-            unset($this->clauses['col']);
+            $this->clause_column = [];
 
             // add columns
         } elseif (!empty($col)) {
@@ -110,9 +126,9 @@ trait ColTrait
             $rawMode = $rawMode ?: $this->isRaw($col);
 
             if ('' === $colAlias) {
-                $this->clauses['col'][] = [$rawMode, $col];
+                $this->clause_column[] = [$rawMode, $col];
             } else {
-                $this->clauses['col'][(string) $colAlias] = [$rawMode, $col];
+                $this->clause_column[(string) $colAlias] = [$rawMode, $col];
             }
         }
         return $this;
@@ -129,12 +145,12 @@ trait ColTrait
         $result = [];
 
         // all cols
-        if (!isset($this->clauses['col']) || empty($this->clauses['col'])) {
+        if (empty($this->clause_column)) {
             $result[] = '*';
 
         // specific cols
         } else {
-            foreach ($this->clauses['col'] as $as => $col) {
+            foreach ($this->clause_column as $as => $col) {
                 // col alias
                 $alias = is_int($as) ? '' : (' AS ' . $this->quoteSpace($as));
 
@@ -160,12 +176,13 @@ trait ColTrait
     protected function buildDistinct()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['distinct'])) {
+        if ($this->clause_distinct) {
             $result[] = 'DISTINCT';
         }
         return $result;
     }
 
+    /* utilities from UtilityTrait */
     abstract protected function isRaw($str)/*# : bool */;
     abstract protected function quote(/*# string */ $str)/*# : string */;
     abstract protected function quoteSpace(/*# string */ $str)/*# : string */;

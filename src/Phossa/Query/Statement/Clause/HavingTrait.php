@@ -27,6 +27,14 @@ namespace Phossa\Query\Statement\Clause;
 trait HavingTrait
 {
     /**
+     * HAVINGs
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_having = [];
+
+    /**
      * {@inheritDoc}
      */
     public function having(

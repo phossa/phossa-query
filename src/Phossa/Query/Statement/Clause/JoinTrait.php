@@ -30,6 +30,14 @@ use Phossa\Query\Statement\ExpressionInterface;
 trait JoinTrait
 {
     /**
+     * JOINs
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_join = [];
+
+    /**
      * {@inheritDoc}
      */
     public function realJoin(
@@ -91,7 +99,7 @@ trait JoinTrait
             }
         }
 
-        $this->clauses['join'][] = [$rawMode, $join, $table, $on, $alias];
+        $this->clause_join[] = [$rawMode, $join, $table, $on, $alias];
 
         return $this;
     }
@@ -229,37 +237,35 @@ trait JoinTrait
     protected function buildJoin()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['join'])) {
-            foreach ($this->clauses['join'] as $join) {
+        foreach ($this->clause_join as $join) {
 
-                // join type, INNER JOIN etc.
-                $res = [ $join[1] ];
+            // join type, INNER JOIN etc.
+            $res = [ $join[1] ];
 
-                // raw mode
-                if ($join[0]) {
-                    $res[] = $join[2];
+            // raw mode
+            if ($join[0]) {
+                $res[] = $join[2];
 
+            } else {
+                // join table
+                $tbl = $join[2];
+                if (is_object($tbl) && $tbl instanceof SelectInterface) {
+                    $res[] = '('. $tbl->getSql([], $this->getDialect(), false) .')';
                 } else {
-                    // join table
-                    $tbl = $join[2];
-                    if (is_object($tbl) && $tbl instanceof SelectInterface) {
-                        $res[] = '('. $tbl->getSql([], $this->getDialect(), false) .')';
-                    } else {
-                        $res[] = $this->quote($tbl);
-                    }
-
-                    // table alias if any
-                    if ($join[4]) {
-                        $tbl = $join[4];
-                        $res[] = 'AS ' . $this->quote($tbl);
-                    }
-
-                    // on clause
-                    $res[] = $this->buildJoinOn($join[3], $tbl);
+                    $res[] = $this->quote($tbl);
                 }
 
-                $result[] = join(' ', $res);
+                // table alias if any
+                if ($join[4]) {
+                    $tbl = $join[4];
+                    $res[] = 'AS ' . $this->quote($tbl);
+                }
+
+                // on clause
+                $res[] = $this->buildJoinOn($join[3], $tbl);
             }
+
+            $result[] = join(' ', $res);
         }
         return $result;
     }
@@ -306,9 +312,14 @@ trait JoinTrait
         return join(' ', $res);
     }
 
+    /* for subqueries */
     abstract public function getDialect()/*# : DialectInterface */;
+
+    /* utilities from UtilityTrait */
     abstract protected function isRaw(/*# string */ $string)/*# : bool */;
     abstract protected function quote(/*# string */ $str)/*# : string */;
+
+    /* utilities from FromTrait */
     abstract protected function getTableName($returnAlias = false)/*# : string */;
     abstract protected function splitAlias(/*# string */ $string)/*# : array */;
 }

@@ -15,10 +15,10 @@
 
 namespace Phossa\Query\Statement\Clause;
 
+use Phossa\Query\Statement\RawInterface;
 use Phossa\Query\Statement\SelectInterface;
 use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Statement\StatementInterface;
-use Phossa\Query\Statement\RawInterface;
 
 /**
  * WhereTrait
@@ -32,6 +32,14 @@ use Phossa\Query\Statement\RawInterface;
  */
 trait WhereTrait
 {
+    /**
+     * WHEREs
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_where = [];
+
     /**
      * {@inheritDoc}
      */
@@ -80,7 +88,7 @@ trait WhereTrait
                 $value = null;
             }
 
-            $this->clauses[$clause][] = [
+            $this->clause_{$clause}[] = [
                 $rawMode, $whereNot, $logicAnd, $col, $operator, $value
             ];
         }
@@ -294,9 +302,9 @@ trait WhereTrait
     protected function buildWhere(/*# string */ $clause = 'where')/*# : array */
     {
         $result = [];
-        if (!empty($this->clauses[$clause])) {
+        if (!empty($this->clause_{$clause})) {
             // $rawMode, $whereNot, $logicAnd, $col, $operator, $value
-            foreach ($this->clauses[$clause] as $idx => $where) {
+            foreach ($this->clause_{$clause} as $idx => $where) {
                 $cls = [];
 
                 // AND OR
@@ -341,7 +349,10 @@ trait WhereTrait
         return $result;
     }
 
+    /* for subqueries */
     abstract public function getDialect()/*# : DialectInterface */;
+
+    /* utilities from UtilityTrait */
     abstract protected function quote(/*# string */ $str)/*# : string */;
     abstract protected function getPlaceholder($value)/*# : string */;
 }

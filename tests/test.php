@@ -13,14 +13,32 @@
  */
 /*# declare(strict_types=1); */
 
-$sql = 'SELECT __1__, __2__ FROM users WHERE user_id = __3__';
-var_dump(preg_replace_callback(
-    '/\b__[0-9]+__\b/',
-    function($m) {
-        var_dump($m);
-        return 'xx';
-    }, $sql)
-);
 
-class A {}
-var_dump(spl_object_hash(new A()));
+
+function param($template) {
+    // get values from argument list
+    $val = func_get_args();
+    array_shift($val);
+
+    // replace
+    $pat = $rep = [];
+    foreach ($val as $v) {
+        $pat[] = '/\?/';
+        $rep[] = generate($v);
+    }
+    var_dump(preg_replace($pat, $rep, $template, 1));
+}
+
+function generate($value)
+{
+    static $count = 0, $params = [];
+
+    $key = '__P_' . ++$count . '__';
+    $params[$key] = $value;
+    var_dump($params);
+
+    return $key;
+}
+
+$str = 'IN (?, ?, ?, ?, ?, ?)';
+param($str, 1,2,3,a,b,c);

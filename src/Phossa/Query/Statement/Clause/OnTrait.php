@@ -29,6 +29,14 @@ use Phossa\Query\Statement\Clause\WhereInterface;
 trait OnTrait
 {
     /**
+     * ONs
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_on = [];
+
+    /**
      * {@inheritDoc}
      */
     public function on(
@@ -44,7 +52,7 @@ trait OnTrait
         } else {
             $on = [$or, $firstTableCol, $operator, $secondTableCol];
         }
-        $this->clauses['on'][] = $on;
+        $this->clause_on[] = $on;
 
         return $this;
     }
@@ -89,17 +97,16 @@ trait OnTrait
     protected function buildOn()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['on'])) {
-            foreach ($this->clauses['on'] as $on) {
-                $res = [ $on[0] ? 'OR ON' : 'ON'];
-                $res[] = $this->quote($on[1]); // first col
-                $res[] = $on[2]; // operator
-                $res[] = $this->quote($on[3]); // second col
-                $result[] = join(' ', $res);
-            }
+        foreach ($this->clause_on as $on) {
+            $res = [ $on[0] ? 'OR ON' : 'ON'];
+            $res[] = $this->quote($on[1]); // first col
+            $res[] = $on[2]; // operator
+            $res[] = $this->quote($on[3]); // second col
+            $result[] = join(' ', $res);
         }
         return $result;
     }
 
+    /* utilities from UtilityTrait */
     abstract protected function quote(/*# string */ $str)/*# : string */;
 }

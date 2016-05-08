@@ -27,6 +27,14 @@ namespace Phossa\Query\Statement\Clause;
 trait OrderByTrait
 {
     /**
+     * ORDER BYs
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_orderby = [];
+
+    /**
      * {@inheritDoc}
      */
     public function orderByDesc(
@@ -34,7 +42,7 @@ trait OrderByTrait
         /*# bool */ $rawMode = false,
         /*# sting */ $desc = 'DESC'
     ) {
-        $this->clauses['orderby'][] = [
+        $this->clause_orderby[] = [
             $rawMode ?: $this->isRaw($col), $col, $desc
         ];
         return $this;
@@ -65,15 +73,14 @@ trait OrderByTrait
     protected function buildOrderBy()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['orderby'])) {
-            foreach ($this->clauses['orderby'] as $ord) {
-                $result[] = $ord[0] ? $ord[1] :
-                    ($this->quote($ord[1]) . ' ' . $ord[2]);
-            }
+        foreach ($this->clause_orderby as $ord) {
+            $result[] = $ord[0] ? $ord[1] :
+                ($this->quote($ord[1]) . ' ' . $ord[2]);
         }
         return $result;
     }
 
+    /* utilities from UtilityTrait */
     abstract protected function isRaw(/*# string */ $string)/*# : bool */;
     abstract protected function quote(/*# string */ $str)/*# : string */;
 }

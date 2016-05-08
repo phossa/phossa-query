@@ -32,16 +32,12 @@ use Phossa\Query\Dialect\DialectAwareTrait;
  */
 abstract class StatementAbstract implements StatementInterface
 {
-    use SettingsTrait, DialectAwareTrait, BuilderAwareTrait, PreviousTrait,
-        ParameterTrait, UtilityTrait;
-
-    /**
-     * clause parts
-     *
-     * @var    array
-     * @access protected
-     */
-    protected $clauses = [];
+    use UtilityTrait,
+        SettingsTrait,
+        PreviousTrait,
+        DialectAwareTrait,
+        BuilderAwareTrait,
+        ParameterAwareTrait;
 
     /**
      * Constructor
@@ -82,23 +78,16 @@ abstract class StatementAbstract implements StatementInterface
         $res[] = $this->build();
         $sql   = join($this->getSettings()['seperator'], $res);
 
-        // replace those placeholders
+        // replace all placeholders
         if ($replace) {
-            $sql = $this->rebindParam(
+            $sql = $this->bindValues(
                 $sql,
-                $this->getSettings()['positionedParam']
+                $this->getSettings()['positionedParam'],
+                $this->getSettings()['escapeFunction']
             );
         }
 
         return $sql;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getClauses()/*# : array */
-    {
-        return $this->clauses;
     }
 
     /**
@@ -110,7 +99,7 @@ abstract class StatementAbstract implements StatementInterface
     }
 
     /**
-     * Build the statement
+     * Real building the statement
      *
      * @return string
      * @access protected

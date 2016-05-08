@@ -44,7 +44,10 @@ trait SettingsTrait
         'seperator'         => ' ',
 
         // subline indention
-        'indent'            => ''
+        'indent'            => '',
+
+        // escape/quote function
+        'escapeFunction'    => null,
     ];
 
     /**

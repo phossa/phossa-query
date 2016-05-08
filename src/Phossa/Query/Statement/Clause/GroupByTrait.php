@@ -27,6 +27,14 @@ namespace Phossa\Query\Statement\Clause;
 trait GroupByTrait
 {
     /**
+     * GROUP BYs
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_groupby = [];
+
+    /**
      * {@inheritDoc}
      */
     public function groupBy($col, /*# bool */ $rawMode = false)
@@ -36,7 +44,7 @@ trait GroupByTrait
                 $this->groupBy($c, $rawMode);
             }
         } else {
-            $this->clauses['groupby'][] = [
+            $this->clause_groupby[] = [
                 $rawMode ?: $this->isRaw($col), $col
             ];
         }
@@ -60,14 +68,13 @@ trait GroupByTrait
     protected function buildGroupBy()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['groupby'])) {
-            foreach ($this->clauses['groupby'] as $grp) {
-                $result[] = $grp[0] ? $grp[1] : $this->quote($grp[1]);
-            }
+        foreach ($this->clause_groupby as $grp) {
+            $result[] = $grp[0] ? $grp[1] : $this->quote($grp[1]);
         }
         return $result;
     }
 
+    /* utilities from UtilityTrait */
     abstract protected function isRaw(/*# string */ $string)/*# : bool */;
     abstract protected function quote(/*# string */ $str)/*# : string */;
 }

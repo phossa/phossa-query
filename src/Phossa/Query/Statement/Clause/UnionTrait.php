@@ -31,11 +31,19 @@ use Phossa\Query\Statement\SelectInterface;
 trait UnionTrait
 {
     /**
+     * UNIONs
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $clause_union = [];
+
+    /**
      * {@inheritDoc}
      */
     public function union()/*# : SelectInterace */
     {
-        $this->clauses['union'][] = 'UNION';
+        $this->clause_union[] = 'UNION';
         return (new Select($this->getBuilder()))->setPrevious($this);
     }
 
@@ -44,7 +52,7 @@ trait UnionTrait
      */
     public function unionAll()/*# : SelectInterace */
     {
-        $this->clauses['union'][] = 'UNION ALL';
+        $this->clause_union[] = 'UNION ALL';
         return (new Select($this->getBuilder()))->setPrevious($this);
     }
 
@@ -57,10 +65,8 @@ trait UnionTrait
     protected function buildUnion()/*# : array */
     {
         $result = [];
-        if (isset($this->clauses['union'])) {
-            foreach ($this->clauses['union'] as $union) {
-                $result[] = $union;
-            }
+        foreach ($this->clause_union as $union) {
+            $result[] = $union;
         }
         return $result;
     }
