@@ -52,7 +52,7 @@ interface FromInterface extends ClauseInterface
      *
      * @param  string|array|SelectInterface $table table specification[s]
      * @param  string $tableAlias alias to be used later in the query
-     * @return this
+     * @return self
      * @access public
      */
     public function from(

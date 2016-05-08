@@ -43,7 +43,7 @@ interface HavingInterface
      * @param  string $operator
      * @param  mixed $value
      * @param  bool $logicAnd 'AND'
-     * @return this
+     * @return self
      * @access public
      */
     public function having(
@@ -59,7 +59,7 @@ interface HavingInterface
      * @param  string $col
      * @param  string $operator
      * @param  mixed $value
-     * @return this
+     * @return self
      * @access public
      */
     public function orHaving(
@@ -72,7 +72,7 @@ interface HavingInterface
      * Raw mode Having
      *
      * @param  string $having
-     * @return this
+     * @return self
      * @access public
      */
     public function havingRaw(/*# string */ $having);
@@ -81,7 +81,7 @@ interface HavingInterface
      * Raw mode OR Having
      *
      * @param  string $having
-     * @return this
+     * @return self
      * @access public
      */
     public function orHavingRaw(/*# string */ $having);

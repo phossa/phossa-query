@@ -31,7 +31,7 @@ interface SettingsInterface
      * Set settings
      *
      * @param  array $settings
-     * @return this
+     * @return self
      * @access public
      */
     public function setSettings(array $settings);
@@ -40,7 +40,7 @@ interface SettingsInterface
      * Combine with settings
      *
      * @param  array $settings
-     * @return this
+     * @return self
      * @access public
      */
     public function combineSettings(array $settings);

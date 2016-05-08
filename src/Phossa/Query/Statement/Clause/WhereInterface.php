@@ -64,7 +64,7 @@ interface WhereInterface extends ClauseInterface
      * @param  bool $whereNot 'WHERE NOT'
      * @param  bool $rawMode
      * @param  string $clause 'where' or 'having'
-     * @return this
+     * @return self
      * @access public
      */
     public function where(
@@ -83,7 +83,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string|array $col col or cols
      * @param  mixed $operator
      * @param  mixed $value
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -99,7 +99,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string|array $col col or cols
      * @param  mixed $operator
      * @param  mixed $value
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -113,7 +113,7 @@ interface WhereInterface extends ClauseInterface
      * Raw mode WHERE with logic 'AND'
      *
      * @param  string $where
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -123,7 +123,7 @@ interface WhereInterface extends ClauseInterface
      * Raw mode WHERE with logic 'OR'
      *
      * @param  string $where
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -135,7 +135,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string|array $col col or cols
      * @param  mixed $operator
      * @param  mixed $value
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -151,7 +151,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string|array $col col or cols
      * @param  mixed $operator
      * @param  mixed $value
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -174,7 +174,7 @@ interface WhereInterface extends ClauseInterface
      * @param  array $value
      * @param  bool $and logic 'and' or 'or'
      * @param  bool $not not in
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -185,7 +185,7 @@ interface WhereInterface extends ClauseInterface
      *
      * @param  string $col
      * @param  array $value
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -196,7 +196,7 @@ interface WhereInterface extends ClauseInterface
      *
      * @param  string $col
      * @param  array $value
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -207,7 +207,7 @@ interface WhereInterface extends ClauseInterface
      *
      * @param  string $col
      * @param  array $value
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -224,7 +224,7 @@ interface WhereInterface extends ClauseInterface
      * @param  mixed $val2
      * @param  bool $and and or
      * @param  bool not between
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -236,7 +236,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string $col
      * @param  mixed $value1
      * @param  mixed $value2
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -248,7 +248,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string $col
      * @param  mixed $value1
      * @param  mixed $value2
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -260,7 +260,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string $col
      * @param  mixed $value1
      * @param  mixed $value2
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -272,7 +272,7 @@ interface WhereInterface extends ClauseInterface
      * @param  string $col
      * @param  bool $and and or
      * @param  bool $not not null
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -282,7 +282,7 @@ interface WhereInterface extends ClauseInterface
      * WHERE IS NULL with 'OR' logic
      *
      * @param  string $col
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -292,7 +292,7 @@ interface WhereInterface extends ClauseInterface
      * WHERE IS NOT NULL with 'AND' logic
      *
      * @param  string $col
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -302,7 +302,7 @@ interface WhereInterface extends ClauseInterface
      * WHERE IS NOT NULL with 'OR' logic
      *
      * @param  string $col
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -314,7 +314,7 @@ interface WhereInterface extends ClauseInterface
      * @param  SelectInterface $sel
      * @param  bool $and and or
      * @param  bool $not not exists
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -326,7 +326,7 @@ interface WhereInterface extends ClauseInterface
      * WHERE EXISTS with 'OR' logic
      *
      * @param  SelectInterface $sel
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -336,7 +336,7 @@ interface WhereInterface extends ClauseInterface
      * WHERE NOT EXISTS with 'AND' logic
      *
      * @param  SelectInterface $sel
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */
@@ -346,7 +346,7 @@ interface WhereInterface extends ClauseInterface
      * WHERE NOT EXISTS with 'OR' logic
      *
      * @param  SelectInterface $sel
-     * @return this
+     * @return self
      * @see    self::where()
      * @access public
      */

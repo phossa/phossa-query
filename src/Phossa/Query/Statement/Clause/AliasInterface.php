@@ -29,7 +29,7 @@ interface AliasInterface
 {
     /**
      * @param  string $alias
-     * @return this
+     * @return self
      * @access public
      */
     public function alias(/*# string */ $alias);

@@ -39,7 +39,7 @@ interface BeforeAfterInterface
      *
      * @param  string $position such as 'where'
      * @param  string $clause the clause to insert
-     * @return this
+     * @return self
      * @throws InvalidArgumentException if position unknown
      * @access public
      */
@@ -58,7 +58,7 @@ interface BeforeAfterInterface
      *
      * @param  string $position such as 'where'
      * @param  string $clause the clause to insert
-     * @return this
+     * @return self
      * @throws InvalidArgumentException if position unknown
      * @access public
      */

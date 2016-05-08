@@ -29,7 +29,7 @@ interface PreviousInterface
      * Set previous statement
      *
      * @param  StatementInterface $previous
-     * @return this
+     * @return self
      * @access public
      */
     public function setPrevious(StatementInterface $previous);

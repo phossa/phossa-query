@@ -15,7 +15,6 @@
 
 namespace Phossa\Query\Statement;
 
-use Phossa\Query\Statement\Clause\ColTrait;
 use Phossa\Query\Statement\Clause\FromTrait;
 use Phossa\Query\Statement\Clause\JoinTrait;
 use Phossa\Query\Statement\Clause\LimitTrait;

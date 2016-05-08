@@ -34,7 +34,7 @@ trait UtilityTrait
      * If $string contains any char other than '[0-9a-zA-Z$_.]', we consider
      * it is a raw string case
      *
-     * @param  string|object $string
+     * @param  string|object $str
      * @return bool
      * @access protected
      */
@@ -51,7 +51,7 @@ trait UtilityTrait
     /**
      * Quote SQL identifier base on settings
      *
-     * @param  string $string
+     * @param  string $str
      * @return string
      * @access protected
      */
@@ -59,7 +59,7 @@ trait UtilityTrait
     {
         return $this->dialect->quote(
             $str,
-            $this->settings['autoQuote'] ?
+            $this->getSettings()['autoQuote'] ?
             DialectInterface::QUOTE_YES :
             DialectInterface::QUOTE_NO
         );
@@ -68,13 +68,13 @@ trait UtilityTrait
     /**
      * If SPACE found ,quote it anyway
      *
-     * @param  string $string
+     * @param  string $str
      * @return string
      * @access protected
      */
     protected function quoteSpace(/*# string */ $str)/*# : string */
     {
-        return $this->dialect->quote(
+        return $this->getDialect()->quote(
             $str,
             DialectInterface::QUOTE_SPACE | (
                 $this->settings['autoQuote'] ?
@@ -83,4 +83,20 @@ trait UtilityTrait
             )
         );
     }
+
+    /**
+     * Get current settings
+     *
+     * @return array
+     * @access public
+     */
+    abstract public function getSettings()/*# : array */;
+
+    /**
+     * Get the dialect
+     *
+     * @return DialectInterface
+     * @access public
+     */
+    abstract public function getDialect()/*# : DialectInterface */;
 }
