@@ -77,7 +77,7 @@ trait BeforeAfterTrait
      */
     protected function getPosition(/*# string */ $position)/*# : int */
     {
-        $c = get_class($this).'::'.'ORDER_' . strtoupper($position);
+        $c = get_class($this) . '::' . 'ORDER_' . strtoupper($position);
         if (!defined($c)) {
             throw new InvalidArgumentException(
                 Message::get(Message::SQL_UNKNOWN_POS, $position),

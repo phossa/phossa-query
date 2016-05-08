@@ -142,7 +142,7 @@ class Select extends StatementAbstract implements SelectInterface
 
     protected function build()/*# : string */
     {
-        $result = [ 'SELECT' ];
+        $result = ['SELECT'];
         $sep = $this->settings['seperator'] . $this->settings['indent'];
 
         foreach ($this->config as $pos => $part) {
@@ -159,8 +159,7 @@ class Select extends StatementAbstract implements SelectInterface
                 // line prefix
                 $prefix = $part['prefix'] . (
                     empty($part['prefix']) ?
-                        ($part['indent'] ? $this->settings['indent'] : '') :
-                        $sep
+                        ($part['indent'] ? $this->settings['indent'] : '') : $sep
                 );
                 $result[] = $prefix . join($part['join'] . $sep, $built);
             }

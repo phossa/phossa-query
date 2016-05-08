@@ -240,7 +240,7 @@ trait JoinTrait
         foreach ($this->clause_join as $join) {
 
             // join type, INNER JOIN etc.
-            $res = [ $join[1] ];
+            $res = [$join[1]];
 
             // raw mode
             if ($join[0]) {
@@ -250,7 +250,7 @@ trait JoinTrait
                 // join table
                 $tbl = $join[2];
                 if (is_object($tbl) && $tbl instanceof SelectInterface) {
-                    $res[] = '('. $tbl->getSql([], $this->getDialect(), false) .')';
+                    $res[] = '(' . $tbl->getSql([], $this->getDialect(), false) . ')';
                 } else {
                     $res[] = $this->quote($tbl);
                 }
@@ -303,7 +303,7 @@ trait JoinTrait
                 $res[] = $this->quote($input[2]);
             }
         } elseif (is_object($input)) {
-            $res = [ $input->getSql([], $this->getDialect(), false) ];
+            $res = [$input->getSql([], $this->getDialect(), false)];
 
         } elseif (is_string($input)) {
             $res = ['ON', $input];

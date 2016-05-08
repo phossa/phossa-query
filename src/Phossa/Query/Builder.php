@@ -144,8 +144,7 @@ class Builder implements BuilderInterface
                 $clone->tables = $table;
             } else {
                 $clone->tables = empty($tableAlias) ?
-                    [ $table ] :
-                    [ $tableAlias => $table ];
+                    [$table] : [$tableAlias => $table];
             }
         }
         return $clone;

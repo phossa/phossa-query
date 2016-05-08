@@ -334,7 +334,7 @@ trait WhereTrait
                     // subquery (SELECT ...)
                     if ($where[5] instanceof StatementInterface) {
                         $cls[] = '(' . $where[5]->getSql([],
-                            $this->getDialect(), false) .')';
+                            $this->getDialect(), false) . ')';
                     } elseif ($where[5] instanceof RawInterface) {
                         $cls[] = $where[5] . '';
                     }
