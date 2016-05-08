@@ -41,7 +41,7 @@ trait ColTrait
      * @var    array
      * @access protected
      */
-    protected $clause_column   = [];
+    protected $clause_column = [];
 
     /**
      * {@inheritDoc}
