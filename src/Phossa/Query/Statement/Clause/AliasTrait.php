@@ -58,7 +58,7 @@ trait AliasTrait
     {
         // auto generate a random one
         if (!$this->hasAlias()) {
-            $this->alias = substr(md5(microtime(true)),0,3);
+            $this->alias = substr(md5(microtime(true)), 0, 3);
         }
         return $this->alias;
     }

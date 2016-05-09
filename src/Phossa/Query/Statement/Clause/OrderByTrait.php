@@ -74,8 +74,7 @@ trait OrderByTrait
     {
         $result = [];
         foreach ($this->clause_orderby as $ord) {
-            $result[] = $ord[0] ? $ord[1] :
-                ($this->quote($ord[1]) . ' ' . $ord[2]);
+            $result[] = $ord[0] ? $ord[1] : ($this->quote($ord[1]) . ' ' . $ord[2]);
         }
         return $result;
     }
