@@ -94,7 +94,7 @@ trait ParameterAwareTrait
     /**
      * Get the database escape callable
      *
-     * @param  callable $escapeFunction defult escape function
+     * @param  null|callable $escapeFunction defult escape function
      * @return callable
      * @access protected
      */

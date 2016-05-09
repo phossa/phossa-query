@@ -57,7 +57,7 @@ trait UtilityTrait
      */
     protected function quote(/*# string */ $str)/*# : string */
     {
-        return $this->dialect->quote(
+        return $this->getDialect()->quote(
             $str,
             $this->getSettings()['autoQuote'] ?
             DialectInterface::QUOTE_YES :
@@ -77,7 +77,7 @@ trait UtilityTrait
         return $this->getDialect()->quote(
             $str,
             DialectInterface::QUOTE_SPACE | (
-                $this->settings['autoQuote'] ?
+                $this->getSettings()['autoQuote'] ?
                 DialectInterface::QUOTE_YES :
                 DialectInterface::QUOTE_NO
             )
