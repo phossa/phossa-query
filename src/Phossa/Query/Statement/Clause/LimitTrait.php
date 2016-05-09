@@ -57,7 +57,7 @@ trait LimitTrait
         if (!empty($this->clause_limit)) {
             $this->clause_limit[1] = (int) $offset;
         } else {
-            $this->clause_limit = [ 0, (int) $offset];
+            $this->clause_limit = [0, (int) $offset];
         }
         return $this;
     }

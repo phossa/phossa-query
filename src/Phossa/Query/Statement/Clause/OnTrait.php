@@ -98,7 +98,7 @@ trait OnTrait
     {
         $result = [];
         foreach ($this->clause_on as $on) {
-            $res = [ $on[0] ? 'OR ON' : 'ON'];
+            $res = [$on[0] ? 'OR ON' : 'ON'];
             $res[] = $this->quote($on[1]); // first col
             $res[] = $on[2]; // operator
             $res[] = $this->quote($on[3]); // second col
