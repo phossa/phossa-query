@@ -17,7 +17,6 @@ namespace Phossa\Query\Statement;
 
 use Phossa\Query\SettingsTrait;
 use Phossa\Query\BuilderInterface;
-use Phossa\Query\Dialect\DialectInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
 
 /**
@@ -40,6 +39,14 @@ abstract class StatementAbstract implements StatementInterface
         ParameterAwareTrait;
 
     /**
+     * Statement type
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $type;
+
+    /**
      * Constructor
      *
      * @param  BuilderInterface $builder
@@ -48,6 +55,7 @@ abstract class StatementAbstract implements StatementInterface
     public function __construct(BuilderInterface $builder)
     {
         $this->setBuilder($builder);
+        $this->setDialect($builder->getDialect());
     }
 
     /**
@@ -55,36 +63,32 @@ abstract class StatementAbstract implements StatementInterface
      */
     public function getSql(
         array $settings = [],
-        DialectInterface $dialect = null,
         /*# bool */ $replace = true
     )/*# : string */ {
-        // update dialect
-        $this->setDialect($dialect ?: $this->builder->getDialect());
+        // merge with builder's & provided settings
+        $this->combineSettings(
+            array_replace($this->getBuilder()->getSettings(), $settings)
+        );
 
-        // update settings
-        $this->combineSettings(array_replace(
-            $this->builder->getSettings(), $settings
-        ));
+        // current settings
+        $currSettings = $this->getSettings();
 
-        // build previous statement if any
+        // build PREVIOUS statement if any (UNION etc)
         $res = [];
         if ($this->hasPrevious()) {
-            $res[] = $this->getPrevious()->getSql(
-                $this->getSettings(), $this->getDialect(), false
-            );
+            $res[] = $this->getPrevious()->getSql($currSettings, false);
         }
 
         // build current statement
         $res[] = $this->build();
-        $sql   = join($this->getSettings()['seperator'], $res);
 
-        // replace all placeholders
+        // raw sql with placeholders
+        $sql = join($currSettings['seperator'], $res);
+
+        // replace placeholders with '?' or values
         if ($replace) {
-            $sql = $this->bindValues(
-                $sql,
-                $this->getSettings()['positionedParam'],
-                $this->getSettings()['escapeFunction']
-            );
+            $sql = $this->bindValues($sql, $currSettings['positionedParam'],
+                $currSettings['escapeFunction']);
         }
 
         return $sql;
@@ -104,5 +108,52 @@ abstract class StatementAbstract implements StatementInterface
      * @return string
      * @access protected
      */
-    abstract protected function build()/*# : string */;
+    protected function build()/*# : string */
+    {
+        // settings
+        $settings = $this->getSettings();
+
+        // configs
+        $configs  = $this->getConfig();
+
+        // start of result array
+        $result = [$this->type];
+
+        // seperator & indent
+        $sp = $settings['seperator'];
+        $in = $settings['indent'];
+        $si = $sp . $in;
+
+        foreach ($configs as $pos => $part) {
+            // before clause
+            if (isset($this->before[$pos])) {
+                $result[] = join($sp, $this->before[$pos]);
+            }
+
+            $built = call_user_func([$this, $part['func']]);
+            if (!empty($built)) {
+                $prefix = $part['prefix'] . (empty($part['prefix']) ?
+                    ($part['indent'] ? $in : '') : $si);
+                $result[] = $prefix . join($part['join'] . $si, $built);
+            }
+
+            // after clause
+            if (isset($this->after[$pos])) {
+                $result[] = join($sp, $this->after[$pos]);
+            }
+        }
+
+        return join($sp, $result);
+    }
+
+    /**
+     * Get config of this type of statement
+     *
+     * @return array
+     * @access protected
+     */
+    protected function getConfig()/*# : array */
+    {
+        return $this->config;
+    }
 }

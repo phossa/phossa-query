@@ -15,6 +15,9 @@
 
 namespace Phossa\Query\Dialect;
 
+use Phossa\Query\BuilderInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
+
 /**
  * DialectInterface
  *
@@ -48,6 +51,15 @@ interface DialectInterface
     const QUOTE_SPACE   = 2;
 
     /**#@-*/
+
+    /**
+     * Select statement
+     *
+     * @param  BuilderInterface $builder
+     * @return SelectInterface
+     * @access public
+     */
+    public function select(BuilderInterface $builder)/*# : SelectInterface */;
 
     /**
      * Quote identifer

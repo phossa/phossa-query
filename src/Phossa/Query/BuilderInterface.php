@@ -16,13 +16,13 @@
 namespace Phossa\Query;
 
 use Phossa\Query\Statement\RawInterface;
-use Phossa\Query\Statement\SelectInterface;
 use Phossa\Query\Statement\DeleteInterface;
 use Phossa\Query\Statement\InsertInterface;
 use Phossa\Query\Statement\UpdateInterface;
 use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Dialect\DialectAwareInterface;
 use Phossa\Query\Statement\Clause\FromInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
 
 /**
  * BuilderInterface

@@ -15,7 +15,7 @@
 
 namespace Phossa\Query\Statement\Clause;
 
-use Phossa\Query\Statement\SelectInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
 
 /**
  * FromInterface

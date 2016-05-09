@@ -42,4 +42,14 @@ interface DialectAwareInterface
      * @access public
      */
     public function getDialect()/*# : DialectInterface */;
+
+    /**
+     * Any dialect related method
+     *
+     * @param  string $method
+     * @param  array $args
+     * @return self
+     * @access public
+     */
+    public function __call($method, array $args);
 }

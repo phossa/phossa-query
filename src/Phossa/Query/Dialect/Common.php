@@ -15,6 +15,10 @@
 
 namespace Phossa\Query\Dialect;
 
+use Phossa\Query\BuilderInterface;
+use Phossa\Query\Dialect\Common\Select;
+use Phossa\Query\Dialect\Common\SelectInterface;
+
 /**
  * Standard Query Language dialect
  *
@@ -41,6 +45,14 @@ class Common implements DialectInterface
      * @access protected
      */
     protected $quote_suffix = '"';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function select(BuilderInterface $builder)/*# : SelectInterface */
+    {
+        return new Select($builder);
+    }
 
     /**
      * {@inheritDoc}

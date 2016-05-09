@@ -15,7 +15,8 @@
 
 namespace Phossa\Query\Statement\Clause;
 
-use Phossa\Query\Statement\SelectInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
+
 /**
  * FromTrait
  *
@@ -86,7 +87,7 @@ trait FromTrait
 
             // subselect
             if (is_object($tbl) && $tbl instanceof SelectInterface) {
-                $tbl = '(' . $tbl->getSql([], $this->getDialect(), false) . ')';
+                $tbl = '(' . $tbl->getSql([], false) . ')';
 
             // normal table
             } else {

@@ -52,11 +52,14 @@ class Expression extends StatementAbstract implements ExpressionInterface
         ],
     ];
 
+    /**
+     * {@inheritDoc}
+     */
     protected function build()/*# : string */
     {
         $result = [];
 
-        foreach ($this->config as $part) {
+        foreach ($this->getConfig() as $part) {
             $built = call_user_func([$this, $part['func']]);
             if (!empty($built)) {
                 $result[] =

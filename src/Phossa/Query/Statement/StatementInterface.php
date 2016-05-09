@@ -16,7 +16,6 @@
 namespace Phossa\Query\Statement;
 
 use Phossa\Query\SettingsInterface;
-use Phossa\Query\Dialect\DialectInterface;
 use Phossa\Query\Dialect\DialectAwareInterface;
 
 /**
@@ -34,14 +33,12 @@ interface StatementInterface extends DialectAwareInterface, SettingsInterface, B
      * Return the SQL base on settings and the dialect
      *
      * @param  array $settings settings
-     * @param  DialectInterface $dialect
      * @param  bool $replace replace placeholders
      * @return string
      * @access public
      */
     public function getSql(
         array $settings = [],
-        DialectInterface $dialect = null,
         /*# bool */ $replace = true
     )/*# : string */;
 

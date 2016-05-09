@@ -15,8 +15,8 @@
 
 namespace Phossa\Query\Statement\Clause;
 
-use Phossa\Query\Statement\SelectInterface;
 use Phossa\Query\Statement\ExpressionInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
 
 /**
  * JoinTrait
@@ -250,7 +250,7 @@ trait JoinTrait
                 // join table
                 $tbl = $join[2];
                 if (is_object($tbl) && $tbl instanceof SelectInterface) {
-                    $res[] = '(' . $tbl->getSql([], $this->getDialect(), false) . ')';
+                    $res[] = '(' . $tbl->getSql([], false) . ')';
                 } else {
                     $res[] = $this->quote($tbl);
                 }
@@ -303,7 +303,7 @@ trait JoinTrait
                 $res[] = $this->quote($input[2]);
             }
         } elseif (is_object($input)) {
-            $res = [$input->getSql([], $this->getDialect(), false)];
+            $res = [$input->getSql([], false)];
 
         } elseif (is_string($input)) {
             $res = ['ON', $input];

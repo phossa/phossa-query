@@ -15,8 +15,8 @@
 
 namespace Phossa\Query\Statement\Clause;
 
-use Phossa\Query\Statement\SelectInterface;
 use Phossa\Query\Statement\ExpressionInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
 
 /**
  * JoinInterface

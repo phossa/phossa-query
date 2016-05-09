@@ -13,20 +13,21 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Dialect\Common;
 
+use Phossa\Query\Statement\StatementInterface;
 use Phossa\Query\Statement\Clause\ColInterface;
 use Phossa\Query\Statement\Clause\FromInterface;
-use Phossa\Query\Statement\Clause\WhereInterface;
-use Phossa\Query\Statement\Clause\FunctionInterface;
-use Phossa\Query\Statement\Clause\GroupByInterface;
-use Phossa\Query\Statement\Clause\HavingInterface;
 use Phossa\Query\Statement\Clause\JoinInterface;
+use Phossa\Query\Statement\Clause\WhereInterface;
 use Phossa\Query\Statement\Clause\LimitInterface;
-use Phossa\Query\Statement\Clause\OrderByInterface;
 use Phossa\Query\Statement\Clause\UnionInterface;
-use Phossa\Query\Statement\Clause\BeforeAfterInterface;
 use Phossa\Query\Statement\Clause\AliasInterface;
+use Phossa\Query\Statement\Clause\HavingInterface;
+use Phossa\Query\Statement\Clause\GroupByInterface;
+use Phossa\Query\Statement\Clause\OrderByInterface;
+use Phossa\Query\Statement\Clause\FunctionInterface;
+use Phossa\Query\Statement\Clause\BeforeAfterInterface;
 
 /**
  * SelectInterface

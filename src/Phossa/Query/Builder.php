@@ -169,7 +169,7 @@ class Builder implements BuilderInterface
     )/*# : SelectInterface */ {
 
         // SELECT statement
-        $select = new Select($this);
+        $select = $this->getDialect()->select($this);
 
         // set tables
         if (false !== $col && count($this->tables)) {
@@ -177,7 +177,7 @@ class Builder implements BuilderInterface
         }
 
         // set columns
-        if (func_num_args() > 0) {
+        if (!empty($col)) {
             $select->col(
                 func_get_arg(0),
                 func_num_args() > 1 ? func_get_arg(1) : ''

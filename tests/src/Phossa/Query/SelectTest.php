@@ -1,5 +1,5 @@
 <?php
-namespace Phossa\Query\Statement;
+namespace Phossa\Query;
 
 use Phossa\Query\Builder;
 

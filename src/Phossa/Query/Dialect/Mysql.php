@@ -15,6 +15,10 @@
 
 namespace Phossa\Query\Dialect;
 
+use Phossa\Query\BuilderInterface;
+use Phossa\Query\Dialect\Mysql\Select;
+use Phossa\Query\Dialect\Mysql\SelectInterface;
+
 /**
  * Mysql dialect
  *
@@ -41,4 +45,12 @@ class Mysql extends Common
      * @access protected
      */
     protected $quote_suffix = '`';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function select(BuilderInterface $builder)/*# : SelectInterface */
+    {
+        return new Select($builder);
+    }
 }

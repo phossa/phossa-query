@@ -13,10 +13,11 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Dialect\Common;
 
 use Phossa\Query\Statement\Clause\FromTrait;
 use Phossa\Query\Statement\Clause\JoinTrait;
+use Phossa\Query\Statement\StatementAbstract;
 use Phossa\Query\Statement\Clause\LimitTrait;
 use Phossa\Query\Statement\Clause\UnionTrait;
 use Phossa\Query\Statement\Clause\WhereTrait;
@@ -28,7 +29,7 @@ use Phossa\Query\Statement\Clause\FunctionTrait;
 use Phossa\Query\Statement\Clause\BeforeAfterTrait;
 
 /**
- * SelectStatement
+ * Select
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
@@ -42,6 +43,14 @@ class Select extends StatementAbstract implements SelectInterface
     use FromTrait, FunctionTrait, GroupByTrait, HavingTrait, JoinTrait,
         LimitTrait, OrderByTrait, UnionTrait, WhereTrait, BeforeAfterTrait,
         AliasTrait;
+
+    /**
+     * Statement type
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $type = 'SELECT';
 
     /**
      * clauses ordering
@@ -139,41 +148,4 @@ class Select extends StatementAbstract implements SelectInterface
             'indent'    => false,
         ],
     ];
-
-    protected function build()/*# : string */
-    {
-        $result = ['SELECT'];
-        $sep = $this->settings['seperator'] . $this->settings['indent'];
-
-        foreach ($this->config as $pos => $part) {
-            // before
-            if (isset($this->before[$pos])) {
-                $result[] = join(
-                    $this->settings['seperator'],
-                    $this->before[$pos]
-                );
-            }
-
-            $built = call_user_func([$this, $part['func']]);
-            if (!empty($built)) {
-                // line prefix
-                $prefix = $part['prefix'] . (
-                    empty($part['prefix']) ?
-                        ($part['indent'] ? $this->settings['indent'] : '') : $sep
-                );
-                $result[] = $prefix . join($part['join'] . $sep, $built);
-            }
-
-            // after
-            if (isset($this->after[$pos])) {
-                $result[] = join(
-                    $this->settings['seperator'],
-                    $this->after[$pos]
-                );
-            }
-        }
-
-        // join as SELECT
-        return join($this->settings['seperator'], $result);
-    }
 }

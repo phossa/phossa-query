@@ -15,8 +15,8 @@
 
 namespace Phossa\Query\Statement\Clause;
 
-use Phossa\Query\Statement\Select;
-use Phossa\Query\Statement\SelectInterface;
+use Phossa\Query\BuilderInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
 
 /**
  * UnionTrait
@@ -44,7 +44,7 @@ trait UnionTrait
     public function union()/*# : SelectInterace */
     {
         $this->clause_union[] = 'UNION';
-        return (new Select($this->getBuilder()))->setPrevious($this);
+        return $this->getBuilder()->select(false)->setPrevious($this);
     }
 
     /**
@@ -53,7 +53,7 @@ trait UnionTrait
     public function unionAll()/*# : SelectInterace */
     {
         $this->clause_union[] = 'UNION ALL';
-        return (new Select($this->getBuilder()))->setPrevious($this);
+        return $this->getBuilder()->select(false)->setPrevious($this);
     }
 
     /**
@@ -71,5 +71,11 @@ trait UnionTrait
         return $result;
     }
 
+    /**
+     * Return the builder
+     *
+     * @return BuilderInterface
+     * @access public
+     */
     abstract public function getBuilder()/*# : BuilderInterface */;
 }

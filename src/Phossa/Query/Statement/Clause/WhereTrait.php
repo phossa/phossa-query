@@ -16,9 +16,9 @@
 namespace Phossa\Query\Statement\Clause;
 
 use Phossa\Query\Statement\RawInterface;
-use Phossa\Query\Statement\SelectInterface;
-use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Statement\StatementInterface;
+use Phossa\Query\Statement\ExpressionInterface;
+use Phossa\Query\Dialect\Common\SelectInterface;
 
 /**
  * WhereTrait
@@ -318,7 +318,7 @@ trait WhereTrait
 
                 // grouped where
                 if (is_object($where[3])) {
-                    $cls[] = $where[3]->getSql([], $this->getDialect(), false);
+                    $cls[] = $where[3]->getSql([], false);
 
                 } elseif (!is_null($where[3])) {
                     $cls[] = $where[0] ? $where[3] : $this->quote($where[3]);
@@ -333,8 +333,7 @@ trait WhereTrait
                 if (is_object($where[5])) {
                     // subquery (SELECT ...)
                     if ($where[5] instanceof StatementInterface) {
-                        $cls[] = '(' . $where[5]->getSql([],
-                            $this->getDialect(), false) . ')';
+                        $cls[] = '(' . $where[5]->getSql([], false) . ')';
                     } elseif ($where[5] instanceof RawInterface) {
                         $cls[] = $where[5] . '';
                     }
@@ -347,9 +346,6 @@ trait WhereTrait
         }
         return $result;
     }
-
-    /* for subqueries */
-    abstract public function getDialect()/*# : DialectInterface */;
 
     /* utilities from UtilityTrait */
     abstract protected function quote(/*# string */ $str)/*# : string */;

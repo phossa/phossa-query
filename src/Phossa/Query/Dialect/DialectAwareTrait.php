@@ -36,6 +36,14 @@ trait DialectAwareTrait
     protected $dialect;
 
     /**
+     * store of dialect related methods and its arguments
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $dialect_methods = [];
+
+    /**
      * {@inheritDoc}
      */
     public function setDialect(DialectInterface $dialect)
@@ -50,5 +58,17 @@ trait DialectAwareTrait
     public function getDialect()/*# : DialectInterface */
     {
         return $this->dialect;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __call($method, array $args)
+    {
+        if (!isset($this->dialect_methods[$method])) {
+            $this->dialect_methods[$method] = [];
+        }
+        $this->dialect_methods[$method][] = $args;
+        return $this;
     }
 }
