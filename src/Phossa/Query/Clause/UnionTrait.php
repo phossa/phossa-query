@@ -15,7 +15,7 @@
 
 namespace Phossa\Query\Clause;
 
-use Phossa\Query\BuilderInterface;
+use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\Common\SelectStatementInterface;
 
 /**

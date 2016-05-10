@@ -26,7 +26,7 @@ namespace Phossa\Query\Clause;
 interface SelectInterface
 {
     /**
-     * Build a SELECT statement
+     * INSERT ... SELECT etc.
      *
      * Add col[s] to SELECT query. IF $col is FALSE, clear tables!!
      *

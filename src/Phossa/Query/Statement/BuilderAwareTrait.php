@@ -15,7 +15,7 @@
 
 namespace Phossa\Query\Statement;
 
-use Phossa\Query\BuilderInterface;
+use Phossa\Query\Builder\BuilderInterface;
 
 /**
  * BuilderAwareTrait

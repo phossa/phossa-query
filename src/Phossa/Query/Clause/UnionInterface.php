@@ -15,7 +15,7 @@
 
 namespace Phossa\Query\Clause;
 
-use Phossa\Query\BuilderInterface;
+use Phossa\Query\Builder\BuilderInterface;
 
 /**
  * UnionInterface

@@ -13,43 +13,34 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query;
+namespace Phossa\Query\Builder;
 
 /**
- * SettingsInterface
+ * ParameterInterface
  *
- * @interface
+ * Dealing with positioned parameters
+ *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Dialect\DialectAwareInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface SettingsInterface
+interface ParameterInterface
 {
     /**
-     * Set settings
+     * Generate and return a placeholder for the value
      *
-     * @param  array $settings
-     * @return self
+     * @param  mixed $value
+     * @return string the placeholder
      * @access public
      */
-    public function setSettings(array $settings);
+    public function generatePlaceholder($value)/*# : string */;
 
     /**
-     * Combine with settings
-     *
-     * @param  array $settings
-     * @return self
-     * @access public
-     */
-    public function combineSettings(array $settings);
-
-    /**
-     * Get current settings
+     * Get the placeholder to value mappings
      *
      * @return array
      * @access public
      */
-    public function getSettings()/*# : array */;
+    public function getPlaceholderMapping()/*# : array */;
 }

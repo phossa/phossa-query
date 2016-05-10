@@ -13,7 +13,7 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query;
+namespace Phossa\Query\Builder;
 
 /**
  * SettingsTrait

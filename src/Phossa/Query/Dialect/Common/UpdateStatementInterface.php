@@ -18,7 +18,7 @@ namespace Phossa\Query\Dialect\Common;
 use Phossa\Query\Statement\StatementInterface;
 
 /**
- * DeleteInterface
+ * UpdateInterface
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
@@ -26,6 +26,6 @@ use Phossa\Query\Statement\StatementInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DeleteInterface extends StatementInterface
+interface UpdateStatementInterface extends StatementInterface
 {
 }

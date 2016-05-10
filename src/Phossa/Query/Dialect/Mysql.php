@@ -15,8 +15,8 @@
 
 namespace Phossa\Query\Dialect;
 
-use Phossa\Query\BuilderInterface;
 use Phossa\Query\Dialect\Mysql\Select;
+use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\Mysql\SelectStatementInterface;
 
 /**

@@ -18,13 +18,18 @@ namespace Phossa\Query;
 use Phossa\Query\Statement\Raw;
 use Phossa\Query\Dialect\Common;
 use Phossa\Query\Statement\Expression;
+use Phossa\Query\Builder\SettingsTrait;
+use Phossa\Query\Builder\ParameterTrait;
 use Phossa\Query\Statement\RawInterface;
+use Phossa\Query\Statement\PreviousTrait;
 use Phossa\Query\Dialect\DialectInterface;
+use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
 use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Dialect\Common\SelectStatementInterface;
 use Phossa\Query\Dialect\Common\InsertStatementInterface;
-use Phossa\Query\Statement\PreviousTrait;
+use Phossa\Query\Dialect\Common\UpdateStatementInterface;
+use Phossa\Query\Dialect\Common\DeleteStatementInterface;
 
 /**
  * Query Builder
@@ -220,14 +225,14 @@ class Builder implements BuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function update(array $values = [])/*# : UpdateInterface */
+    public function update(array $values = [])/*# : UpdateStatementInterface */
     {
     }
 
     /**
      * {@inheritDoc}
      */
-    public function delete()/*# : DeleteInterface */
+    public function delete()/*# : DeleteStatementInterface */
     {
     }
 }

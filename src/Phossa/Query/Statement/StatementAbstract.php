@@ -15,10 +15,10 @@
 
 namespace Phossa\Query\Statement;
 
-use Phossa\Query\SettingsTrait;
-use Phossa\Query\BuilderInterface;
-use Phossa\Query\Dialect\DialectAwareTrait;
+use Phossa\Query\Builder\SettingsTrait;
 use Phossa\Query\Clause\BeforeAfterTrait;
+use Phossa\Query\Builder\BuilderInterface;
+use Phossa\Query\Dialect\DialectAwareTrait;
 
 /**
  * StatementAbstract

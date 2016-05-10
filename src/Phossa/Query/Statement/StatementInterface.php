@@ -15,9 +15,9 @@
 
 namespace Phossa\Query\Statement;
 
-use Phossa\Query\SettingsInterface;
-use Phossa\Query\Dialect\DialectAwareInterface;
+use Phossa\Query\Builder\SettingsInterface;
 use Phossa\Query\Clause\BeforeAfterInterface;
+use Phossa\Query\Dialect\DialectAwareInterface;
 
 /**
  * StatementInterface
