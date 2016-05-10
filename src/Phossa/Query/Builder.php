@@ -17,12 +17,14 @@ namespace Phossa\Query;
 
 use Phossa\Query\Statement\Raw;
 use Phossa\Query\Dialect\Common;
-use Phossa\Query\Statement\Select;
 use Phossa\Query\Statement\Expression;
 use Phossa\Query\Statement\RawInterface;
 use Phossa\Query\Dialect\DialectInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
 use Phossa\Query\Statement\ExpressionInterface;
+use Phossa\Query\Dialect\Common\SelectStatementInterface;
+use Phossa\Query\Dialect\Common\InsertStatementInterface;
+use Phossa\Query\Statement\PreviousTrait;
 
 /**
  * Query Builder
@@ -46,7 +48,7 @@ use Phossa\Query\Statement\ExpressionInterface;
  */
 class Builder implements BuilderInterface
 {
-    use SettingsTrait, DialectAwareTrait, ParameterTrait;
+    use SettingsTrait, DialectAwareTrait, ParameterTrait, PreviousTrait;
 
     /**
      * tables
@@ -166,14 +168,21 @@ class Builder implements BuilderInterface
     public function select(
         $col = '',
         /*# string */ $colAlias = ''
-    )/*# : SelectInterface */ {
+    )/*# : SelectStatementInterface */ {
 
         // SELECT statement
         $select = $this->getDialect()->select($this);
 
-        // set tables
-        if (false !== $col && count($this->tables)) {
-            $select->from($this->tables);
+        // prevous statement ?
+        if ($this->hasPrevious()) {
+            $select->setPrevious($this->getPrevious());
+            $this->setPrevious(null);
+
+        } else {
+            // inherit tables
+            if (false !== $col && count($this->tables)) {
+                $select->from($this->tables);
+            }
         }
 
         // set columns
@@ -190,8 +199,22 @@ class Builder implements BuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function insert(array $values = [])/*# : InsertInterface */
+    public function insert(array $values = [])/*# : InsertStatementInterface */
     {
+        // INSERT statement
+        $insert = $this->getDialect()->insert($this);
+
+        // set table
+        if (count($this->tables)) {
+            $insert->into($this->tables[array_keys($this->tables)]);
+        }
+
+        // set cols
+        if (!empty($values)) {
+            $insert->set($values);
+        }
+
+        return $insert;
     }
 
     /**

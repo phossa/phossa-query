@@ -15,14 +15,15 @@
 
 namespace Phossa\Query;
 
+use Phossa\Query\Clause\FromInterface;
+use Phossa\Query\Clause\SelectInterface;
 use Phossa\Query\Statement\RawInterface;
 use Phossa\Query\Statement\DeleteInterface;
-use Phossa\Query\Statement\InsertInterface;
 use Phossa\Query\Statement\UpdateInterface;
+use Phossa\Query\Statement\PreviousInterface;
 use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Dialect\DialectAwareInterface;
-use Phossa\Query\Statement\Clause\FromInterface;
-use Phossa\Query\Dialect\Common\SelectInterface;
+use Phossa\Query\Dialect\Common\InsertStatementInterface;
 
 /**
  * BuilderInterface
@@ -39,7 +40,7 @@ use Phossa\Query\Dialect\Common\SelectInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface, ParameterInterface
+interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface, ParameterInterface, PreviousInterface, SelectInterface
 {
     /**
      * Create an expression
@@ -81,45 +82,13 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
     public function raw(/*# string */ $string)/*# : RawInterface */;
 
     /**
-     * Build a SELECT statement
-     *
-     * Add col[s] to SELECT query. IF $col is FALSE, clear tables!!
-     *
-     * ```php
-     *     // SELECT DISTINCT
-     *     ->select()->distinct()
-     *
-     *     // SELECT `user_name`
-     *     ->select('user_name')
-     *
-     *     // SELECT `user_name` AS `n`
-     *     ->select('user_name', 'n')
-     *
-     *     // SELECT `user_id`, `user_name`
-     *     ->select(['user_id', 'user_name'])
-     *
-     *     // SELECT `user_id`, `user_name` AS `n`
-     *     ->select(['user_id', 'user_name' => 'n'])
-     * ```
-     *
-     * @param  string|array|bool $col column specification[s]
-     * @param  string $colAlias alias name for $col
-     * @return SelectInterface
-     * @access public
-     */
-    public function select(
-        $col = '',
-        /*# string */ $colAlias = ''
-    )/*# : SelectInterface */;
-
-    /**
      * Build an INSERT statement
      *
      * @param  array $values
-     * @return InsertInterface
+     * @return InsertStatementInterface
      * @access public
      */
-    public function insert(array $values = [])/*# : InsertInterface */;
+    public function insert(array $values = [])/*# : InsertStatementInterface */;
 
     /**
      * Build an UPDATE statement

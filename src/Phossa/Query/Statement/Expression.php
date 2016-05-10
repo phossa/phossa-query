@@ -15,8 +15,8 @@
 
 namespace Phossa\Query\Statement;
 
-use Phossa\Query\Statement\Clause\OnTrait;
-use Phossa\Query\Statement\Clause\WhereTrait;
+use Phossa\Query\Clause\OnTrait;
+use Phossa\Query\Clause\WhereTrait;
 
 /**
  * Statement part for WHERE/ON etc.

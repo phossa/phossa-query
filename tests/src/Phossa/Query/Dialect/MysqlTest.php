@@ -49,7 +49,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     /**
      * multiple columns
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Mysql::select()
      */
     public function testSelect01()
     {
@@ -73,6 +73,33 @@ EOT;
                 ->col("GROUP_CONCAT(DISTINCT test_score ORDER BY test_score DESC SEPARATOR ' ')")
                 ->from("students")
                 ->groupBy("name")
+                ->getSql()
+        );
+    }
+
+    /**
+     * flags & for update
+     *
+     * @covers Phossa\Query\Dialect\Mysql::select()
+     */
+    public function testSelect02()
+    {
+        $str = <<<EOT
+SELECT
+    /*! HIGH_PRIORITY SQL_CACHE */
+    `name`
+FROM
+    `students`
+FOR UPDATE
+EOT;
+        $this->assertEquals(
+            preg_replace("/\r\n/","\n", $str),
+            $this->builder->select()
+                ->col("name")
+                ->from("students")
+                ->addFlag('HIGH_PRIORITY')
+                ->addFlag('sql_cache')
+                ->forUpdate()
                 ->getSql()
         );
     }

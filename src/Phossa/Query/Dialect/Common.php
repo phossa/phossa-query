@@ -17,7 +17,9 @@ namespace Phossa\Query\Dialect;
 
 use Phossa\Query\BuilderInterface;
 use Phossa\Query\Dialect\Common\Select;
-use Phossa\Query\Dialect\Common\SelectInterface;
+use Phossa\Query\Dialect\Common\Insert;
+use Phossa\Query\Dialect\Common\SelectStatementInterface;
+use Phossa\Query\Dialect\Common\InsertStatementInterface;
 
 /**
  * Standard Query Language dialect
@@ -49,9 +51,17 @@ class Common implements DialectInterface
     /**
      * {@inheritDoc}
      */
-    public function select(BuilderInterface $builder)/*# : SelectInterface */
+    public function select(BuilderInterface $builder)/*# : SelectStatementInterface */
     {
         return new Select($builder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function insert(BuilderInterface $builder)/*# : InsertStatementInterface */
+    {
+        return new Insert($builder);
     }
 
     /**

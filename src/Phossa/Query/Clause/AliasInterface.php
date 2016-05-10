@@ -13,33 +13,40 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Clause;
 
 /**
- * DialectAwareInterface
+ * AliasInterface
  *
- * @interface
+ * Indicating AS for a subquery etc.
+ *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DialectAwareInterface
+interface AliasInterface
 {
     /**
-     * Set the dialect
-     *
-     * @param  DialectInterface $dialect
+     * @param  string $alias
      * @return self
      * @access public
      */
-    public function setDialect(DialectInterface $dialect);
+    public function alias(/*# string */ $alias);
 
     /**
-     * Get the dialect
+     * has alias or not
      *
-     * @return DialectInterface
+     * @return bool
      * @access public
      */
-    public function getDialect()/*# : DialectInterface */;
+    public function hasAlias()/*#: bool */;
+
+    /**
+     * get alias
+     *
+     * @return string
+     * @access public
+     */
+    public function getAlias()/*#: string */;
 }

@@ -16,7 +16,8 @@
 namespace Phossa\Query\Dialect;
 
 use Phossa\Query\BuilderInterface;
-use Phossa\Query\Dialect\Common\SelectInterface;
+use Phossa\Query\Dialect\Common\SelectStatementInterface;
+use Phossa\Query\Dialect\Common\InsertStatementInterface;
 
 /**
  * DialectInterface
@@ -53,13 +54,22 @@ interface DialectInterface
     /**#@-*/
 
     /**
-     * Select statement
+     * SELECT statement
      *
      * @param  BuilderInterface $builder
-     * @return SelectInterface
+     * @return SelectStatementInterface
      * @access public
      */
-    public function select(BuilderInterface $builder)/*# : SelectInterface */;
+    public function select(BuilderInterface $builder)/*# : SelectStatementInterface */;
+
+    /**
+     * INSERT statement
+     *
+     * @param  BuilderInterface $builder
+     * @return InsertStatementInterface
+     * @access public
+     */
+    public function insert(BuilderInterface $builder)/*# : InsertStatementInterface */;
 
     /**
      * Quote identifer

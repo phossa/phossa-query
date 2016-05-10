@@ -49,7 +49,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase
     /**
      * multiple columns
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect01()
     {
@@ -80,7 +80,7 @@ EOT;
     /**
      * try "  " as indent
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect02()
     {
@@ -103,7 +103,7 @@ EOT;
     /**
      * multiple tables
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect03()
     {
@@ -128,7 +128,7 @@ EOT;
     /**
      * subquery as table
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect04()
     {
@@ -150,7 +150,7 @@ EOT;
     /**
      * table prefix for column, field() is alias of col()
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect05()
     {
@@ -174,7 +174,7 @@ EOT;
     /**
      * functions in column
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect06()
     {
@@ -200,7 +200,7 @@ EOT;
     /**
      * subquery in column
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect07()
     {
@@ -222,7 +222,7 @@ EOT;
     /**
      * select distinct
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect08()
     {
@@ -246,7 +246,7 @@ EOT;
     /**
      * joins
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect09()
     {
@@ -263,7 +263,7 @@ EOT;
     /**
      * join with conditions
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect10()
     {
@@ -289,7 +289,7 @@ EOT;
     /**
      * join with subquery
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect11()
     {
@@ -312,7 +312,7 @@ EOT;
     /**
      * filter with WHERE
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect12()
     {
@@ -330,7 +330,7 @@ EOT;
     /**
      * subquery in WHERE
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect13()
     {
@@ -355,7 +355,7 @@ EOT;
     /**
      * multiple WHEREs
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect14()
     {
@@ -382,7 +382,7 @@ EOT;
     /**
      * expressions in WHERE
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect15()
     {
@@ -411,7 +411,7 @@ EOT;
     /**
      * order by
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect16()
     {
@@ -438,7 +438,7 @@ EOT;
     /**
      * group by
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect17()
     {
@@ -465,7 +465,7 @@ EOT;
     /**
      * having
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect18()
     {
@@ -493,7 +493,7 @@ EOT;
     /**
      * pass as raw
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect19()
     {
@@ -518,7 +518,7 @@ EOT;
     /**
      * pass parameters
      *
-     * @covers Phossa\Query\Statement\Select::select()
+     * @covers Phossa\Query\Dialect\Common::select()
      */
     public function testSelect20()
     {

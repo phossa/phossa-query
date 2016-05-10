@@ -13,42 +13,53 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Clause;
 
 /**
- * DialectAwareTrait
+ * AliasTrait
  *
- * @trait
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     DialectAwareInterface
+ * @see     AliasInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-trait DialectAwareTrait
+trait AliasTrait
 {
     /**
-     * dialect
+     * subquery alias
      *
-     * @var    DialectInterface
+     * @var    string
      * @access protected
      */
-    protected $dialect;
+    protected $alias;
 
     /**
      * {@inheritDoc}
      */
-    public function setDialect(DialectInterface $dialect)
+    public function alias(/*# string */ $alias)
     {
-        $this->dialect = $dialect;
+        $this->alias = $alias;
         return $this;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getDialect()/*# : DialectInterface */
+    public function hasAlias()/*#: bool */
     {
-        return $this->dialect;
+        return null !== $this->alias;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAlias()/*#: string */
+    {
+        // auto generate a random one
+        if (!$this->hasAlias()) {
+            $this->alias = substr(md5(microtime(true)),0,3);
+        }
+        return $this->alias;
     }
 }

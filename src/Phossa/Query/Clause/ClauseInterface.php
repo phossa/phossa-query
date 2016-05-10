@@ -13,20 +13,16 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
-
-use Phossa\Query\Clause\OnInterface;
-use Phossa\Query\Clause\WhereInterface;
+namespace Phossa\Query\Clause;
 
 /**
- * ExpressionInterface
+ * ClauseInterface
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface ExpressionInterface extends StatementInterface, WhereInterface, OnInterface
+interface ClauseInterface
 {
 }

@@ -15,18 +15,17 @@
 
 namespace Phossa\Query\Dialect\Common;
 
-use Phossa\Query\Statement\Clause\FromTrait;
-use Phossa\Query\Statement\Clause\JoinTrait;
+use Phossa\Query\Clause\FromTrait;
+use Phossa\Query\Clause\JoinTrait;
+use Phossa\Query\Clause\LimitTrait;
+use Phossa\Query\Clause\UnionTrait;
+use Phossa\Query\Clause\WhereTrait;
+use Phossa\Query\Clause\AliasTrait;
+use Phossa\Query\Clause\HavingTrait;
+use Phossa\Query\Clause\GroupByTrait;
+use Phossa\Query\Clause\OrderByTrait;
+use Phossa\Query\Clause\FunctionTrait;
 use Phossa\Query\Statement\StatementAbstract;
-use Phossa\Query\Statement\Clause\LimitTrait;
-use Phossa\Query\Statement\Clause\UnionTrait;
-use Phossa\Query\Statement\Clause\WhereTrait;
-use Phossa\Query\Statement\Clause\AliasTrait;
-use Phossa\Query\Statement\Clause\HavingTrait;
-use Phossa\Query\Statement\Clause\GroupByTrait;
-use Phossa\Query\Statement\Clause\OrderByTrait;
-use Phossa\Query\Statement\Clause\FunctionTrait;
-use Phossa\Query\Statement\Clause\BeforeAfterTrait;
 
 /**
  * Select
@@ -34,15 +33,14 @@ use Phossa\Query\Statement\Clause\BeforeAfterTrait;
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     StatementAbstract
- * @see     SelectInterface
+ * @see     SelectStatementInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Select extends StatementAbstract implements SelectInterface
+class Select extends StatementAbstract implements SelectStatementInterface
 {
     use FromTrait, FunctionTrait, GroupByTrait, HavingTrait, JoinTrait,
-        LimitTrait, OrderByTrait, UnionTrait, WhereTrait, BeforeAfterTrait,
-        AliasTrait;
+        LimitTrait, OrderByTrait, UnionTrait, WhereTrait, AliasTrait;
 
     /**
      * Statement type

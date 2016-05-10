@@ -17,7 +17,7 @@ namespace Phossa\Query\Dialect;
 
 use Phossa\Query\BuilderInterface;
 use Phossa\Query\Dialect\Mysql\Select;
-use Phossa\Query\Dialect\Mysql\SelectInterface;
+use Phossa\Query\Dialect\Mysql\SelectStatementInterface;
 
 /**
  * Mysql dialect
@@ -49,7 +49,7 @@ class Mysql extends Common
     /**
      * {@inheritDoc}
      */
-    public function select(BuilderInterface $builder)/*# : SelectInterface */
+    public function select(BuilderInterface $builder)/*# : SelectStatementInterface */
     {
         return new Select($builder);
     }

@@ -13,20 +13,28 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
-
-use Phossa\Query\Clause\OnInterface;
-use Phossa\Query\Clause\WhereInterface;
+namespace Phossa\Query\Clause;
 
 /**
- * ExpressionInterface
+ * MysqlFlagInterface
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface ExpressionInterface extends StatementInterface, WhereInterface, OnInterface
+interface MysqlFlagInterface
 {
+    /**
+     * Add mysql flag
+     *
+     * @param  string $flagName
+     * @param  bool $enable
+     * @return self
+     * @access public
+     */
+    public function addFlag(
+        /*# string */ $flagName,
+        /*# bool */ $enable = true
+    );
 }

@@ -17,6 +17,7 @@ namespace Phossa\Query\Statement;
 
 use Phossa\Query\SettingsInterface;
 use Phossa\Query\Dialect\DialectAwareInterface;
+use Phossa\Query\Clause\BeforeAfterInterface;
 
 /**
  * StatementInterface
@@ -27,7 +28,7 @@ use Phossa\Query\Dialect\DialectAwareInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface StatementInterface extends DialectAwareInterface, SettingsInterface, BuilderAwareInterface, ParameterAwareInterface, PreviousInterface
+interface StatementInterface extends DialectAwareInterface, SettingsInterface, BuilderAwareInterface, ParameterAwareInterface, PreviousInterface, BeforeAfterInterface
 {
     /**
      * Return the SQL base on settings and the dialect

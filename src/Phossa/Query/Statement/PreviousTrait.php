@@ -29,7 +29,7 @@ trait PreviousTrait
     /**
      * Previous statement
      *
-     * @var    StatementInterface
+     * @var    StatementInterface|null
      * @access protected
      */
     protected $previous;
@@ -37,7 +37,7 @@ trait PreviousTrait
     /**
      * {@inheritDoc}
      */
-    public function setPrevious(StatementInterface $previous)
+    public function setPrevious($previous)
     {
         $this->previous = $previous;
         return $this;

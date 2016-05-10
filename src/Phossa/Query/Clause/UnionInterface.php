@@ -13,33 +13,33 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Clause;
+
+use Phossa\Query\BuilderInterface;
 
 /**
- * DialectAwareInterface
+ * UnionInterface
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DialectAwareInterface
+interface UnionInterface
 {
     /**
-     * Set the dialect
+     * Union with another SELECT
      *
-     * @param  DialectInterface $dialect
-     * @return self
+     * @return BuilderInterface
      * @access public
      */
-    public function setDialect(DialectInterface $dialect);
+    public function union()/*# : BuilderInterace */;
 
     /**
-     * Get the dialect
+     * Union all with another SELECT
      *
-     * @return DialectInterface
+     * @return BuilderInterface
      * @access public
      */
-    public function getDialect()/*# : DialectInterface */;
+    public function unionAll()/*# : BuilderInterace */;
 }

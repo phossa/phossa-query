@@ -13,20 +13,27 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Clause;
 
-use Phossa\Query\Clause\OnInterface;
 use Phossa\Query\Clause\WhereInterface;
 
 /**
- * ExpressionInterface
+ * SetInterface
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface ExpressionInterface extends StatementInterface, WhereInterface, OnInterface
+interface SetInterface
 {
+    /**
+     * Insert into table
+     *
+     * @param  string|array $col
+     * @param  mixed value scalar or Select query
+     * @return self
+     * @access public
+     */
+    public function set($col, $value = WhereInterface::NO_VALUE);
 }

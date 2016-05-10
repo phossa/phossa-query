@@ -18,6 +18,7 @@ namespace Phossa\Query\Statement;
 use Phossa\Query\SettingsTrait;
 use Phossa\Query\BuilderInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
+use Phossa\Query\Clause\BeforeAfterTrait;
 
 /**
  * StatementAbstract
@@ -34,6 +35,7 @@ abstract class StatementAbstract implements StatementInterface
     use UtilityTrait,
         SettingsTrait,
         PreviousTrait,
+        BeforeAfterTrait,
         DialectAwareTrait,
         BuilderAwareTrait,
         ParameterAwareTrait;
@@ -45,6 +47,14 @@ abstract class StatementAbstract implements StatementInterface
      * @access protected
      */
     protected $type;
+
+    /**
+     * order, prefix, join char
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $config = [];
 
     /**
      * Constructor
