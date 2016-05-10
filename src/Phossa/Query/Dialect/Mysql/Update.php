@@ -15,28 +15,24 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
-use Phossa\Query\Clause\OnDupTrait;
 use Phossa\Query\Clause\MysqlFlagTrait;
-use Phossa\Query\Clause\PartitionTrait;
-use Phossa\Query\Clause\OnDupInterface;
-use Phossa\Query\Clause\PartitionInterface;
-use Phossa\Query\Dialect\Common\Insert as CommonInsert;
+use Phossa\Query\Clause\MysqlFlagInterface;
+use Phossa\Query\Dialect\Common\Update as CommonUpdate;
 
 /**
- * Mysql Insert
+ * Mysql Update
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     \Phossa\Query\Dialect\Common\Insert
+ * @see     \Phossa\Query\Dialect\Common\Update
  * @see     MysqlInterface
- * @see     PartitionInterface
- * @see     OnDupInterface
+ * @see     MysqlFlagInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Insert extends CommonInsert implements MysqlInterface, PartitionInterface, OnDupInterface
+class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface
 {
-    use MysqlFlagTrait, PartitionTrait, OnDupTrait;
+    use MysqlFlagTrait;
 
     /**
      * clauses ordering
@@ -45,8 +41,6 @@ class Insert extends CommonInsert implements MysqlInterface, PartitionInterface,
      * @access protected
      */
     const ORDER_MYSQLFLAG = 5;
-    const ORDER_PARTITION = 15;
-    const ORDER_ONDUP     = 100;
 
     /**
      * order, prefix, join char
@@ -60,22 +54,6 @@ class Insert extends CommonInsert implements MysqlInterface, PartitionInterface,
             'prefix'    => '',
             'func'      => 'buildFlag',
             'join'      => ' ',
-            'indent'    => true,
-        ],
-
-        // partition
-        self::ORDER_PARTITION => [
-            'prefix'    => '',
-            'func'      => 'buildPartition',
-            'join'      => '',
-            'indent'    => false,
-        ],
-
-        // on dup
-        self::ORDER_ONDUP => [
-            'prefix'    => 'ON DUPLICATE KEY UPDATE',
-            'func'      => 'buildOnDup',
-            'join'      => ',',
             'indent'    => true,
         ],
     ];

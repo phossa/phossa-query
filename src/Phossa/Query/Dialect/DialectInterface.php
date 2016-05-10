@@ -18,6 +18,8 @@ namespace Phossa\Query\Dialect;
 use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\Common\SelectStatementInterface;
 use Phossa\Query\Dialect\Common\InsertStatementInterface;
+use Phossa\Query\Dialect\Common\UpdateStatementInterface;
+use Phossa\Query\Dialect\Common\DeleteStatementInterface;
 
 /**
  * DialectInterface
@@ -70,6 +72,24 @@ interface DialectInterface
      * @access public
      */
     public function insert(BuilderInterface $builder)/*# : InsertStatementInterface */;
+
+    /**
+     * UPDATE statement
+     *
+     * @param  BuilderInterface $builder
+     * @return UpdateStatementInterface
+     * @access public
+     */
+    public function update(BuilderInterface $builder)/*# : UpdateStatementInterface */;
+
+    /**
+     * DELETE statement
+     *
+     * @param  BuilderInterface $builder
+     * @return DeleteStatementInterface
+     * @access public
+     */
+    public function delete(BuilderInterface $builder)/*# : DeleteStatementInterface */;
 
     /**
      * Quote identifer

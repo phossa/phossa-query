@@ -15,28 +15,27 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
-use Phossa\Query\Clause\OnDupTrait;
 use Phossa\Query\Clause\MysqlFlagTrait;
 use Phossa\Query\Clause\PartitionTrait;
-use Phossa\Query\Clause\OnDupInterface;
+use Phossa\Query\Clause\MysqlFlagInterface;
 use Phossa\Query\Clause\PartitionInterface;
-use Phossa\Query\Dialect\Common\Insert as CommonInsert;
+use Phossa\Query\Dialect\Common\Delete as CommonDelete;
 
 /**
- * Mysql Insert
+ * Mysql Delete
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     \Phossa\Query\Dialect\Common\Insert
+ * @see     \Phossa\Query\Dialect\Common\Delete
  * @see     MysqlInterface
+ * @see     MysqlFlagInterface
  * @see     PartitionInterface
- * @see     OnDupInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Insert extends CommonInsert implements MysqlInterface, PartitionInterface, OnDupInterface
+class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface, PartitionInterface
 {
-    use MysqlFlagTrait, PartitionTrait, OnDupTrait;
+    use MysqlFlagTrait, PartitionTrait;
 
     /**
      * clauses ordering
@@ -46,7 +45,6 @@ class Insert extends CommonInsert implements MysqlInterface, PartitionInterface,
      */
     const ORDER_MYSQLFLAG = 5;
     const ORDER_PARTITION = 15;
-    const ORDER_ONDUP     = 100;
 
     /**
      * order, prefix, join char
@@ -69,14 +67,6 @@ class Insert extends CommonInsert implements MysqlInterface, PartitionInterface,
             'func'      => 'buildPartition',
             'join'      => '',
             'indent'    => false,
-        ],
-
-        // on dup
-        self::ORDER_ONDUP => [
-            'prefix'    => 'ON DUPLICATE KEY UPDATE',
-            'func'      => 'buildOnDup',
-            'join'      => ',',
-            'indent'    => true,
         ],
     ];
 }

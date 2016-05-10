@@ -13,40 +13,24 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Dialect\Mysql;
 
 /**
- * MSSQL dialect
+ * Mysql Replace
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Common
+ * @see     Insert
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Mssql extends Common
+class Replace extends Insert implements ReplaceStatementInterace
 {
     /**
-     * Current dialect string
+     * Statement type
      *
      * @var    string
      * @access protected
      */
-    protected $dialect = 'Mssql';
-
-    /**
-     * quote prefix
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $quote_prefix = '[';
-
-    /**
-     * quote suffix
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $quote_suffix = ']';
+    protected $type = 'REPLACE';
 }

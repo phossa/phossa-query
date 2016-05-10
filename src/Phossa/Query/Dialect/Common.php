@@ -33,6 +33,14 @@ use Phossa\Query\Dialect\Common\InsertStatementInterface;
 class Common implements DialectInterface
 {
     /**
+     * Current dialect string
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $dialect = 'Common';
+
+    /**
      * quote prefix
      *
      * @var    string
@@ -53,7 +61,8 @@ class Common implements DialectInterface
      */
     public function select(BuilderInterface $builder)/*# : SelectStatementInterface */
     {
-        return new Select($builder);
+        $class = __NAMESPACE__ . '\\' . $this->dialect . '\\Select';
+        return new $class($builder);
     }
 
     /**
@@ -61,7 +70,26 @@ class Common implements DialectInterface
      */
     public function insert(BuilderInterface $builder)/*# : InsertStatementInterface */
     {
-        return new Insert($builder);
+        $class = __NAMESPACE__ . '\\' . $this->dialect . '\\Insert';
+        return new $class($builder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function update(BuilderInterface $builder)/*# : UpdateStatementInterface */
+    {
+        $class = __NAMESPACE__ . '\\' . $this->dialect . '\\Update';
+        return new $class($builder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function delete(BuilderInterface $builder)/*# : DeleteStatementInterface */
+    {
+        $class = __NAMESPACE__ . '\\' . $this->dialect . '\\Delete';
+        return new $class($builder);
     }
 
     /**

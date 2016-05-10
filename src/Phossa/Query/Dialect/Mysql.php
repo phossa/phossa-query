@@ -15,11 +15,7 @@
 
 namespace Phossa\Query\Dialect;
 
-use Phossa\Query\Dialect\Mysql\Select;
-use Phossa\Query\Dialect\Mysql\Insert;
 use Phossa\Query\Builder\BuilderInterface;
-use Phossa\Query\Dialect\Mysql\SelectStatementInterface;
-use Phossa\Query\Dialect\Mysql\InsertStatementInterface;
 
 /**
  * Mysql dialect
@@ -32,6 +28,14 @@ use Phossa\Query\Dialect\Mysql\InsertStatementInterface;
  */
 class Mysql extends Common
 {
+    /**
+     * Current dialect string
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $dialect = 'Mysql';
+
     /**
      * quote prefix
      *
@@ -51,16 +55,9 @@ class Mysql extends Common
     /**
      * {@inheritDoc}
      */
-    public function select(BuilderInterface $builder)/*# : SelectStatementInterface */
+    public function replace(BuilderInterface $builder)/*# : ReplaceStatementInterface */
     {
-        return new Select($builder);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function insert(BuilderInterface $builder)/*# : InsertStatementInterface */
-    {
-        return new Insert($builder);
+        $class = __NAMESPACE__ . '\\' . $this->dialect . '\\Replace';
+        return new $class($builder);
     }
 }

@@ -6,31 +6,26 @@
  *
  * @category  Library
  * @package   Phossa\Query
- * @author    Hong Zhang <phossa@126.com>
  * @copyright 2015 phossa.com
  * @license   http://mit-license.org/ MIT License
  * @link      http://www.phossa.com/
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Exception;
+
+use Phossa\Shared\Exception\BadMethodCallException as BMException;
 
 /**
- * Oracle dialect
+ * BadMethodCallException for \Phossa\Query
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Common
+ * @see     ExceptionInterface
+ * @see     \Phossa\Shared\Exception\BadMethodCallException
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Oracle extends Common
+class BadMethodCallException extends BMException implements ExceptionInterface
 {
-    /**
-     * Current dialect string
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $dialect = 'Oracle';
 }

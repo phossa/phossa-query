@@ -15,10 +15,6 @@
 
 namespace Phossa\Query\Dialect;
 
-use Phossa\Query\Dialect\Pgsql\Select;
-use Phossa\Query\Builder\BuilderInterface;
-use Phossa\Query\Dialect\Common\SelectStatementInterface;
-
 /**
  * PostGreSQL dialect
  *
@@ -31,10 +27,10 @@ use Phossa\Query\Dialect\Common\SelectStatementInterface;
 class Pgsql extends Common
 {
     /**
-     * {@inheritDoc}
+     * Current dialect string
+     *
+     * @var    string
+     * @access protected
      */
-    public function select(BuilderInterface $builder)/*# : SelectStatementInterface */
-    {
-        return new Select($builder);
-    }
+    protected $dialect = 'Pgsql';
 }

@@ -35,7 +35,12 @@ class Message extends MessageAbstract
     /**
      * Query position "%s" unknown
      */
-    const SQL_UNKNOWN_POS   = 1605051116;
+    const SQL_UNKNOWN_POS           = 1605051116;
+
+    /**
+     * Unknown method "%s"
+     */
+    const BUILDER_UNKNOWN_METHOD    = 1605051117;
 
     /**#@-*/
 
@@ -43,6 +48,7 @@ class Message extends MessageAbstract
      * {@inheritdoc}
      */
     protected static $messages = [
-        self::SQL_UNKNOWN_POS       => 'Query position "%s" unknown',
+        self::SQL_UNKNOWN_POS           => 'Query position "%s" unknown',
+        self::BUILDER_UNKNOWN_METHOD    => 'Unknown method "%s"',
     ];
 }

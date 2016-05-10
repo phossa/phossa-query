@@ -13,24 +13,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Dialect\Oracle;
+
+use Phossa\Query\Dialect\Common\Update as CommonUpdate;
 
 /**
- * Oracle dialect
+ * Oracle Update
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Common
+ * @see     \Phossa\Query\Dialect\Common\Update
+ * @see     OracleInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Oracle extends Common
+class Update extends CommonUpdate implements OracleInterface
 {
-    /**
-     * Current dialect string
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $dialect = 'Oracle';
 }

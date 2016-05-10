@@ -13,24 +13,19 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Dialect\Mysql;
+
+use Phossa\Query\Dialect\Common\InsertStatementInterface;
 
 /**
- * Oracle dialect
+ * ReplaceStatementInterace
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Common
+ * @see     InsertStatementInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Oracle extends Common
+interface ReplaceStatementInterace extends InsertStatementInterface
 {
-    /**
-     * Current dialect string
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $dialect = 'Oracle';
 }

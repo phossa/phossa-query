@@ -26,8 +26,6 @@ namespace Phossa\Query\Clause;
  */
 trait SetTrait
 {
-    use ValueTrait;
-
     /**
      * SET column values
      *
@@ -117,10 +115,10 @@ trait SetTrait
      */
     protected function buildSet()/*# : array */
     {
-        if ('INSERT' === $this->getType()) {
-            return $this->buildInsertSet();
-        } else {
+        if ('UPDATE' === $this->getType()) {
             return $this->buildUpdateSet();
+        } else {
+            return $this->buildInsertSet();
         }
     }
 
@@ -144,6 +142,25 @@ trait SetTrait
             $cols[] = $this->quote($col);
         }
         $result[] = '(' . join(', ', $cols) . ')';
+
+        return $result;
+    }
+
+    /**
+     * Build SET ... = ..., ... = ...
+     *
+     * @return array
+     * @access protected
+     */
+    protected function buildUpdateSet()/*# : array */
+    {
+        $result = [];
+
+        // build set
+        $data = $this->clause_data[0];
+        foreach ($data as $col => $val) {
+            $result[] = $this->quote($col) . ' = ' . $this->processValue($val);
+        }
 
         return $result;
     }
@@ -173,19 +190,6 @@ trait SetTrait
             $result[] = '(' . join(', ', $values) . ')' . ($num !== $maxRow ?
                 ',' : '');
         }
-
-        return $result;
-    }
-
-    /**
-     * Build Set .. = .., .. = .. etc
-     *
-     * @return array
-     * @access protected
-     */
-    protected function buildUpdateSet()/*# : array */
-    {
-        $result = [];
 
         return $result;
     }

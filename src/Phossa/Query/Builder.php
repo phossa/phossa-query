@@ -17,6 +17,7 @@ namespace Phossa\Query;
 
 use Phossa\Query\Statement\Raw;
 use Phossa\Query\Dialect\Common;
+use Phossa\Query\Message\Message;
 use Phossa\Query\Statement\Expression;
 use Phossa\Query\Builder\SettingsTrait;
 use Phossa\Query\Builder\ParameterTrait;
@@ -26,6 +27,7 @@ use Phossa\Query\Dialect\DialectInterface;
 use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
 use Phossa\Query\Statement\ExpressionInterface;
+use Phossa\Query\Exception\BadMethodCallException;
 use Phossa\Query\Dialect\Common\SelectStatementInterface;
 use Phossa\Query\Dialect\Common\InsertStatementInterface;
 use Phossa\Query\Dialect\Common\UpdateStatementInterface;
@@ -90,6 +92,25 @@ class Builder implements BuilderInterface
         $this->combineSettings($settings)
              ->setDialect($dialect ?: new Common())
              ->from($table);
+    }
+
+    /**
+     * @param  string $method
+     * @param  array $arguments
+     * @return object
+     * @throws BadMethodCallException if method unknown
+     */
+    public function __call($method, $arguments)
+    {
+        $dialect = $this->getDialect();
+        if (method_exists($dialect, $method)) {
+            return call_user_func_array([$dialect, $method], $arguments);
+        }
+
+        throw new BadMethodCallException(
+            Message::get(Message::BUILDER_UNKNOWN_METHOD, $method),
+            Message::BUILDER_UNKNOWN_METHOD
+        );
     }
 
     /**
@@ -227,6 +248,20 @@ class Builder implements BuilderInterface
      */
     public function update(array $values = [])/*# : UpdateStatementInterface */
     {
+        // UPDATE statement
+        $update = $this->getDialect()->update($this);
+
+        // set table
+        if (count($this->tables)) {
+            $update->table($this->tables);
+        }
+
+        // set cols
+        if (!empty($values)) {
+            $update->set($values);
+        }
+
+        return $update;
     }
 
     /**
@@ -234,5 +269,14 @@ class Builder implements BuilderInterface
      */
     public function delete()/*# : DeleteStatementInterface */
     {
+        // DELETE statement
+        $delete = $this->getDialect()->delete($this);
+
+        // set table
+        if (count($this->tables)) {
+            $delete->table($this->tables);
+        }
+
+        return $delete;
     }
 }

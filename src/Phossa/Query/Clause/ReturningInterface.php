@@ -13,28 +13,24 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect\Mysql;
+namespace Phossa\Query\Clause;
 
 /**
- * MysqlTrait
- *
- * Common stuff for Mysql
+ * ReturningInterface
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     MysqlInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-trait MysqlTrait
+interface ReturningInterface
 {
     /**
-     * {@inheritDoc}
+     * returning ...
+     *
+     * @param  string|array $col column name
+     * @return self
+     * @access public
      */
-    protected function getConfig()/*# : array */
-    {
-        $config = array_replace($this->config, $this->my_config);
-        ksort($config);
-        return $config;
-    }
+    public function returning($col);
 }

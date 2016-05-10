@@ -13,24 +13,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Dialect\Oracle;
+
+use Phossa\Query\Dialect\Common\Delete as CommonDelete;
 
 /**
- * Oracle dialect
+ * Oracle Delete
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Common
+ * @see     \Phossa\Query\Dialect\Common\Delete
+ * @see     OracleInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Oracle extends Common
+class Delete extends CommonDelete implements OracleInterface
 {
-    /**
-     * Current dialect string
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $dialect = 'Oracle';
 }

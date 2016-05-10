@@ -13,24 +13,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Dialect;
+namespace Phossa\Query\Dialect\Oracle;
+
+use Phossa\Query\Dialect\Common\Insert as CommonInsert;
 
 /**
- * Oracle dialect
+ * Oracle Insert
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     Common
+ * @see     \Phossa\Query\Dialect\Common\Insert
+ * @see     OracleInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Oracle extends Common
+class Insert extends CommonInsert implements OracleInterface
 {
-    /**
-     * Current dialect string
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $dialect = 'Oracle';
 }

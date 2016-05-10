@@ -57,6 +57,14 @@ abstract class StatementAbstract implements StatementInterface
     protected $config = [];
 
     /**
+     * dialect related order, prefix, join char
+     *
+     * @var    array
+     * @access protected
+     */
+    protected $dialect_config = [];
+
+    /**
      * Constructor
      *
      * @param  BuilderInterface $builder
@@ -176,6 +184,8 @@ abstract class StatementAbstract implements StatementInterface
      */
     protected function getConfig()/*# : array */
     {
-        return $this->config;
+        $config = array_replace($this->config, $this->dialect_config);
+        ksort($config);
+        return $config;
     }
 }

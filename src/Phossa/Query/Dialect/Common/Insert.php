@@ -17,6 +17,7 @@ namespace Phossa\Query\Dialect\Common;
 
 use Phossa\Query\Clause\SetTrait;
 use Phossa\Query\Clause\IntoTrait;
+use Phossa\Query\Clause\ValueTrait;
 use Phossa\Query\Statement\StatementAbstract;
 
 /**
@@ -30,7 +31,7 @@ use Phossa\Query\Statement\StatementAbstract;
  */
 class Insert extends StatementAbstract implements InsertStatementInterface
 {
-    use IntoTrait, SetTrait;
+    use IntoTrait, SetTrait, ValueTrait;
 
     /**
      * Statement type

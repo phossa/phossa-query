@@ -18,6 +18,8 @@ namespace Phossa\Query\Dialect\Mysql;
 use Phossa\Query\Clause\MysqlFlagTrait;
 use Phossa\Query\Clause\ForUpdateTrait;
 use Phossa\Query\Clause\PartitionTrait;
+use Phossa\Query\Clause\PartitionInterface;
+use Phossa\Query\Clause\ForUpdateInterface;
 use Phossa\Query\Dialect\Common\Select as CommonSelect;
 
 /**
@@ -30,9 +32,9 @@ use Phossa\Query\Dialect\Common\Select as CommonSelect;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Select extends CommonSelect implements SelectStatementInterface
+class Select extends CommonSelect implements ForUpdateInterface, MysqlInterface, PartitionInterface
 {
-    use MysqlFlagTrait, ForUpdateTrait, PartitionTrait, MysqlTrait;
+    use MysqlFlagTrait, ForUpdateTrait, PartitionTrait;
 
     /**
      * clauses ordering
@@ -50,7 +52,7 @@ class Select extends CommonSelect implements SelectStatementInterface
      * @var    array
      * @access protected
      */
-    protected $my_config = [
+    protected $dialect_config = [
         // flags
         self::ORDER_MYSQLFLAG  => [
             'prefix'    => '',
