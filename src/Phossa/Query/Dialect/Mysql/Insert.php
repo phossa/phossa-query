@@ -15,24 +15,24 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
+use Phossa\Query\Clause\OnDupTrait;
 use Phossa\Query\Clause\MysqlFlagTrait;
-use Phossa\Query\Clause\ForUpdateTrait;
 use Phossa\Query\Clause\PartitionTrait;
-use Phossa\Query\Dialect\Common\Select as CommonSelect;
+use Phossa\Query\Dialect\Common\Insert as CommonInsert;
 
 /**
- * Mysql Select
+ * Mysql Insert
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     \Phossa\Query\Dialect\Common\Select
- * @see     SelectStatementInterface
+ * @see     \Phossa\Query\Dialect\Common\Insert
+ * @see     InsertStatementInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Select extends CommonSelect implements SelectStatementInterface
+class Insert extends CommonInsert implements InsertStatementInterface
 {
-    use MysqlFlagTrait, ForUpdateTrait, PartitionTrait, MysqlTrait;
+    use MysqlFlagTrait, PartitionTrait, MysqlTrait, OnDupTrait;
 
     /**
      * clauses ordering
@@ -40,9 +40,9 @@ class Select extends CommonSelect implements SelectStatementInterface
      * @var    int
      * @access protected
      */
-    const ORDER_MYSQLFLAG = 15;
-    const ORDER_PARTITION = 45;
-    const ORDER_FORUPDATE = 300;
+    const ORDER_MYSQLFLAG = 5;
+    const ORDER_PARTITION = 15;
+    const ORDER_ONDUP     = 100;
 
     /**
      * order, prefix, join char
@@ -67,12 +67,12 @@ class Select extends CommonSelect implements SelectStatementInterface
             'indent'    => false,
         ],
 
-        // for update
-        self::ORDER_FORUPDATE  => [
-            'prefix'    => '',
-            'func'      => 'buildForUpdate',
-            'join'      => '',
-            'indent'    => false,
+        // on dup
+        self::ORDER_ONDUP => [
+            'prefix'    => 'ON DUPLICATE KEY UPDATE',
+            'func'      => 'buildOnDup',
+            'join'      => ',',
+            'indent'    => true,
         ],
     ];
 }

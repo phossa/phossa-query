@@ -15,8 +15,6 @@
 
 namespace Phossa\Query\Clause;
 
-use Phossa\Query\Statement\RawInterface;
-use Phossa\Query\Statement\StatementInterface;
 use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Dialect\Common\SelectStatementInterface;
 
@@ -32,6 +30,8 @@ use Phossa\Query\Dialect\Common\SelectStatementInterface;
  */
 trait WhereTrait
 {
+    use ValueTrait;
+
     /**
      * WHEREs
      *
@@ -64,14 +64,13 @@ trait WhereTrait
         } else {
             // grouped where
             if (is_object($col) && $col instanceof ExpressionInterface) {
-                $operator = null;
-                $value    = null;
+                $operator = ClauseInterface::NO_OPERATOR;
+                $value    = ClauseInterface::NO_VALUE;
 
             // 1 param provided, raw where provided
             } elseif (ClauseInterface::NO_OPERATOR === $operator) {
                 $rawMode  = true;
-                $operator = null;
-                $value    = null;
+                $value    = ClauseInterface::NO_VALUE;
 
             //  2 params provided
             } elseif (ClauseInterface::NO_VALUE === $value) {
@@ -85,7 +84,7 @@ trait WhereTrait
 
             // short version provided
             } elseif (WhereInterface::SHORT_FORM === $value) {
-                $value = null;
+                $value = ClauseInterface::NO_VALUE;
             }
 
             $this->clause_{$clause}[] = [
@@ -325,20 +324,13 @@ trait WhereTrait
                 }
 
                 // operator
-                if (!is_null($where[4])) {
+                if (ClauseInterface::NO_OPERATOR !== $where[4]) {
                     $cls[] = (empty($col) ? '' : ' ') . $where[4];
                 }
 
                 // val part
-                if (is_object($where[5])) {
-                    // subquery
-                    if ($where[5] instanceof StatementInterface) {
-                        $cls[] = '(' . $where[5]->getSql([], false) . ')';
-                    } elseif ($where[5] instanceof RawInterface) {
-                        $cls[] = $where[5] . '';
-                    }
-                } elseif (!is_null($where[5])) {
-                    $cls[] = $this->getPlaceholder($where[5]);
+                if (ClauseInterface::NO_VALUE !== $where[5]) {
+                    $cls[] = $this->processValue($where[5]);
                 }
 
                 $result[] = join(' ', $cls);
@@ -349,5 +341,4 @@ trait WhereTrait
 
     /* utilities from UtilityTrait */
     abstract protected function quote(/*# string */ $str)/*# : string */;
-    abstract protected function getPlaceholder($value)/*# : string */;
 }

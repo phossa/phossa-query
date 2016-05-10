@@ -15,22 +15,26 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
-use Phossa\Query\Clause\ForUpdateInterface;
-use Phossa\Query\Clause\PartitionInterface;
-use Phossa\Query\Dialect\Common\SelectStatementInterface as SelectInterface;
-
 /**
- * Mysql version of SelectStatementInterface
+ * MysqlTrait
+ *
+ * Common stuff for Mysql
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     \Phossa\Query\Dialect\Common\SelectStatementInterface
- * @see     ForUpdateInterface
- * @see     PartitionInterface
  * @see     MysqlInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface SelectStatementInterface extends SelectInterface, ForUpdateInterface, MysqlInterface, PartitionInterface
+trait MysqlTrait
 {
+    /**
+     * {@inheritDoc}
+     */
+    protected function getConfig()/*# : array */
+    {
+        $config = array_replace($this->config, $this->my_config);
+        ksort($config);
+        return $config;
+    }
 }

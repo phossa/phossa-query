@@ -103,5 +103,34 @@ EOT;
                 ->getSql()
         );
     }
-}
 
+    /**
+     * insert
+     *
+     * @covers Phossa\Query\Dialect\Mysql::insert()
+     */
+    public function testInsert01()
+    {
+        $str = <<<EOT
+INSERT
+    /*! DELAYED */
+PARTITION (part1, part2)
+    (`uid`, `uname`)
+VALUES
+    (2, 'phossa')
+ON DUPLICATE KEY UPDATE
+    uid = uid + 1,
+    uname = CONCAT(uname, 'xx')
+EOT;
+        $this->assertEquals(
+            preg_replace("/\r\n/","\n", $str),
+            $this->builder->insert()
+                ->addFlag("delayed")
+                ->set(['uid' => 2, 'uname' => 'phossa'])
+                ->partition(['part1', 'part2'])
+                ->onDup('uid', 'uid + 1')
+                ->onDup('uname', 'CONCAT(uname, \'xx\')')
+                ->getSql()
+        );
+    }
+}

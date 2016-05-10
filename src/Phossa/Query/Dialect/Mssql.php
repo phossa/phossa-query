@@ -15,14 +15,12 @@
 
 namespace Phossa\Query\Dialect;
 
-use Phossa\Query\Dialect\Mysql\Select;
-use Phossa\Query\Dialect\Mysql\Insert;
+use Phossa\Query\Dialect\Mssql\Select;
 use Phossa\Query\Builder\BuilderInterface;
-use Phossa\Query\Dialect\Mysql\SelectStatementInterface;
-use Phossa\Query\Dialect\Mysql\InsertStatementInterface;
+use Phossa\Query\Dialect\Common\SelectStatementInterface;
 
 /**
- * Mysql dialect
+ * MSSQL dialect
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
@@ -30,7 +28,7 @@ use Phossa\Query\Dialect\Mysql\InsertStatementInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Mysql extends Common
+class Mssql extends Common
 {
     /**
      * quote prefix
@@ -38,7 +36,7 @@ class Mysql extends Common
      * @var    string
      * @access protected
      */
-    protected $quote_prefix = '`';
+    protected $quote_prefix = '[';
 
     /**
      * quote suffix
@@ -46,7 +44,7 @@ class Mysql extends Common
      * @var    string
      * @access protected
      */
-    protected $quote_suffix = '`';
+    protected $quote_suffix = ']';
 
     /**
      * {@inheritDoc}
@@ -54,13 +52,5 @@ class Mysql extends Common
     public function select(BuilderInterface $builder)/*# : SelectStatementInterface */
     {
         return new Select($builder);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function insert(BuilderInterface $builder)/*# : InsertStatementInterface */
-    {
-        return new Insert($builder);
     }
 }

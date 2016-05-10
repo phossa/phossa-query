@@ -16,52 +16,51 @@
 namespace Phossa\Query\Clause;
 
 /**
- * IntoTrait
+ * PartitionTrait
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     IntoInterface
+ * @see     PartitionInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-trait IntoTrait
+trait PartitionTrait
 {
     /**
-     * INTO TABLE
+     * Partition
      *
-     * @var    string
+     * @var    array
      * @access protected
      */
-    protected $clause_into = '';
+    protected $clause_partition = [];
 
     /**
-     * Insert into table
-     *
-     * @param  string $table
-     * @return self
-     * @access public
+     * {@inheritDoc}
      */
-    public function into(/*# string */ $table)
+    public function partition($partitionName)
     {
-        $this->clause_into = $table;
+        if (is_array($partitionName)) {
+            $this->clause_partition = array_merge(
+                $this->clause_partition, $partitionName
+            );
+        } else {
+            $this->clause_partition[] = $partitionName;
+        }
         return $this;
     }
 
     /**
-     * Build INTO
+     * Build PARTITION
      *
      * @return array
      * @access protected
      */
-    protected function buildInto()/*# : array */
+    protected function buildPartition()/*# : array */
     {
         $result = [];
-        if ($this->clause_into) {
-            $result[] = 'INTO ' . $this->quote($this->clause_into);
+        if (!empty($this->clause_partition)) {
+            $result[] = 'PARTITION (' . join(', ', $this->clause_partition) . ')';
         }
         return $result;
     }
-
-    /* utilities from UtilityTrait */
-    abstract protected function quote(/*# string */ $str)/*# : string */;
 }

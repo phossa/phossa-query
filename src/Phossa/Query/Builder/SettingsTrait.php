@@ -48,6 +48,9 @@ trait SettingsTrait
 
         // escape/quote function
         'escapeFunction'    => null,
+
+        // INSERT NULL instead of DEFAULT
+        'useNullAsDefault'  => false,
     ];
 
     /**

@@ -44,6 +44,14 @@ interface StatementInterface extends DialectAwareInterface, SettingsInterface, B
     )/*# : string */;
 
     /**
+     * Return the SQL statement type
+     *
+     * @return string
+     * @access public
+     */
+    public function getType()/*# : string */;
+
+    /**
      * Get the statement with default settings & dialect
      *
      * @return string

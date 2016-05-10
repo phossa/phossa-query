@@ -48,6 +48,7 @@ class Insert extends StatementAbstract implements InsertStatementInterface
      */
     const ORDER_INTO = 10;
     const ORDER_SET  = 20;
+    const ORDER_VAL  = 25;
 
     /**
      * order, prefix, join char
@@ -58,7 +59,7 @@ class Insert extends StatementAbstract implements InsertStatementInterface
     protected $config = [
         // into
         self::ORDER_INTO  => [
-            'prefix'    => 'INTO',
+            'prefix'    => '',
             'func'      => 'buildInto',
             'join'      => '',
             'indent'    => false,
@@ -68,7 +69,15 @@ class Insert extends StatementAbstract implements InsertStatementInterface
         self::ORDER_SET => [
             'prefix'    => '',
             'func'      => 'buildSet',
-            'join'      => ',',
+            'join'      => '',
+            'indent'    => true,
+        ],
+
+        // build values
+        self::ORDER_VAL => [
+            'prefix'    => 'VALUES',
+            'func'      => 'buildValues',
+            'join'      => '',
             'indent'    => true,
         ],
     ];

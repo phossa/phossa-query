@@ -97,11 +97,23 @@ abstract class StatementAbstract implements StatementInterface
 
         // replace placeholders with '?' or values
         if ($replace) {
+            // flush bindings array
+            $this->resetBindings();
+
+            // replace with '?' or values
             $sql = $this->bindValues($sql, $currSettings['positionedParam'],
                 $currSettings['escapeFunction']);
         }
 
         return $sql;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType()/*# : string */
+    {
+        return $this->type;
     }
 
     /**

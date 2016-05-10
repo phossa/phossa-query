@@ -16,52 +16,45 @@
 namespace Phossa\Query\Clause;
 
 /**
- * IntoTrait
+ * OnDupTrait
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     IntoInterface
+ * @see     OnDupInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-trait IntoTrait
+trait OnDupTrait
 {
     /**
-     * INTO TABLE
+     * ON DUP
      *
-     * @var    string
+     * @var    array
      * @access protected
      */
-    protected $clause_into = '';
+    protected $clause_ondup = [];
 
     /**
-     * Insert into table
-     *
-     * @param  string $table
-     * @return self
-     * @access public
+     * {@inheritDoc}
      */
-    public function into(/*# string */ $table)
+    public function onDup(/*# string */ $col, /*# string */ $expr)
     {
-        $this->clause_into = $table;
+        $this->clause_ondup[$col] = $expr;
         return $this;
     }
 
     /**
-     * Build INTO
+     * Build ON DUP
      *
      * @return array
      * @access protected
      */
-    protected function buildInto()/*# : array */
+    protected function buildOnDup()/*# : array */
     {
         $result = [];
-        if ($this->clause_into) {
-            $result[] = 'INTO ' . $this->quote($this->clause_into);
+        foreach ($this->clause_ondup as $col => $expr) {
+            $result[] = $col . ' = ' . $expr;
         }
         return $result;
     }
-
-    /* utilities from UtilityTrait */
-    abstract protected function quote(/*# string */ $str)/*# : string */;
 }

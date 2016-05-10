@@ -15,22 +15,22 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
-use Phossa\Query\Clause\ForUpdateInterface;
+use Phossa\Query\Clause\OnDupInterface;
 use Phossa\Query\Clause\PartitionInterface;
-use Phossa\Query\Dialect\Common\SelectStatementInterface as SelectInterface;
+use Phossa\Query\Dialect\Common\InsertStatementInterface as InsertInterface;
 
 /**
  * Mysql version of SelectStatementInterface
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     \Phossa\Query\Dialect\Common\SelectStatementInterface
- * @see     ForUpdateInterface
+ * @see     \Phossa\Query\Dialect\Common\InsertStatementInterface
  * @see     PartitionInterface
  * @see     MysqlInterface
+ * @see     OnDupInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface SelectStatementInterface extends SelectInterface, ForUpdateInterface, MysqlInterface, PartitionInterface
+interface InsertStatementInterface extends InsertInterface, MysqlInterface, PartitionInterface, OnDupInterface
 {
 }

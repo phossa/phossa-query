@@ -45,6 +45,18 @@ trait ParameterAwareTrait
     }
 
     /**
+     * Flush bindings
+     *
+     * @return self
+     * @access protected
+     */
+    protected function resetBindings()
+    {
+        $this->bindings = [];
+        return $this;
+    }
+
+    /**
      * Replace placeholders in the SQL with '?' or real value
      *
      * @param  string $sql
