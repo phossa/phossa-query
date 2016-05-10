@@ -32,7 +32,7 @@ trait SetTrait
      * @var    array
      * @access protected
      */
-    protected $clause_cols  = [];
+    protected $clause_cols = [];
 
     /**
      * Insert into table
