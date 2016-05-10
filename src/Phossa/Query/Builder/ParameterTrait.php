@@ -44,7 +44,7 @@ trait ParameterTrait
      * @access protected
      * @staticvar
      */
-    protected static $positioned_count  = 0;
+    protected static $positioned_count = 0;
 
     /**
      *{@inheritDoc}
