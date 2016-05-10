@@ -15,6 +15,7 @@
 
 namespace Phossa\Query\Dialect\Pgsql;
 
+use Phossa\Query\Clause\ReturningInterface;
 use Phossa\Query\Dialect\Common\Update as CommonUpdate;
 
 /**
@@ -23,10 +24,12 @@ use Phossa\Query\Dialect\Common\Update as CommonUpdate;
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     \Phossa\Query\Dialect\Common\Update
- * @see     UpdateStatementInterface
+ * @see     PgsqlInterface
+ * @see     ReturningInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Update extends CommonUpdate implements PgsqlInterface
+class Update extends CommonUpdate implements PgsqlInterface, ReturningInterface
 {
+    use ReturnTrait;
 }

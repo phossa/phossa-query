@@ -17,9 +17,7 @@ namespace Phossa\Query\Dialect\Common;
 
 use Phossa\Query\Clause\SetTrait;
 use Phossa\Query\Clause\FromTrait;
-use Phossa\Query\Clause\LimitTrait;
 use Phossa\Query\Clause\WhereTrait;
-use Phossa\Query\Clause\OrderByTrait;
 use Phossa\Query\Statement\StatementAbstract;
 
 /**
@@ -33,7 +31,7 @@ use Phossa\Query\Statement\StatementAbstract;
  */
 class Update extends StatementAbstract implements UpdateStatementInterface
 {
-    use FromTrait, SetTrait, WhereTrait, OrderByTrait, LimitTrait;
+    use FromTrait, SetTrait, WhereTrait;
 
     /**
      * Statement type
@@ -52,8 +50,6 @@ class Update extends StatementAbstract implements UpdateStatementInterface
     const ORDER_TABLE = 10;
     const ORDER_SET   = 20;
     const ORDER_WHERE = 30;
-    const ORDER_ORDBY = 40;
-    const ORDER_LIMIT = 50;
 
     /**
      * order, prefix, join char
@@ -82,22 +78,6 @@ class Update extends StatementAbstract implements UpdateStatementInterface
         self::ORDER_WHERE => [
             'prefix'    => 'WHERE',
             'func'      => 'buildWhere',
-            'join'      => '',
-            'indent'    => false,
-        ],
-
-        // order by
-        self::ORDER_ORDBY => [
-            'prefix'    => 'ORDER BY',
-            'func'      => 'buildOrderBy',
-            'join'      => ',',
-            'indent'    => false,
-        ],
-
-        // limit
-        self::ORDER_LIMIT => [
-            'prefix'    => '',
-            'func'      => 'buildLimit',
             'join'      => '',
             'indent'    => false,
         ],

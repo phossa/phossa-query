@@ -15,7 +15,11 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
+use Phossa\Query\Clause\LimitTrait;
+use Phossa\Query\Clause\OrderByTrait;
 use Phossa\Query\Clause\MysqlFlagTrait;
+use Phossa\Query\Clause\LimitInterface;
+use Phossa\Query\Clause\OrderByInterface;
 use Phossa\Query\Clause\MysqlFlagInterface;
 use Phossa\Query\Dialect\Common\Update as CommonUpdate;
 
@@ -30,9 +34,9 @@ use Phossa\Query\Dialect\Common\Update as CommonUpdate;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface
+class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface, OrderByInterface, LimitInterface
 {
-    use MysqlFlagTrait;
+    use MysqlFlagTrait, OrderByTrait, LimitTrait;
 
     /**
      * clauses ordering
@@ -41,6 +45,8 @@ class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface
      * @access protected
      */
     const ORDER_MYSQLFLAG = 5;
+    const ORDER_ORDBY     = 40;
+    const ORDER_LIMIT     = 50;
 
     /**
      * order, prefix, join char
@@ -55,6 +61,22 @@ class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface
             'func'      => 'buildFlag',
             'join'      => ' ',
             'indent'    => true,
+        ],
+
+        // order by
+        self::ORDER_ORDBY => [
+            'prefix'    => 'ORDER BY',
+            'func'      => 'buildOrderBy',
+            'join'      => ',',
+            'indent'    => false,
+        ],
+
+        // limit
+        self::ORDER_LIMIT => [
+            'prefix'    => '',
+            'func'      => 'buildLimit',
+            'join'      => '',
+            'indent'    => false,
         ],
     ];
 }

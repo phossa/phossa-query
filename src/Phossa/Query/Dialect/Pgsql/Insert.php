@@ -15,7 +15,6 @@
 
 namespace Phossa\Query\Dialect\Pgsql;
 
-use Phossa\Query\Clause\ReturningTrait;
 use Phossa\Query\Clause\ReturningInterface;
 use Phossa\Query\Dialect\Common\Insert as CommonInsert;
 
@@ -25,35 +24,12 @@ use Phossa\Query\Dialect\Common\Insert as CommonInsert;
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     \Phossa\Query\Dialect\Common\Insert
- * @see     InsertStatementInterface
+ * @see     PgsqlInterface
+ * @see     ReturningInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
 class Insert extends CommonInsert implements PgsqlInterface, ReturningInterface
 {
-    use ReturningTrait;
-
-    /**
-     * clauses ordering
-     *
-     * @var    int
-     * @access protected
-     */
-    const ORDER_RETURNING = 100;
-
-    /**
-     * order, prefix, join char
-     *
-     * @var    array
-     * @access protected
-     */
-    protected $dialect_config = [
-        // partition
-        self::ORDER_RETURNING => [
-            'prefix'    => 'RETURNING',
-            'func'      => 'buildReturning',
-            'join'      => ', ',
-            'indent'    => true,
-        ],
-    ];
+    use ReturnTrait;
 }

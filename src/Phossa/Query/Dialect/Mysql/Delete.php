@@ -15,8 +15,12 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
+use Phossa\Query\Clause\LimitTrait;
+use Phossa\Query\Clause\OrderByTrait;
 use Phossa\Query\Clause\MysqlFlagTrait;
 use Phossa\Query\Clause\PartitionTrait;
+use Phossa\Query\Clause\LimitInterface;
+use Phossa\Query\Clause\OrderByInterface;
 use Phossa\Query\Clause\MysqlFlagInterface;
 use Phossa\Query\Clause\PartitionInterface;
 use Phossa\Query\Dialect\Common\Delete as CommonDelete;
@@ -33,9 +37,9 @@ use Phossa\Query\Dialect\Common\Delete as CommonDelete;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface, PartitionInterface
+class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface, PartitionInterface, OrderByInterface, LimitInterface
 {
-    use MysqlFlagTrait, PartitionTrait;
+    use MysqlFlagTrait, PartitionTrait, OrderByTrait, LimitTrait;
 
     /**
      * clauses ordering
@@ -45,6 +49,8 @@ class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface,
      */
     const ORDER_MYSQLFLAG = 5;
     const ORDER_PARTITION = 15;
+    const ORDER_ORDBY     = 40;
+    const ORDER_LIMIT     = 50;
 
     /**
      * order, prefix, join char
@@ -65,6 +71,22 @@ class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface,
         self::ORDER_PARTITION => [
             'prefix'    => '',
             'func'      => 'buildPartition',
+            'join'      => '',
+            'indent'    => false,
+        ],
+
+        // order by
+        self::ORDER_ORDBY => [
+            'prefix'    => 'ORDER BY',
+            'func'      => 'buildOrderBy',
+            'join'      => ',',
+            'indent'    => false,
+        ],
+
+        // limit
+        self::ORDER_LIMIT => [
+            'prefix'    => '',
+            'func'      => 'buildLimit',
             'join'      => '',
             'indent'    => false,
         ],

@@ -15,6 +15,7 @@
 
 namespace Phossa\Query\Dialect\Pgsql;
 
+use Phossa\Query\Clause\ReturningInterface;
 use Phossa\Query\Dialect\Common\Select as CommonSelect;
 
 /**
@@ -24,9 +25,11 @@ use Phossa\Query\Dialect\Common\Select as CommonSelect;
  * @author  Hong Zhang <phossa@126.com>
  * @see     \Phossa\Query\Dialect\Common\Select
  * @see     PgsqlInterface
+ * @see     ReturningInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Select extends CommonSelect implements PgsqlInterface
+class Select extends CommonSelect implements PgsqlInterface, ReturningInterface
 {
+    use ReturnTrait;
 }
