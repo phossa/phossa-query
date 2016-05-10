@@ -44,8 +44,8 @@ trait JoinTrait
         /*# string */ $joinType,
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE,
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE,
         /*# bool */ $rawMode = false
     ) {
         $join = strtoupper($joinType) . ' JOIN';
@@ -71,11 +71,11 @@ trait JoinTrait
         // col provided
         } else {
             // only ONE colName provided
-            if (WhereInterface::NO_OPERATOR === $operator) {
+            if (ClauseInterface::NO_OPERATOR === $operator) {
                 $on = [$firstTableCol, '=', $firstTableCol];
 
             // 2 colNames provides
-            } elseif (WhereInterface::NO_VALUE === $secondTableCol) {
+            } elseif (ClauseInterface::NO_VALUE === $secondTableCol) {
                 $on = [$firstTableCol, '=', $operator];
 
             // 2 colNames and operator provided
@@ -110,8 +110,8 @@ trait JoinTrait
     public function join(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
         ) {
             return $this->realJoin('INNER', $table, $firstTableCol, $operator,
                 $secondTableCol);
@@ -123,8 +123,8 @@ trait JoinTrait
     public function innerJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin('INNER', $table, $firstTableCol, $operator,
             $secondTableCol);
@@ -136,8 +136,8 @@ trait JoinTrait
     public function outerJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin(
             'OUTER', $table, $firstTableCol, $operator, $secondTableCol
@@ -150,8 +150,8 @@ trait JoinTrait
     public function leftJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin(
             'LEFT', $table, $firstTableCol, $operator, $secondTableCol
@@ -164,8 +164,8 @@ trait JoinTrait
     public function leftOuterJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin(
             'LEFT OUTER', $table, $firstTableCol, $operator, $secondTableCol
@@ -178,8 +178,8 @@ trait JoinTrait
     public function rightJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin(
             'RIGHT', $table, $firstTableCol, $operator, $secondTableCol
@@ -192,8 +192,8 @@ trait JoinTrait
     public function rightOuterJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin(
             'RIGHT OUTER', $table, $firstTableCol, $operator, $secondTableCol
@@ -206,8 +206,8 @@ trait JoinTrait
     public function fullOuterJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin(
             'FULL OUTER', $table, $firstTableCol, $operator, $secondTableCol
@@ -220,8 +220,8 @@ trait JoinTrait
     public function crossJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->realJoin(
             'CROSS', $table, $firstTableCol, $operator, $secondTableCol
@@ -311,9 +311,6 @@ trait JoinTrait
 
         return join(' ', $res);
     }
-
-    /* for subqueries */
-    abstract public function getDialect()/*# : DialectInterface */;
 
     /* utilities from UtilityTrait */
     abstract protected function isRaw(/*# string */ $string)/*# : bool */;

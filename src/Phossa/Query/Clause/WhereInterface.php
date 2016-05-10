@@ -33,9 +33,7 @@ interface WhereInterface extends ClauseInterface
      *
      * @var    string
      */
-    const SHORT_FORM    = '__SHORT_FORM__';
-    const NO_VALUE      = '__NO_SUCH_VALUE__';
-    const NO_OPERATOR   = '__NO_SUCH_OPERATOR__';
+    const SHORT_FORM = '__SHORT_FORM__';
 
     /**
      * Generic WHERE clause with 'AND' logic
@@ -69,8 +67,8 @@ interface WhereInterface extends ClauseInterface
      */
     public function where(
         $col,
-        $operator = self::NO_OPERATOR,
-        $value    = self::NO_VALUE,
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE,
         /*# bool */ $logicAnd = true,
         /*# bool */ $whereNot = false,
         /*# bool */ $rawMode  = false,
@@ -89,8 +87,8 @@ interface WhereInterface extends ClauseInterface
      */
     public function andWhere(
         $col,
-        $operator = self::NO_OPERATOR,
-        $value    = self::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -105,8 +103,8 @@ interface WhereInterface extends ClauseInterface
      */
     public function orWhere(
         $col,
-        $operator = self::NO_OPERATOR,
-        $value    = self::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -141,8 +139,8 @@ interface WhereInterface extends ClauseInterface
      */
     public function whereNot(
         $col,
-        $operator = self::NO_OPERATOR,
-        $value    = self::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -157,8 +155,8 @@ interface WhereInterface extends ClauseInterface
      */
     public function orWhereNot(
         $col,
-        $operator = self::NO_OPERATOR,
-        $value    = self::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     );
 
     /**

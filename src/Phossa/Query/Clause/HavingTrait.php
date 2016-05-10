@@ -39,8 +39,8 @@ trait HavingTrait
      */
     public function having(
         /*# string */ $col,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $value  = WhereInterface::NO_VALUE,
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $value  = ClauseInterface::NO_VALUE,
         /*# bool */ $logicAnd = true
     ) {
         return $this->where(
@@ -53,8 +53,8 @@ trait HavingTrait
      */
     public function orHaving(
         /*# string */ $col,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $value = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $value = ClauseInterface::NO_VALUE
     ) {
         return $this->having($col, $operator, $value, false);
     }
@@ -72,8 +72,8 @@ trait HavingTrait
      */
     public function orHavingRaw(/*# string */ $having)
     {
-        return $this->having($having, WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE, false);
+        return $this->having($having, ClauseInterface::NO_OPERATOR,
+            ClauseInterface::NO_VALUE, false);
     }
 
     /**
@@ -89,8 +89,8 @@ trait HavingTrait
 
     abstract public function where(
         $col,
-        $operator = self::NO_OPERATOR,
-        $value    = self::NO_VALUE,
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE,
         /*# bool */ $logicAnd = true,
         /*# bool */ $whereNot = false,
         /*# bool */ $rawMode  = false,

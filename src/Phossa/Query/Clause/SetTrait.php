@@ -15,8 +15,6 @@
 
 namespace Phossa\Query\Clause;
 
-use Phossa\Query\Clause\WhereInterface;
-
 /**
  * SetTrait
  *
@@ -44,7 +42,7 @@ trait SetTrait
      * @return self
      * @access public
      */
-    public function set($col, $value = WhereInterface::NO_VALUE)
+    public function set($col, $value = ClauseInterface::NO_VALUE)
     {
         if (is_string($col)) {
             $this->clause_cols[$col] = $value;

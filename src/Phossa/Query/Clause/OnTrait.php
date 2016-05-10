@@ -15,8 +15,6 @@
 
 namespace Phossa\Query\Clause;
 
-use Phossa\Query\Clause\WhereInterface;
-
 /**
  * OnTrait
  *
@@ -41,13 +39,13 @@ trait OnTrait
      */
     public function on(
         /*# string */ $firstTableCol,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE,
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE,
         /*# bool */ $or = false
     ) {
-        if (WhereInterface::NO_OPERATOR === $operator) {
+        if (ClauseInterface::NO_OPERATOR === $operator) {
             $on = [$or, $firstTableCol, '=', $firstTableCol];
-        } elseif (WhereInterface::NO_VALUE === $secondTableCol) {
+        } elseif (ClauseInterface::NO_VALUE === $secondTableCol) {
             $on = [$or, $firstTableCol, '=', $operator];
         } else {
             $on = [$or, $firstTableCol, $operator, $secondTableCol];
@@ -62,8 +60,8 @@ trait OnTrait
      */
     public function orOn(
         /*# string */ $firstTableCol,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     ) {
         return $this->on(
             $firstTableCol, $operator, $secondTableCol, true
@@ -75,8 +73,8 @@ trait OnTrait
      */
     public function onRaw(/*# string */ $on)
     {
-        return $this->on($on, WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE);
+        return $this->on($on, ClauseInterface::NO_OPERATOR,
+            ClauseInterface::NO_VALUE);
     }
 
     /**
@@ -84,8 +82,8 @@ trait OnTrait
      */
     public function orOnRaw(/*# string */ $on)
     {
-        return $this->on($on, WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE, true);
+        return $this->on($on, ClauseInterface::NO_OPERATOR,
+            ClauseInterface::NO_VALUE, true);
     }
 
     /**

@@ -23,7 +23,7 @@ namespace Phossa\Query\Clause;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface SelectInterface
+interface SelectInterface extends ClauseInterface
 {
     /**
      * INSERT ... SELECT etc.

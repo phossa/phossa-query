@@ -130,9 +130,6 @@ trait FromTrait
         return preg_split('/\s+/', $string, 2, PREG_SPLIT_NO_EMPTY);
     }
 
-    /* for subqueries */
-    abstract public function getDialect()/*# : DialectInterface */;
-
     /* utilities from UtilityTrait */
     abstract protected function quote(/*# string */ $str)/*# : string */;
     abstract protected function quoteSpace(/*# string */ $str)/*# : string */;

@@ -15,8 +15,6 @@
 
 namespace Phossa\Query\Clause;
 
-use Phossa\Query\Clause\WhereInterface;
-
 /**
  * SetInterface
  *
@@ -25,7 +23,7 @@ use Phossa\Query\Clause\WhereInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface SetInterface
+interface SetInterface extends ClauseInterface
 {
     /**
      * Insert into table
@@ -35,5 +33,5 @@ interface SetInterface
      * @return self
      * @access public
      */
-    public function set($col, $value = WhereInterface::NO_VALUE);
+    public function set($col, $value = ClauseInterface::NO_VALUE);
 }

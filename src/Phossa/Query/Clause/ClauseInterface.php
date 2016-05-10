@@ -25,4 +25,11 @@ namespace Phossa\Query\Clause;
  */
 interface ClauseInterface
 {
+    /**
+     * Dummy placeholders
+     *
+     * @var    string
+     */
+    const NO_VALUE    = '__NO_SUCH_VALUE__';
+    const NO_OPERATOR = '__NO_SUCH_OPERATOR__';
 }

@@ -23,7 +23,7 @@ namespace Phossa\Query\Clause;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface LimitInterface
+interface LimitInterface extends ClauseInterface
 {
     /**
      * Limit return rows, if $count is -1, means to the end

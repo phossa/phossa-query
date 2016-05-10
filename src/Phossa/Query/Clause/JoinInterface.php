@@ -26,7 +26,7 @@ use Phossa\Query\Dialect\Common\SelectStatementInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface JoinInterface
+interface JoinInterface extends ClauseInterface
 {
     /**
      * Join clause
@@ -57,8 +57,8 @@ interface JoinInterface
         /*# string */ $joinType,
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE,
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE,
         /*# bool */ $rawMode = false
     );
 
@@ -75,8 +75,8 @@ interface JoinInterface
     public function join(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -92,8 +92,8 @@ interface JoinInterface
     public function innerJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -109,8 +109,8 @@ interface JoinInterface
     public function outerJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -126,8 +126,8 @@ interface JoinInterface
     public function leftJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -143,8 +143,8 @@ interface JoinInterface
     public function leftOuterJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -160,8 +160,8 @@ interface JoinInterface
     public function rightJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -177,8 +177,8 @@ interface JoinInterface
     public function rightOuterJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -194,8 +194,8 @@ interface JoinInterface
     public function fullOuterJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**
@@ -211,7 +211,7 @@ interface JoinInterface
     public function crossJoin(
         $table,
         $firstTableCol = '',
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 }

@@ -27,7 +27,7 @@ use Phossa\Query\Exception\InvalidArgumentException;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface BeforeAfterInterface
+interface BeforeAfterInterface extends ClauseInterface
 {
     /**
      * Insert clause before some position like before 'WHERE'

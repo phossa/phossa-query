@@ -25,7 +25,7 @@ namespace Phossa\Query\Clause;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface AliasInterface
+interface AliasInterface extends ClauseInterface
 {
     /**
      * @param  string $alias

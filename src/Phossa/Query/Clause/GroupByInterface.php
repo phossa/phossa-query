@@ -23,7 +23,7 @@ namespace Phossa\Query\Clause;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface GroupByInterface
+interface GroupByInterface extends ClauseInterface
 {
     /**
      * Generic GROUP BY

@@ -25,7 +25,7 @@ use Phossa\Query\Builder\BuilderInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface UnionInterface
+interface UnionInterface extends ClauseInterface
 {
     /**
      * Union with another SELECT

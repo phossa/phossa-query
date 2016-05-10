@@ -23,7 +23,7 @@ namespace Phossa\Query\Clause;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface ForUpdateInterface
+interface ForUpdateInterface extends ClauseInterface
 {
     /**
      * Generic FOR UPDATE

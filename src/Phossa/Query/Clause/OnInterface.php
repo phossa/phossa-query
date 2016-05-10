@@ -23,7 +23,7 @@ namespace Phossa\Query\Clause;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface OnInterface
+interface OnInterface extends ClauseInterface
 {
     /**
      * ON
@@ -37,8 +37,8 @@ interface OnInterface
      */
     public function on(
         /*# string */ $firstTableCol,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE,
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE,
         /*# bool */ $or = false
     );
 
@@ -53,8 +53,8 @@ interface OnInterface
      */
     public function orOn(
         /*# string */ $firstTableCol,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $secondTableCol = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
     );
 
     /**

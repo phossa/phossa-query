@@ -23,7 +23,7 @@ namespace Phossa\Query\Clause;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface HavingInterface
+interface HavingInterface extends ClauseInterface
 {
     /**
      * Generic HAVING
@@ -48,8 +48,8 @@ interface HavingInterface
      */
     public function having(
         /*# string */ $col,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $value = WhereInterface::NO_VALUE,
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $value = ClauseInterface::NO_VALUE,
         /*# bool */ $logicAnd = true
     );
 
@@ -64,8 +64,8 @@ interface HavingInterface
      */
     public function orHaving(
         /*# string */ $col,
-        /*# string */ $operator = WhereInterface::NO_OPERATOR,
-        /*# string */ $value = WhereInterface::NO_VALUE
+        /*# string */ $operator = ClauseInterface::NO_OPERATOR,
+        /*# string */ $value = ClauseInterface::NO_VALUE
     );
 
     /**

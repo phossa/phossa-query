@@ -45,8 +45,8 @@ trait WhereTrait
      */
     public function where(
         $col,
-        $operator = WhereInterface::NO_OPERATOR,
-        $value    = WhereInterface::NO_VALUE,
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE,
         /*# bool */ $logicAnd = true,
         /*# bool */ $whereNot = false,
         /*# bool */ $rawMode  = false,
@@ -56,8 +56,8 @@ trait WhereTrait
         if (is_array($col)) {
             foreach ($col as $fld => $val) {
                 $this->where(
-                    $fld, $val, self::NO_VALUE, $logicAnd, $whereNot, $rawMode
-                );
+                    $fld, $val, ClauseInterface::NO_VALUE, $logicAnd,
+                    $whereNot, $rawMode);
             }
 
         // $col is string or object
@@ -68,13 +68,13 @@ trait WhereTrait
                 $value    = null;
 
             // 1 param provided, raw where provided
-            } elseif (WhereInterface::NO_OPERATOR === $operator) {
+            } elseif (ClauseInterface::NO_OPERATOR === $operator) {
                 $rawMode  = true;
                 $operator = null;
                 $value    = null;
 
             //  2 params provided
-            } elseif (WhereInterface::NO_VALUE === $value) {
+            } elseif (ClauseInterface::NO_VALUE === $value) {
                 if (is_array($operator)) {
                     $value    = $operator[1];
                     $operator = $operator[0];
@@ -101,8 +101,8 @@ trait WhereTrait
      */
     public function andWhere(
         $col,
-        $operator = WhereInterface::NO_OPERATOR,
-        $value    = WhereInterface::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     ) {
         return $this->where($col, $operator, $value);
     }
@@ -112,8 +112,8 @@ trait WhereTrait
      */
     public function orWhere(
         $col,
-        $operator = WhereInterface::NO_OPERATOR,
-        $value    = WhereInterface::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     ) {
         return $this->where($col, $operator, $value, false);
     }
@@ -123,8 +123,8 @@ trait WhereTrait
      */
     public function whereRaw($where)
     {
-        return $this->where($where, WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE, true, false, true);
+        return $this->where($where, ClauseInterface::NO_OPERATOR,
+            ClauseInterface::NO_VALUE, true, false, true);
     }
 
     /**
@@ -132,8 +132,8 @@ trait WhereTrait
      */
     public function orWhereRaw($where)
     {
-        return $this->where($where, WhereInterface::NO_OPERATOR,
-            WhereInterface::NO_VALUE, false, false, true
+        return $this->where($where, ClauseInterface::NO_OPERATOR,
+            ClauseInterface::NO_VALUE, false, false, true
         );
     }
 
@@ -142,8 +142,8 @@ trait WhereTrait
      */
     public function whereNot(
         $col,
-        $operator = WhereInterface::NO_OPERATOR,
-        $value    = WhereInterface::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     ) {
         return $this->where($col, $operator, $value, true, true);
     }
@@ -153,8 +153,8 @@ trait WhereTrait
      */
     public function orWhereNot(
         $col,
-        $operator = WhereInterface::NO_OPERATOR,
-        $value    = WhereInterface::NO_VALUE
+        $operator = ClauseInterface::NO_OPERATOR,
+        $value    = ClauseInterface::NO_VALUE
     ) {
         return $this->where($col, $operator, $value, false, true);
     }
@@ -331,7 +331,7 @@ trait WhereTrait
 
                 // val part
                 if (is_object($where[5])) {
-                    // subquery (SELECT ...)
+                    // subquery
                     if ($where[5] instanceof StatementInterface) {
                         $cls[] = '(' . $where[5]->getSql([], false) . ')';
                     } elseif ($where[5] instanceof RawInterface) {

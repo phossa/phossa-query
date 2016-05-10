@@ -61,4 +61,7 @@ trait IntoTrait
         }
         return $result;
     }
+
+    /* utilities from UtilityTrait */
+    abstract protected function quote(/*# string */ $str)/*# : string */;
 }
