@@ -42,19 +42,19 @@ class HavingTraitTest extends \PHPUnit_Framework_TestCase
         // 2 params
         $this->assertEquals(
             'SELECT * FROM "users" HAVING "age" = 10',
-            $this->builder->select()->having('age', 10)->getSql()
+            $this->builder->select()->having('age', 10)->getStatement()
         );
 
         // 3 params
         $this->assertEquals(
             'SELECT * FROM "users" HAVING "age" > 10',
-            $this->builder->select()->having('age', '>', 10)->getSql()
+            $this->builder->select()->having('age', '>', 10)->getStatement()
         );
 
         // raw mode
         $this->assertEquals(
             'SELECT * FROM "users" HAVING age > 10',
-            $this->builder->select()->having('age > 10')->getSql()
+            $this->builder->select()->having('age > 10')->getStatement()
         );
 
         // multiple having
@@ -63,7 +63,7 @@ class HavingTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->having('age', '>', 10)
                 ->having('level', 15)
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -77,7 +77,7 @@ class HavingTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->having('age', 10)
                 ->orHaving('level', '>', 20)
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -92,7 +92,7 @@ class HavingTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
             ->havingRaw('age = 10')
             ->orHavingRaw('level > 10')
-            ->getSql()
+            ->getStatement()
         );
     }
 }

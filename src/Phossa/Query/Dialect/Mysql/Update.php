@@ -17,10 +17,10 @@ namespace Phossa\Query\Dialect\Mysql;
 
 use Phossa\Query\Clause\LimitTrait;
 use Phossa\Query\Clause\OrderByTrait;
-use Phossa\Query\Clause\MysqlFlagTrait;
+use Phossa\Query\Clause\HintTrait;
 use Phossa\Query\Clause\LimitInterface;
 use Phossa\Query\Clause\OrderByInterface;
-use Phossa\Query\Clause\MysqlFlagInterface;
+use Phossa\Query\Clause\HintInterface;
 use Phossa\Query\Dialect\Common\Update as CommonUpdate;
 
 /**
@@ -30,13 +30,13 @@ use Phossa\Query\Dialect\Common\Update as CommonUpdate;
  * @author  Hong Zhang <phossa@126.com>
  * @see     \Phossa\Query\Dialect\Common\Update
  * @see     MysqlInterface
- * @see     MysqlFlagInterface
+ * @see     HintInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface, OrderByInterface, LimitInterface
+class Update extends CommonUpdate implements MysqlInterface, HintInterface, OrderByInterface, LimitInterface
 {
-    use MysqlFlagTrait, OrderByTrait, LimitTrait;
+    use HintTrait, OrderByTrait, LimitTrait;
 
     /**
      * clauses ordering
@@ -44,7 +44,7 @@ class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface,
      * @var    int
      * @access protected
      */
-    const ORDER_MYSQLFLAG = 5;
+    const ORDER_MYSQLHINT = 5;
     const ORDER_ORDBY     = 40;
     const ORDER_LIMIT     = 50;
 
@@ -55,10 +55,10 @@ class Update extends CommonUpdate implements MysqlInterface, MysqlFlagInterface,
      * @access protected
      */
     protected $dialect_config = [
-        // flags
-        self::ORDER_MYSQLFLAG  => [
+        // hints
+        self::ORDER_MYSQLHINT  => [
             'prefix'    => '',
-            'func'      => 'buildFlag',
+            'func'      => 'buildHint',
             'join'      => ' ',
             'indent'    => true,
         ],

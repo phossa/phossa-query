@@ -85,6 +85,20 @@ trait UtilityTrait
     }
 
     /**
+     * Quote 'name(4) ASC' as '`name`(4) ASC' as used in index creation
+     * @param  string $str
+     * @return string
+     * @access protected
+     */
+    protected function quoteLeading(/*# string */ $str)/*# : string */
+    {
+        $parts = preg_split('/([^0-9a-zA-Z_.])/', $str, 5,
+            \PREG_SPLIT_DELIM_CAPTURE | \PREG_SPLIT_NO_EMPTY);
+        $first = array_shift($parts);
+        return $this->quote($first) . join('', $parts);
+    }
+
+    /**
      * Get current settings
      *
      * @return array

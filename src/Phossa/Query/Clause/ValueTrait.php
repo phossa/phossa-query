@@ -41,10 +41,10 @@ trait ValueTrait
     {
         // object
         if (is_object($value)) {
-            if ($value instanceof StatementInterface) {
-                return '(' . $value->getSql([], false) . ')';
-            } elseif ($value instanceof RawInterface) {
-                return $value . '';
+            if ($value instanceof RawInterface) {
+                return $value->getStatement([], false);
+            } elseif ($value instanceof StatementInterface) {
+                return '(' . $value->getStatement([], false) . ')';
             }
         }
 

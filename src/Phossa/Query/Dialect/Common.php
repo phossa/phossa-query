@@ -95,6 +95,15 @@ class Common implements DialectInterface
     /**
      * {@inheritDoc}
      */
+    public function create(BuilderInterface $builder)/*# : CreateInterface */
+    {
+        $class = __NAMESPACE__ . '\\' . $this->dialect . '\\Create';
+        return new $class($builder);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function quote(
         /*# string */ $string,
         /*# bool */ $quote = DialectInterface::QUOTE_YES

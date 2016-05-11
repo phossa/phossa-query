@@ -73,7 +73,7 @@ EOT;
                 ->col("GROUP_CONCAT(DISTINCT test_score ORDER BY test_score DESC SEPARATOR ' ')")
                 ->from("students")
                 ->groupBy("name")
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -86,7 +86,7 @@ EOT;
     {
         $str = <<<EOT
 SELECT
-    /*! HIGH_PRIORITY SQL_CACHE */
+    HIGH_PRIORITY SQL_CACHE
     `name`
 FROM
     `students`
@@ -97,10 +97,10 @@ EOT;
             $this->builder->select()
                 ->col("name")
                 ->from("students")
-                ->addFlag('HIGH_PRIORITY')
-                ->addFlag('sql_cache')
+                ->addHint('HIGH_PRIORITY')
+                ->addHint('SQL_CACHE')
                 ->forUpdate()
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -113,7 +113,7 @@ EOT;
     {
         $str = <<<EOT
 INSERT
-    /*! DELAYED */
+    DELAYED
 PARTITION (part1, part2)
     (`uid`, `uname`)
 VALUES
@@ -125,12 +125,12 @@ EOT;
         $this->assertEquals(
             preg_replace("/\r\n/","\n", $str),
             $this->builder->insert()
-                ->addFlag("delayed")
+                ->addHint('DELAYED')
                 ->set(['uid' => 2, 'uname' => 'phossa'])
                 ->partition(['part1', 'part2'])
                 ->onDup('uid', 'uid + 1')
                 ->onDup('uname', 'CONCAT(uname, \'xx\')')
-                ->getSql()
+                ->getStatement()
         );
     }
 }

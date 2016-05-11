@@ -16,52 +16,50 @@
 namespace Phossa\Query\Clause;
 
 /**
- * MysqlFlagTrait
+ * TableOptionTrait
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     MysqlFlagInterface
+ * @see     TableOptionInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-trait MysqlFlagTrait
+trait TableOptionTrait
 {
     /**
-     * Mysql flags
+     * table options
      *
      * @var    array
      * @access protected
      */
-    protected $clause_flags = [];
+    protected $tbl_option = [];
 
     /**
      * {@inheritDoc}
      */
-    public function addFlag(/*# string */ $flagName, /*# bool */ $enable = true)
+    public function tblOption(/*# string */ $string)
     {
-        $name = strtoupper($flagName);
-        $this->clause_flags[$name] = $enable;
+        $this->tbl_option[] = $string;
         return $this;
     }
 
     /**
-     * Build FLAG
+     * Build table options
      *
      * @return array
      * @access protected
      */
-    protected function buildFlag()/*# : array */
+    protected function buildTblOpt()/*# : array */
     {
-        $res = [];
-        foreach ($this->clause_flags as $name => $status) {
-            if ($status) {
-                $res[] = $name;
-            }
+        $result = [];
+
+        foreach ($this->tbl_option as $opt) {
+            $result[] = $opt;
         }
-        if (!empty($res)) {
-            return ['/*! ' . join(' ', $res) . ' */'];
-        } else {
-            return [];
+        if (empty($result)) {
+            $result[] = '';
         }
+
+        return $result;
     }
 }

@@ -27,6 +27,7 @@ use Phossa\Query\Dialect\DialectInterface;
 use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
 use Phossa\Query\Statement\ExpressionInterface;
+use Phossa\Query\Dialect\Common\CreateInterface;
 use Phossa\Query\Exception\BadMethodCallException;
 use Phossa\Query\Dialect\Common\SelectStatementInterface;
 use Phossa\Query\Dialect\Common\InsertStatementInterface;
@@ -95,25 +96,6 @@ class Builder implements BuilderInterface
     }
 
     /**
-     * @param  string $method
-     * @param  array $arguments
-     * @return object
-     * @throws BadMethodCallException if method unknown
-     */
-    public function __call($method, $arguments)
-    {
-        $dialect = $this->getDialect();
-        if (method_exists($dialect, $method)) {
-            return call_user_func_array([$dialect, $method], $arguments);
-        }
-
-        throw new BadMethodCallException(
-            Message::get(Message::BUILDER_UNKNOWN_METHOD, $method),
-            Message::BUILDER_UNKNOWN_METHOD
-        );
-    }
-
-    /**
      * {@inheritDoc}
      */
     public function expr()/*# : ExpressionInterface */
@@ -138,9 +120,9 @@ class Builder implements BuilderInterface
                 $rep[] = $this->generatePlaceholder($val);
             }
 
-            return new Raw(preg_replace($pat, $rep, $string, 1));
+            return new Raw(preg_replace($pat, $rep, $string, 1), $this);
         } else {
-            return new Raw($string);
+            return new Raw($string, $this);
         }
     }
 
@@ -246,6 +228,35 @@ class Builder implements BuilderInterface
     /**
      * {@inheritDoc}
      */
+    public function replace(array $values = [])/*# : ReplaceStatementInterface */
+    {
+        // REPLACE statement
+        $dialect = $this->getDialect();
+        if (!method_exists($dialect, 'replace')) {
+            throw new BadMethodCallException(
+                Message::get(Message::BUILDER_UNKNOWN_METHOD, 'replace'),
+                Message::BUILDER_UNKNOWN_METHOD
+            );
+        }
+
+        $replace = $dialect->replace($this);
+
+        // set table
+        if (count($this->tables)) {
+            $replace->into($this->tables[array_keys($this->tables)]);
+        }
+
+        // set cols
+        if (!empty($values)) {
+            $replace->set($values);
+        }
+
+        return $replace;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function update(array $values = [])/*# : UpdateStatementInterface */
     {
         // UPDATE statement
@@ -278,5 +289,13 @@ class Builder implements BuilderInterface
         }
 
         return $delete;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function create()/*# : CreateInterface */
+    {
+        return $this->getDialect()->create($this);
     }
 }

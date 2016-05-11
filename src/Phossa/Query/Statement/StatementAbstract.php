@@ -79,7 +79,7 @@ abstract class StatementAbstract implements StatementInterface
     /**
      * {@inheritDoc}
      */
-    public function getSql(
+    public function getStatement(
         array $settings = [],
         /*# bool */ $replace = true
     )/*# : string */ {
@@ -94,7 +94,7 @@ abstract class StatementAbstract implements StatementInterface
         // build PREVIOUS statement if any (UNION etc)
         $res = [];
         if ($this->hasPrevious()) {
-            $res[] = $this->getPrevious()->getSql($currSettings, false);
+            $res[] = $this->getPrevious()->getStatement($currSettings, false);
         }
 
         // build current statement
@@ -113,7 +113,7 @@ abstract class StatementAbstract implements StatementInterface
                 $currSettings['escapeFunction']);
         }
 
-        return $sql;
+        return trim($sql);
     }
 
     /**
@@ -129,7 +129,7 @@ abstract class StatementAbstract implements StatementInterface
      */
     public function __toString()/*# : string */
     {
-        return $this->getSql();
+        return $this->getStatement();
     }
 
     /**
@@ -146,8 +146,11 @@ abstract class StatementAbstract implements StatementInterface
         // configs
         $configs  = $this->getConfig();
 
+        // before build()
+        $this->beforeBuild();
+
         // start of result array
-        $result = [$this->type];
+        $result = [$this->getType()];
 
         // seperator & indent
         $sp = $settings['seperator'];
@@ -187,5 +190,15 @@ abstract class StatementAbstract implements StatementInterface
         $config = array_replace($this->config, $this->dialect_config);
         ksort($config);
         return $config;
+    }
+
+    /**
+     * Things to do before build
+     *
+     * @access protected
+     */
+    protected function beforeBuild()
+    {
+        return;
     }
 }

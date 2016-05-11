@@ -71,14 +71,14 @@ EOT;
 
         $this->assertEquals(
             preg_replace("/\r\n/","\n", $str1),
-            $ins->getSql($this->settings)
+            $ins->getStatement($this->settings)
         );
 
         // positioned params
         $str2 = 'UPDATE "users" SET "uid" = ?, "uname" = ? WHERE "uid" = ?';
         $this->assertEquals(
             preg_replace("/\r\n/","\n", $str2),
-            $ins->getSql(['positionedParam' => true])
+            $ins->getStatement(['positionedParam' => true])
         );
     }
 }

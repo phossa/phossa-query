@@ -13,17 +13,24 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Dialect;
 
 /**
- * RawInterface
+ * SQLITE dialect
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     Common
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface RawInterface extends StatementInterface
+class Sqlite extends Common
 {
+    /**
+     * Current dialect string
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $dialect = 'Sqlite';
 }

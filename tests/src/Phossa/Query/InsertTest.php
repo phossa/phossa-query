@@ -61,7 +61,7 @@ class InsertTest extends \PHPUnit_Framework_TestCase
                     ->set('uname', 'phossa');
 
         $this->assertEquals(
-            preg_replace("/\r\n/","\n", $str1), $ins->getSql()
+            preg_replace("/\r\n/","\n", $str1), $ins->getStatement()
         );
 
         // indented spacing
@@ -73,14 +73,14 @@ VALUES
     (2, 'phossa')
 EOT;
         $this->assertEquals(
-            preg_replace("/\r\n/","\n", $str2), $ins->getSql($this->settings)
+            preg_replace("/\r\n/","\n", $str2), $ins->getStatement($this->settings)
         );
 
         // positioned param
         $str3 = 'INSERT INTO "users" ("uid", "uname") VALUES (?, ?)';
         $this->assertEquals(
             preg_replace("/\r\n/","\n", $str3),
-            $ins->getSql(['positionedParam' => true])
+            $ins->getStatement(['positionedParam' => true])
         );
         $this->assertEquals([2, 'phossa'], $ins->getBindings());
     }
@@ -100,14 +100,14 @@ EOT;
             ->set(['uid' => 3, 'uname' => 'test']);
 
         $this->assertEquals(
-            preg_replace("/\r\n/","\n", $str1), $ins1->getSql()
+            preg_replace("/\r\n/","\n", $str1), $ins1->getStatement()
         );
 
         // positioned params
         $str2 = 'INSERT INTO "users" ("uid", "uname") VALUES (?, ?), (?, ?)';
         $this->assertEquals(
             preg_replace("/\r\n/","\n", $str2),
-            $ins1->getSql(['positionedParam' => true])
+            $ins1->getStatement(['positionedParam' => true])
         );
         $this->assertEquals([2, 'phossa', 3, 'test'], $ins1->getBindings());
 
@@ -121,13 +121,13 @@ EOT;
 
         $str3 = 'INSERT INTO "users" ("uid", "uname", "phone") VALUES (2, \'phossa\', DEFAULT), (3, \'test\', \'1234\')';
         $this->assertEquals(
-            preg_replace("/\r\n/","\n", $str3), $ins2->getSql()
+            preg_replace("/\r\n/","\n", $str3), $ins2->getStatement()
         );
 
         // use NULL instead of DEFAULT
         $str4 = 'INSERT INTO "users" ("uid", "uname", "phone") VALUES (2, \'phossa\', NULL), (3, \'test\', \'1234\')';
         $this->assertEquals(
-            preg_replace("/\r\n/","\n", $str4), $ins2->getSql(['useNullAsDefault' => true])
+            preg_replace("/\r\n/","\n", $str4), $ins2->getStatement(['useNullAsDefault' => true])
         );
     }
 
@@ -147,7 +147,7 @@ EOT;
                 ->from('oldusers');
 
         $this->assertEquals(
-            preg_replace("/\r\n/","\n", $str1), $ins1->getSql()
+            preg_replace("/\r\n/","\n", $str1), $ins1->getStatement()
         );
     }
 }

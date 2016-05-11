@@ -317,7 +317,7 @@ trait WhereTrait
 
                 // grouped where
                 if (is_object($where[3])) {
-                    $cls[] = $where[3]->getSql([], false);
+                    $cls[] = $where[3]->getStatement([], false);
 
                 } elseif (!is_null($where[3])) {
                     $cls[] = $where[0] ? $where[3] : $this->quote($where[3]);

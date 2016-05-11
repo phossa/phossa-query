@@ -16,25 +16,21 @@
 namespace Phossa\Query\Clause;
 
 /**
- * MysqlFlagInterface
+ * HintInterface
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface MysqlFlagInterface extends ClauseInterface
+interface HintInterface extends ClauseInterface
 {
     /**
-     * Add mysql flag
+     * Add dialect specific hint (feature)
      *
-     * @param  string $flagName
-     * @param  bool $enable
+     * @param  string $hintName
      * @return self
      * @access public
      */
-    public function addFlag(
-        /*# string */ $flagName,
-        /*# bool */ $enable = true
-    );
+    public function addHint(/*# string */ $hintName);
 }

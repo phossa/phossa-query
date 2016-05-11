@@ -44,26 +44,26 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
         // 1 param
         $this->assertEquals(
             'SELECT * FROM "users" WHERE age > 18',
-            $users->select()->where('age > 18')->getSql()
+            $users->select()->where('age > 18')->getStatement()
         );
 
         // 2 params
         $this->assertEquals(
             'SELECT * FROM "users" WHERE "age" = 18',
-            $users->select()->where('age', 18)->getSql()
+            $users->select()->where('age', 18)->getStatement()
         );
 
 
         // 3 params
         $this->assertEquals(
             'SELECT * FROM "users" WHERE "age" < 18',
-            $users->select()->where('age', '<', 18)->getSql()
+            $users->select()->where('age', '<', 18)->getStatement()
         );
 
         // array param 1
         $this->assertEquals(
             'SELECT * FROM "users" WHERE "age" = 18 AND "score" = 100',
-            $users->select()->where(['age' => 18, 'score' => 100])->getSql()
+            $users->select()->where(['age' => 18, 'score' => 100])->getStatement()
         );
 
         // array param 2
@@ -71,7 +71,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             'SELECT * FROM "users" WHERE "age" > 18 AND "score" >= 90',
             $users->select()
             ->where(['age' => [ '>', 18 ], 'score' => [ '>=', 90 ]])
-            ->getSql()
+            ->getStatement()
         );
 
         // multiple where
@@ -80,7 +80,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->where('age', 18)
             ->where('score', '>=', 90)
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -100,7 +100,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
                 $b->expr()->where('id', 1)->orWhere(
                     $b->expr()->where('id', '<', 20)->orWhere('id', '>', 100)
                 )
-            )->orWhere('name', 'Tester')->getSql()
+            )->orWhere('name', 'Tester')->getStatement()
         );
     }
 
@@ -116,7 +116,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
                 ->where('age', 18)
                 ->andWhere('score', '>', 90)
-                ->getSql()
+                ->getStatement()
        );
     }
 
@@ -132,7 +132,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->where('age', 18)
             ->orWhere('score', '>', 90)
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -148,7 +148,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->whereRaw('age = 18')
             ->orWhere('score', '>', 90)
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -164,7 +164,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->whereRaw('age = 18')
             ->orWhereRaw('score > 90')
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -180,7 +180,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->whereNot('age', 18)
             ->whereNot('score', '>', 90)
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -196,7 +196,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->where('age', 18)
             ->orWhereNot('score', '>', 90)
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -209,7 +209,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM "users" WHERE "age" IN (18,19,20)',
-            $users->select()->whereIn('age', [18,19,20])->getSql()
+            $users->select()->whereIn('age', [18,19,20])->getStatement()
         );
     }
 
@@ -225,7 +225,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
                 ->whereIn('age', [18,19,20])
                 ->orWhereIn('level', [1,2])
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -242,7 +242,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->whereNotIn('age', [18,19,20])
             ->orWhereNotIn('level', [1,2])
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -255,7 +255,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             'SELECT * FROM "users" WHERE "age" BETWEEN 10 AND 20',
-            $users->select()->whereBetween('age', 10, 20)->getSql()
+            $users->select()->whereBetween('age', 10, 20)->getStatement()
         );
     }
 
@@ -271,7 +271,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
                 ->where('score', '>', 90)
                 ->orWhereBetween('age', 10, 20)
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -288,7 +288,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->whereNotBetween('age', 10, 20)
             ->orWhereNotBetween('score', 90, 100)
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -305,7 +305,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->whereNull('age')
             ->orWhereNull('score')
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -322,7 +322,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             $users->select()
             ->whereNotNull('age')
             ->orWhereNotNull('score')
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -341,14 +341,14 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'SELECT * FROM "sales" WHERE EXISTS (SELECT "user_id" FROM "users" WHERE "age" > 60)',
             $sales->select()
-                ->whereExists($users)->getSql()
+                ->whereExists($users)->getStatement()
         );
 
         // whereNotExists
         $this->assertEquals(
             'SELECT * FROM "sales" WHERE NOT EXISTS (SELECT "user_id" FROM "users" WHERE "age" > 60)',
             $sales->select()
-                ->whereNotExists($users)->getSql()
+                ->whereNotExists($users)->getStatement()
         );
 
         // orWhereExists
@@ -356,7 +356,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             'SELECT * FROM "sales" WHERE "order_id" > 10 OR EXISTS (SELECT "user_id" FROM "users" WHERE "age" > 60)',
             $sales->select()
                 ->where('order_id', '>', 10)
-                ->orWhereExists($users)->getSql()
+                ->orWhereExists($users)->getStatement()
         );
 
         // orWhereNotExists
@@ -364,7 +364,7 @@ class WhereTraitTest extends \PHPUnit_Framework_TestCase
             'SELECT * FROM "sales" WHERE "order_id" > 10 OR NOT EXISTS (SELECT "user_id" FROM "users" WHERE "age" > 60)',
             $sales->select()
             ->where('order_id', '>', 10)
-            ->orWhereNotExists($users)->getSql()
+            ->orWhereNotExists($users)->getStatement()
         );
     }
 }

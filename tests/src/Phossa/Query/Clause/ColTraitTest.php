@@ -41,22 +41,22 @@ class ColTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT "user_name"',
-            $this->builder->select()->col('user_name')->getSql()
+            $this->builder->select()->col('user_name')->getStatement()
         );
 
         $this->assertEquals(
             'SELECT "user_name" AS "n"',
-            $this->builder->select()->col('user_name', 'n')->getSql()
+            $this->builder->select()->col('user_name', 'n')->getStatement()
         );
 
         $this->assertEquals(
             'SELECT "user_name", "user_addr"',
-            $this->builder->select()->col(['user_name', 'user_addr'])->getSql()
+            $this->builder->select()->col(['user_name', 'user_addr'])->getStatement()
         );
 
         $this->assertEquals(
             'SELECT "user_name", "user_addr" AS "a"',
-            $this->builder->select()->col(['user_name', 'user_addr' => 'a'])->getSql()
+            $this->builder->select()->col(['user_name', 'user_addr' => 'a'])->getStatement()
         );
 
         // multiple col
@@ -65,7 +65,7 @@ class ColTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->col('user_name')
                 ->col('user_addr', 'a')
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -76,12 +76,12 @@ class ColTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT user_name AS n',
-            $this->builder->select()->colRaw('user_name AS n')->getSql()
+            $this->builder->select()->colRaw('user_name AS n')->getStatement()
         );
 
         $this->assertEquals(
             'SELECT COUNT(user_id) AS "cnt"',
-            $this->builder->select()->colRaw('COUNT(user_id)', 'cnt')->getSql()
+            $this->builder->select()->colRaw('COUNT(user_id)', 'cnt')->getStatement()
         );
     }
 
@@ -92,12 +92,12 @@ class ColTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT DISTINCT "user_name"',
-            $this->builder->select()->distinct()->col('user_name')->getSql()
+            $this->builder->select()->distinct()->col('user_name')->getStatement()
         );
 
         $this->assertEquals(
             'SELECT DISTINCT "user_name" AS "n"',
-            $this->builder->select()->distinct()->col('user_name', 'n')->getSql()
+            $this->builder->select()->distinct()->col('user_name', 'n')->getStatement()
         );
     }
 }

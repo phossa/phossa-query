@@ -13,17 +13,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Dialect\Sqlite;
+
+use Phossa\Query\Dialect\Common\Insert as CommonInsert;
 
 /**
- * RawInterface
+ * MSSQL Insert
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Query\Dialect\Common\Insert
+ * @see     SqliteInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface RawInterface extends StatementInterface
+class Insert extends CommonInsert implements SqliteInterface
 {
 }

@@ -73,7 +73,7 @@ EOT;
                 ->col("GROUP_CONCAT(DISTINCT test_score ORDER BY test_score DESC SEPARATOR ' ')")
                 ->from("students")
                 ->groupBy("name")
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -92,7 +92,7 @@ FROM
 EOT;
         $this->assertEquals(
             preg_replace("/\r\n/","\n", $str),
-            $this->builder->select()->from("students")->getSql([
+            $this->builder->select()->from("students")->getStatement([
                 'seperator' => "\n",
                 'indent'    => "  ",
                 'autoQuote' => false,
@@ -121,7 +121,7 @@ EOT;
                 ->from("students")
                 ->from("lecturers", "l")
                 ->from("admins")
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -143,7 +143,7 @@ EOT;
             $this->builder->select()
                 ->from( $this->builder->select()->from("students"), 's')
                 ->col('s.id')
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -167,7 +167,7 @@ EOT;
                 ->from("students")
                 ->field("id")
                 ->field("students.name")
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -193,7 +193,7 @@ EOT;
                 ->field("s.id")
                 ->field("s.test_score", "Test score")
                 ->field("DATE_FORMAT(s.date_taken, '%M %Y')", "Taken on")
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -215,7 +215,7 @@ EOT;
             $this->builder->select()
                 ->from("students", "s")
                 ->field($this->builder->select()->max("score")->from("scores"), 'score')
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -239,7 +239,7 @@ EOT;
                 ->from("students")
                 ->field("id")
                 ->distinct()
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -256,7 +256,7 @@ EOT;
             $this->builder->select()
                 ->from("students")
                 ->join("teachers")
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -282,7 +282,7 @@ EOT;
                 ->from("students")
                 ->leftJoin("teachers", "students.id", "teachers.student_id")
                 ->rightJoin("jailed j", "j.student_id", "students.id")
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -305,7 +305,7 @@ EOT;
             $this->builder->select()
                 ->from('marks', 'm')
                 ->join($this->builder->select()->from('students')->alias('s'), 's.id', 'm.id')
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -323,7 +323,7 @@ EOT;
                 ->field("id")
                 ->from("students")
                 ->where("name", "Thomas")
-                ->getSql(['autoQuote' => false])
+                ->getStatement(['autoQuote' => false])
         );
     }
 
@@ -348,7 +348,7 @@ EOT;
                 ->field("id")
                 ->from("students")
                 ->where("score", $this->builder->select()->max('score')->from('scores'))
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -375,7 +375,7 @@ EOT;
                 ->from("students")
                 ->where("name","Thomas")
                 ->orWhere("age", ">", 18)
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -404,7 +404,7 @@ EOT;
                         ->andWhere("name", "Thomas")
                         ->orWhere("age", ">", 18)
                 )
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -431,7 +431,7 @@ EOT;
                 ->from("students")
                 ->orderByAsc("id")
                 ->orderByDesc("name")
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -458,7 +458,7 @@ EOT;
                 ->from("students")
                 ->groupBy("id")
                 ->groupBy("students.name")
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -486,7 +486,7 @@ EOT;
                 ->from("students")
                 ->groupBy("id")
                 ->having("a", 2)
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -511,7 +511,7 @@ EOT;
                 ->field($this->builder->raw("id"))
                 ->from("students")
                 ->where("time", $this->builder->raw('NOW()'))
-                ->getSql($this->settings)
+                ->getStatement($this->settings)
         );
     }
 
@@ -529,7 +529,7 @@ EOT;
                 ->where("age", "IN", $this->builder->raw('RANGE(?, ?)', 1, 1.2));
         $this->assertEquals(
             preg_replace("/\r\n/","\n", $str),
-            $sel->getSql(['positionedParam' => true])
+            $sel->getStatement(['positionedParam' => true])
         );
 
         $this->assertEquals([1,1.2], $sel->getBindings());

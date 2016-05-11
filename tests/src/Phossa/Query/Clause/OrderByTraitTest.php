@@ -41,7 +41,7 @@ class OrderByTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" ORDER BY "age" DESC',
-            $this->builder->select()->orderByDesc('age')->getSql()
+            $this->builder->select()->orderByDesc('age')->getStatement()
         );
 
         // multiple orderBy
@@ -50,7 +50,7 @@ class OrderByTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->orderByDesc('age')
                 ->orderByDesc('level')
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -64,7 +64,7 @@ class OrderByTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
             ->orderByAsc('age')
             ->orderByDesc('level')
-            ->getSql()
+            ->getStatement()
         );
     }
 
@@ -77,7 +77,7 @@ class OrderByTraitTest extends \PHPUnit_Framework_TestCase
             'SELECT * FROM "users" ORDER BY age ASC, level DESC',
             $this->builder->select()
             ->orderByRaw('age ASC, level DESC')
-            ->getSql()
+            ->getStatement()
         );
     }
 }

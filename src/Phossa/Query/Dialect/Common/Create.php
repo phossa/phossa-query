@@ -13,49 +13,40 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Dialect\Common;
 
 use Phossa\Query\Builder\BuilderInterface;
+use Phossa\Query\Statement\BuilderAwareTrait;
 
 /**
- * Pass as raw string
+ * Create
  *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @see     RawInterface
+ * @see     CreateInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Raw extends StatementAbstract implements RawInterface
+class Create implements CreateInterface
 {
-    /**
-     * raw string
-     *
-     * @var    string
-     * @access protected
-     */
-    protected $str = '';
+    use BuilderAwareTrait;
 
     /**
-     * Constructor
-     *
-     * @param  string $rawSql
      * @param  BuilderInterface $builder
      * @access public
      */
-    public function __construct(
-        /*# string */ $rawSql,
-        BuilderInterface $builder
-    ) {
-        parent::__construct($builder);
-        $this->str = (string) $rawSql;
+    public function __construct(BuilderInterface $builder)
+    {
+        $this->setBuilder($builder);
     }
 
     /**
      * {@inheritDoc}
      */
-    protected function build()/*# : string */
-    {
-        return $this->str;
+    public function table(
+        /*# string */ $tableName
+    )/*# : CreateTableStatementInterface */ {
+        $class = get_class($this) . 'Table';
+        return new $class($tableName, $this->getBuilder());
     }
 }

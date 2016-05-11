@@ -41,7 +41,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT FUNC("age")',
-            $this->builder->select()->func('FUNC(%s)', 'age')->getSql()
+            $this->builder->select()->func('FUNC(%s)', 'age')->getStatement()
         );
     }
 
@@ -52,7 +52,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT COUNT("age")',
-            $this->builder->select()->count('age')->getSql()
+            $this->builder->select()->count('age')->getStatement()
         );
     }
 
@@ -63,7 +63,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT MIN("age")',
-            $this->builder->select()->min('age')->getSql()
+            $this->builder->select()->min('age')->getStatement()
         );
     }
 
@@ -74,7 +74,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT MAX("age")',
-            $this->builder->select()->max('age')->getSql()
+            $this->builder->select()->max('age')->getStatement()
         );
     }
 
@@ -85,7 +85,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT AVG("age") AS "avg"',
-            $this->builder->select()->avg('age', 'avg')->getSql()
+            $this->builder->select()->avg('age', 'avg')->getStatement()
         );
     }
 
@@ -96,7 +96,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT SUM("age") AS "s"',
-            $this->builder->select()->sum('age', 's')->getSql()
+            $this->builder->select()->sum('age', 's')->getStatement()
         );
     }
 
@@ -107,7 +107,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT SUM(DISTINCT "age") AS "s"',
-            $this->builder->select()->sumDistinct('age', 's')->getSql()
+            $this->builder->select()->sumDistinct('age', 's')->getStatement()
         );
     }
 
@@ -124,7 +124,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
             ->count('user_id', 'cnt')
             ->min('age')
             ->max('score')
-            ->getSql()
+            ->getStatement()
         );
 
         $this->assertEquals(
@@ -132,7 +132,7 @@ class FunctionTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
             ->sumDistinct('age', 'a')
             ->col('score')
-            ->getSql()
+            ->getStatement()
         );
     }
 }

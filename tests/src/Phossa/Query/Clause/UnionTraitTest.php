@@ -45,7 +45,7 @@ class UnionTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'SELECT * FROM "users" UNION SELECT * FROM "oldusers"',
             $this->builder->select()
-                ->union()->select()->table('oldusers')->getSql()
+                ->union()->select()->table('oldusers')->getStatement()
         );
 
         // multiple union
@@ -56,7 +56,7 @@ class UnionTraitTest extends \PHPUnit_Framework_TestCase
                 ->select()->from('oldusers')
             ->unionAll()
                 ->select('user_id')->from('oldusers')
-                ->getSql()
+                ->getStatement()
         );
     }
 }

@@ -16,7 +16,7 @@
 namespace Phossa\Query\Dialect\Mysql;
 
 use Phossa\Query\Clause\OnDupTrait;
-use Phossa\Query\Clause\MysqlFlagTrait;
+use Phossa\Query\Clause\HintTrait;
 use Phossa\Query\Clause\PartitionTrait;
 use Phossa\Query\Clause\OnDupInterface;
 use Phossa\Query\Clause\PartitionInterface;
@@ -36,7 +36,7 @@ use Phossa\Query\Dialect\Common\Insert as CommonInsert;
  */
 class Insert extends CommonInsert implements MysqlInterface, PartitionInterface, OnDupInterface
 {
-    use MysqlFlagTrait, PartitionTrait, OnDupTrait;
+    use HintTrait, PartitionTrait, OnDupTrait;
 
     /**
      * clauses ordering
@@ -44,7 +44,7 @@ class Insert extends CommonInsert implements MysqlInterface, PartitionInterface,
      * @var    int
      * @access protected
      */
-    const ORDER_MYSQLFLAG = 5;
+    const ORDER_MYSQLHINT = 5;
     const ORDER_PARTITION = 15;
     const ORDER_ONDUP     = 100;
 
@@ -55,10 +55,10 @@ class Insert extends CommonInsert implements MysqlInterface, PartitionInterface,
      * @access protected
      */
     protected $dialect_config = [
-        // flags
-        self::ORDER_MYSQLFLAG  => [
+        // hints
+        self::ORDER_MYSQLHINT  => [
             'prefix'    => '',
-            'func'      => 'buildFlag',
+            'func'      => 'buildHint',
             'join'      => ' ',
             'indent'    => true,
         ],

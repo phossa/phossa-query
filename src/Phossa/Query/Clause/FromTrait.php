@@ -87,7 +87,7 @@ trait FromTrait
 
             // subselect
             if (is_object($tbl) && $tbl instanceof SelectStatementInterface) {
-                $tbl = '(' . $tbl->getSql([], false) . ')';
+                $tbl = '(' . $tbl->getStatement([], false) . ')';
 
             // normal table
             } else {

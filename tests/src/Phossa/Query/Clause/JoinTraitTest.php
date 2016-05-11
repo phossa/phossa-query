@@ -42,25 +42,25 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
         // one col
         $this->assertEquals(
             'SELECT * FROM "users" INNER JOIN "sales" ON "users"."uid" = "sales"."uid"',
-            $this->builder->select()->realJoin('INNER', 'sales', 'uid')->getSql()
+            $this->builder->select()->realJoin('INNER', 'sales', 'uid')->getStatement()
         );
 
         // 2 cols
         $this->assertEquals(
             'SELECT * FROM "users" INNER JOIN "sales" ON "users"."uid" = "sales"."s_uid"',
-            $this->builder->select()->realJoin('INNER', 'sales', 'uid', 's_uid')->getSql()
+            $this->builder->select()->realJoin('INNER', 'sales', 'uid', 's_uid')->getStatement()
         );
 
         // 2 cols with =
         $this->assertEquals(
             'SELECT * FROM "users" INNER JOIN "sales" ON "users"."uid" = "sales"."s_uid"',
-            $this->builder->select()->realJoin('INNER', 'sales', 'uid', '=', 's_uid')->getSql()
+            $this->builder->select()->realJoin('INNER', 'sales', 'uid', '=', 's_uid')->getStatement()
         );
 
         // test table alias
         $this->assertEquals(
             'SELECT * FROM "users" INNER JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->realJoin('INNER', 'sales s', 'uid', '=', 'uid')->getSql()
+            $this->builder->select()->realJoin('INNER', 'sales s', 'uid', '=', 'uid')->getStatement()
         );
 
         // join with subquery
@@ -69,7 +69,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()->realJoin('INNER',
                 $this->builder->table('oldusers')->select('uid')->alias('x'),
                 'uid'
-            )->getSql()
+            )->getStatement()
         );
 
         // multiple joins
@@ -78,7 +78,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->realJoin('INNER', 'sales s', 'uid', '=', 'uid')
                 ->realJoin('INNER', 'order o', 'uid')
-                ->getSql()
+                ->getStatement()
         );
 
         // grouped on
@@ -89,7 +89,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
                     $this->builder->expr()
                         ->on('users.uid', 'sales.s_uid')
                         ->orOn('users.uid', 'sales.puid')
-                )->getSql()
+                )->getStatement()
         );
     }
 
@@ -100,7 +100,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" INNER JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->join('sales s', 'uid')->getSql()
+            $this->builder->select()->join('sales s', 'uid')->getStatement()
             );
     }
 
@@ -111,7 +111,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" INNER JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->innerJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->innerJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -122,7 +122,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" OUTER JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->outerJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->outerJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -133,7 +133,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" LEFT JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->leftJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->leftJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -144,7 +144,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" LEFT OUTER JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->leftOuterJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->leftOuterJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -155,7 +155,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" RIGHT JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->rightJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->rightJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -166,7 +166,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" RIGHT OUTER JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->rightOuterJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->rightOuterJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -177,7 +177,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" FULL OUTER JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->fullOuterJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->fullOuterJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -188,7 +188,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" CROSS JOIN "sales" AS "s" ON "users"."uid" = "s"."uid"',
-            $this->builder->select()->crossJoin('sales s', 'uid')->getSql()
+            $this->builder->select()->crossJoin('sales s', 'uid')->getStatement()
         );
     }
 
@@ -202,7 +202,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'SELECT * FROM "users" CROSS JOIN sales s ON users.uid = s.uid',
             $this->builder->select()
-                ->crossJoin('sales s ON users.uid = s.uid')->getSql()
+                ->crossJoin('sales s ON users.uid = s.uid')->getStatement()
         );
     }
 }

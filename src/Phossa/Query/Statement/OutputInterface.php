@@ -15,26 +15,34 @@
 
 namespace Phossa\Query\Statement;
 
-use Phossa\Query\Builder\SettingsInterface;
-use Phossa\Query\Clause\BeforeAfterInterface;
-use Phossa\Query\Dialect\DialectAwareInterface;
-
 /**
- * StatementInterface
+ * OutputInterface
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface StatementInterface extends DialectAwareInterface, SettingsInterface, OutputInterface, BuilderAwareInterface, ParameterAwareInterface, PreviousInterface, BeforeAfterInterface
+interface OutputInterface
 {
     /**
-     * Return the SQL statement type
+     * Return the SQL base on settings and the dialect
+     *
+     * @param  array $settings settings
+     * @param  bool $replace replace placeholders
+     * @return string
+     * @access public
+     */
+    public function getStatement(
+        array $settings = [],
+        /*# bool */ $replace = true
+    )/*# : string */;
+
+    /**
+     * Get the statement with default settings & dialect
      *
      * @return string
      * @access public
      */
-    public function getType()/*# : string */;
+    public function __toString()/*# : string */;
 }

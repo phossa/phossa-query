@@ -13,17 +13,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Dialect\Sqlite;
+
+use Phossa\Query\Dialect\Common\Update as CommonUpdate;
 
 /**
- * RawInterface
+ * MSSQL Update
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     \Phossa\Query\Dialect\Common\Update
+ * @see     SqliteInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface RawInterface extends StatementInterface
+class Update extends CommonUpdate implements SqliteInterface
 {
 }

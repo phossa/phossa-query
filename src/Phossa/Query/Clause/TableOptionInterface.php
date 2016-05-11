@@ -13,17 +13,27 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Clause;
 
 /**
- * RawInterface
+ * TableOptionInterface
  *
- * @interface
+ * Create table options
+ *
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     ClauseInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface RawInterface extends StatementInterface
+interface TableOptionInterface extends ClauseInterface
 {
+    /**
+     * Add one create table option
+     *
+     * @param  string $string
+     * @return self
+     * @access public
+     */
+    public function tblOption(/*# string */ $string);
 }

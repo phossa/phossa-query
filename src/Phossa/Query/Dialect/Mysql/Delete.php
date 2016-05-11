@@ -17,11 +17,11 @@ namespace Phossa\Query\Dialect\Mysql;
 
 use Phossa\Query\Clause\LimitTrait;
 use Phossa\Query\Clause\OrderByTrait;
-use Phossa\Query\Clause\MysqlFlagTrait;
+use Phossa\Query\Clause\HintTrait;
 use Phossa\Query\Clause\PartitionTrait;
 use Phossa\Query\Clause\LimitInterface;
 use Phossa\Query\Clause\OrderByInterface;
-use Phossa\Query\Clause\MysqlFlagInterface;
+use Phossa\Query\Clause\HintInterface;
 use Phossa\Query\Clause\PartitionInterface;
 use Phossa\Query\Dialect\Common\Delete as CommonDelete;
 
@@ -32,14 +32,14 @@ use Phossa\Query\Dialect\Common\Delete as CommonDelete;
  * @author  Hong Zhang <phossa@126.com>
  * @see     \Phossa\Query\Dialect\Common\Delete
  * @see     MysqlInterface
- * @see     MysqlFlagInterface
+ * @see     HintInterface
  * @see     PartitionInterface
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface, PartitionInterface, OrderByInterface, LimitInterface
+class Delete extends CommonDelete implements MysqlInterface, HintInterface, PartitionInterface, OrderByInterface, LimitInterface
 {
-    use MysqlFlagTrait, PartitionTrait, OrderByTrait, LimitTrait;
+    use HintTrait, PartitionTrait, OrderByTrait, LimitTrait;
 
     /**
      * clauses ordering
@@ -47,7 +47,7 @@ class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface,
      * @var    int
      * @access protected
      */
-    const ORDER_MYSQLFLAG = 5;
+    const ORDER_MYSQLHINT = 5;
     const ORDER_PARTITION = 15;
     const ORDER_ORDBY     = 40;
     const ORDER_LIMIT     = 50;
@@ -59,10 +59,10 @@ class Delete extends CommonDelete implements MysqlInterface, MysqlFlagInterface,
      * @access protected
      */
     protected $dialect_config = [
-        // flags
-        self::ORDER_MYSQLFLAG  => [
+        // hints
+        self::ORDER_MYSQLHINT  => [
             'prefix'    => '',
-            'func'      => 'buildFlag',
+            'func'      => 'buildHint',
             'join'      => ' ',
             'indent'    => true,
         ],

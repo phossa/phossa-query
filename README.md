@@ -44,16 +44,16 @@ Usage
   $user = new Builder('Users');
 
   // SELECT * FROM `Users` LIMIT 0, 10
-  $sql  = $user->select()->limit(10)->getSql();
+  $sql  = $user->select()->limit(10)->getStatement();
 
   // INSERT INTO `Users` ('usr_name') VALUES ('phossa')
-  $sql  = $user->insert('usr_name' => 'phossa')->getSql();
+  $sql  = $user->insert('usr_name' => 'phossa')->getStatement();
 
   // switch to another table
   $sale = $user->table('Sale');
 
   // SELECT * FROM `Sale` LIMIT 0, 10
-  $sql  = $sale->select()->limit(10)->getSql();
+  $sql  = $sale->select()->limit(10)->getStatement();
   ```
 
 - `SELECT`

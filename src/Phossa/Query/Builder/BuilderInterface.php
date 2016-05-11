@@ -20,6 +20,9 @@ use Phossa\Query\Statement\RawInterface;
 use Phossa\Query\Statement\PreviousInterface;
 use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Dialect\DialectAwareInterface;
+use Phossa\Query\Dialect\Common\CreateInterface;
+use Phossa\Query\Exception\BadMethodCallException;
+use Phossa\Query\Dialect\Mysql\ReplaceStatementInterace;
 use Phossa\Query\Dialect\Common\InsertStatementInterface;
 use Phossa\Query\Dialect\Common\SelectStatementInterface;
 use Phossa\Query\Dialect\Common\UpdateStatementInterface;
@@ -123,6 +126,16 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
     public function insert(array $values = [])/*# : InsertStatementInterface */;
 
     /**
+     * Build an REPLACE statement
+     *
+     * @param  array $values
+     * @return ReplaceStatementInterace
+     * @throws BadMethodCallException if not supported
+     * @access public
+     */
+    public function replace(array $values = [])/*# : ReplaceStatementInterface */;
+
+    /**
      * Build an UPDATE statement
      *
      * @param  array $values
@@ -138,4 +151,12 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      * @access public
      */
     public function delete()/*# : DeleteStatementInterface */;
+
+    /**
+     * Build an CREATE statement
+     *
+     * @return CreateInterface
+     * @access public
+     */
+    public function create()/*# : CreateInterface */;
 }

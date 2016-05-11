@@ -250,7 +250,7 @@ trait JoinTrait
                 // join table
                 $tbl = $join[2];
                 if (is_object($tbl) && $tbl instanceof SelectStatementInterface) {
-                    $res[] = '(' . $tbl->getSql([], false) . ')';
+                    $res[] = '(' . $tbl->getStatement([], false) . ')';
                 } else {
                     $res[] = $this->quote($tbl);
                 }
@@ -303,7 +303,7 @@ trait JoinTrait
                 $res[] = $this->quote($input[2]);
             }
         } elseif (is_object($input)) {
-            $res = [$input->getSql([], false)];
+            $res = [$input->getStatement([], false)];
 
         } elseif (is_string($input)) {
             $res = ['ON', $input];

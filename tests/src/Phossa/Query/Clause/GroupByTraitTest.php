@@ -41,7 +41,7 @@ class GroupByTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" GROUP BY "age"',
-            $this->builder->select()->groupBy('age')->getSql()
+            $this->builder->select()->groupBy('age')->getStatement()
         );
 
         // multiple groupby
@@ -50,7 +50,7 @@ class GroupByTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->groupBy('age')
                 ->groupBy('level')
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -61,7 +61,7 @@ class GroupByTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users" GROUP BY age DESC',
-            $this->builder->select()->groupByRaw('age DESC')->getSql()
+            $this->builder->select()->groupByRaw('age DESC')->getStatement()
             );
 
         // multiple groupby
@@ -70,7 +70,7 @@ class GroupByTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
             ->groupBy('age')
             ->groupByRaw('level WITH ROLLUP')
-            ->getSql()
+            ->getStatement()
             );
     }
 }

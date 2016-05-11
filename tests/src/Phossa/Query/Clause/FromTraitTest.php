@@ -41,23 +41,23 @@ class FromTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT * FROM "users"',
-            $this->builder->select()->from('users')->getSql()
+            $this->builder->select()->from('users')->getStatement()
         );
 
         $this->assertEquals(
             'SELECT * FROM "users" AS "u"',
-            $this->builder->select()->from('users', 'u')->getSql()
+            $this->builder->select()->from('users', 'u')->getStatement()
         );
 
         $this->assertEquals(
             'SELECT * FROM "users", "items"',
-            $this->builder->select()->from(['users', 'items'])->getSql()
+            $this->builder->select()->from(['users', 'items'])->getStatement()
         );
 
         $this->assertEquals(
             'SELECT * FROM "users" AS "u", "items" AS "i"',
             $this->builder->select()
-            ->from(['users' => 'u', 'items' => 'i'])->getSql()
+            ->from(['users' => 'u', 'items' => 'i'])->getStatement()
         );
 
         // multitple from
@@ -66,7 +66,7 @@ class FromTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->from('users', 'u')
                 ->from('items', 'i')
-                ->getSql()
+                ->getStatement()
         );
 
         // subquery as table
@@ -74,7 +74,7 @@ class FromTraitTest extends \PHPUnit_Framework_TestCase
             'SELECT * FROM (SELECT "1", "2", "3") AS "t1"',
             $this->builder->select()
                 ->from($this->builder->select([1,2,3]), 't1')
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -88,7 +88,7 @@ class FromTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             'SELECT * FROM "users" AS "u", "items" AS "i"',
             $this->builder->select()
-            ->table(['users' => 'u', 'items' => 'i'])->getSql()
+            ->table(['users' => 'u', 'items' => 'i'])->getStatement()
         );
     }
 }

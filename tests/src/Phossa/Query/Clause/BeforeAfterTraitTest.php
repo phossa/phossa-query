@@ -41,7 +41,7 @@ class BeforeAfterTraitTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals(
             'SELECT HIGH_PRIORITY * FROM "users"',
-            $this->builder->select()->before('column', 'HIGH_PRIORITY')->getSql()
+            $this->builder->select()->before('column', 'HIGH_PRIORITY')->getStatement()
         );
 
         // multiple before
@@ -50,7 +50,7 @@ class BeforeAfterTraitTest extends \PHPUnit_Framework_TestCase
             $this->builder->select()
                 ->before('column', 'HIGH_PRIORITY')
                 ->before('column', 'SQL_CACHE')
-                ->getSql()
+                ->getStatement()
         );
     }
 
@@ -63,7 +63,7 @@ class BeforeAfterTraitTest extends \PHPUnit_Framework_TestCase
             'SELECT * FROM "users" PARTITION p1',
             $this->builder->select()
                 ->after('from', 'PARTITION p1')
-                ->getSql()
+                ->getStatement()
         );
     }
 }

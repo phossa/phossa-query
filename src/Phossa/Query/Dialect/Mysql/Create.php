@@ -13,17 +13,20 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
+namespace Phossa\Query\Dialect\Mysql;
+
+use Phossa\Query\Dialect\Common\Create as CommonCreate;
 
 /**
- * RawInterface
+ * Phossa\Query\Dialect\Mysql$Create
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
+ * @see     MysqlInterface
+ * @see     \Phossa\Query\Dialect\Common\Create
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface RawInterface extends StatementInterface
+class Create extends CommonCreate implements MysqlInterface
 {
 }
