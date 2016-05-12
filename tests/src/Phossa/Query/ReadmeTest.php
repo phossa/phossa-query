@@ -48,7 +48,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * example1
+     * example1: simple
      *
      * @covers Phossa\Query\Dialect\Common::select()
      */
@@ -83,7 +83,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * example2
+     * example2: col
      *
      * @covers Phossa\Query\Dialect\Common::select()
      */
@@ -130,7 +130,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * example3
+     * example3: distinct
      *
      * @covers Phossa\Query\Dialect\Common::select()
      */
@@ -147,7 +147,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * example4
+     * example4: from
      *
      * @covers Phossa\Query\Dialect\Common::select()
      */
@@ -179,6 +179,29 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             "SELECT * FROM (SELECT `user_id` FROM `oldusers`) AS `u`",
             $builder->select()->from($builder->select('user_id')->from('oldusers'), 'u')->getStatement()
+        );
+    }
+
+    /**
+     * example5: group by
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme05()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01:
+        $this->assertEquals(
+            "SELECT `group_id`, COUNT(*) AS `cnt` FROM `users` GROUP BY `group_id`",
+            $users->select()->col('group_id')->count('*', 'cnt')->groupBy('group_id')->getStatement()
+        );
+
+        // 02: raw mode and multiple groupby
+        $this->assertEquals(
+            "SELECT `group_id`, `age`, COUNT(*) AS `cnt` FROM `users` GROUP BY `group_id`, age ASC",
+            $users->select()->col('group_id')->col('age')->count('*', 'cnt')->groupBy('group_id')->groupByRaw('age ASC')->getStatement()
         );
     }
 }

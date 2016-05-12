@@ -68,17 +68,27 @@ Usage
 
   - Columns
 
-  Columns can be specified in the `select()` or with `col()` (or with its
+  Columns can be specified in the `select()` or in `col()` (or with its
   alias `field()`).
+
+  Column alias,
 
   ```php
   // SELECT `user_name` AS `n` FROM `users`
   $query = $users->select('user_name', 'n');
+  ```
 
+  Multiple columns,
+
+  ```php
   // SELECT `id`, `user_name` AS `n` FROM `users`
   $query = $users->select()->col(['id', 'user_name' => 'n']);
   $query = $users->select()->col('id')->field('user_name', 'n');
+  ```
 
+  Raw mode,
+
+  ```php
   // SELECT COUNT(user_id) AS `cnt` FROM `users`
   $query = $users->select()->colRaw(['COUNT(user_id)' => 'cnt']);
   ```
@@ -89,10 +99,13 @@ Usage
   ```php
   // SELECT COUNT(`user_id`) AS `cnt` FROM `users`
   $query = $users->select()->count('user_id', 'cnt')->max('user_id', 'max_id');
+  ```
 
+  Generic functions by using `func()`,
+
+  ```php
   // SELECT CONCAT(`user_name`, "XXX") AS `new_name` FROM `users`
   $query = $users->select()->func('CONCAT(%s, "XXX")', 'user_name', 'new_name');
-
   ```
 
   - Distinct
@@ -108,23 +121,47 @@ Usage
 
   `FROM` can used with builder object or select object.
 
-  ```php
-  /*
-   * `select(false)` if don't want use the builder default tables
-   *
-   * SELECT * FROM `sales` AS `s`
-   */
-  $query = $users->select(false)->from('sales', 's');
+  Use `select(false)` to ignore default table from the builder,
 
+  ```php
+  // SELECT * FROM `sales` AS `s`
+  $query = $users->select(false)->from('sales', 's');
+  ```
+
+  Builder tables are carried over,
+
+  ```php
   // SELECT * FROM `users`, `sales`
   $query = $users->select()->from('sales');
+  ```
 
+  Multiple tables supported,
+
+  ```php
   // SELECT * FROM `users` AS `u`, `accounts` AS `a`
   $query = $users->select(false)->from(['users' => 'u', 'accounts' => 'a']);
+  ```
 
+  Subqueries can be used in `from()`,
+
+  ```php
   // SELECT * FROM (SELECT `user_id` FROM `oldusers`) AS `u`
   $builder = $users->table(''); // clear table
   $query = $builder->select()->from($builder->select('user_id')->from('oldusers'), 'u');
+  ```
+
+  - Group by
+
+  ```php
+  // SELECT `group_id`, COUNT(*) AS `cnt` FROM `users` GROUP BY `group_id`
+  $query = $users->select()->col('group_id')->count('*', 'cnt')->groupBy('group_id');
+  ```
+
+  Multiple `groupBy()` and raw mode can used,
+
+  ```php
+  // SELECT `group_id`, `age`, COUNT(*) AS `cnt` FROM `users` GROUP BY `group_id`, age ASC
+  $query = $users->select()->col('group_id')->col('age')->count('*', 'cnt')->groupBy('group_id')->groupByRaw('age ASC')
   ```
 
 Dependencies
