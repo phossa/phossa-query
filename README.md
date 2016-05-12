@@ -383,6 +383,61 @@ Usage
                 ->getStatement()
     ```
 
+- `INSERT`
+
+  Single insert statement,
+
+  ```php
+  // INSERT INTO `users` (`uid`, `uname`) VALUES (2, 'phossa')
+  $sql = $users->insert()->set('uid', 2)->set('uname', 'phossa')
+      ->getStatement();
+
+  // same as above, with array notation
+  $sql = $users->insert()->set(['uid' => 2, 'uname' => 'phossa'])
+      ->getStatement();
+  ```
+
+  Multiple data rows,
+
+  ```php
+  // INSERT INTO `users` (`uid`, `uname`) VALUES (2, 'phossa'), (3, 'test')
+  $query = $users->insert()
+            ->set(['uid' => 2, 'uname' => 'phossa'])
+            ->set(['uid' => 3, 'uname' => 'test']);
+  ```
+
+  Insert with `DEFAULT` values
+
+  ```php
+  // INSERT INTO `users` (`uid`, `uname`, `phone`)
+  // VALUES (2, 'phossa', DEFAULT), (3, 'test', '1234')
+  $query = $users->insert([
+      ['uid' => 2, 'uname' => 'phossa'],
+      ['uid' => 3, 'uname' => 'test', 'phone' => '1234']
+  ]);
+  ```
+
+  Insert `NULL` instead of default values,
+
+  ```php
+  // INSERT INTO `users` (`uid`, `uname`, `phone`)
+  // VALUES (2, 'phossa', NULL), (3, 'test', '1234')
+  $sql = $query->getStatement(['useNullAsDefault' => true]);
+  ```
+
+  Insert with `SELECT` subquery,
+
+  ```php
+  // INSERT INTO `users` (`uid`, `uname`)
+  // SELECT `user_id`, `user_name` FROM `oldusers`
+  $query = $users->insert()->set(['uid', 'uname'])
+               ->select(['user_id', 'user_name'])
+               ->from('oldusers');
+  ```
+
+- `UPDATE`
+
+
 Dependencies
 ---
 

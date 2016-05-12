@@ -457,4 +457,65 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
             ->getStatement()
         );
     }
+
+    /**
+     * example11: insert
+     *
+     * @covers Phossa\Query\Dialect\Common::insert()
+     */
+    public function testReadme12()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: insert
+        $this->assertEquals(
+            "INSERT INTO `users` (`uid`, `uname`) VALUES (2, 'phossa')",
+            $users->insert()->set('uid', 2)->set('uname', 'phossa')
+                ->getStatement()
+        );
+
+        // 02: array notation
+        $this->assertEquals(
+            "INSERT INTO `users` (`uid`, `uname`) VALUES (2, 'phossa')",
+            $users->insert()->set(['uid' => 2, 'uname' => 'phossa'])
+                ->getStatement()
+        );
+
+        // 03: multple rows
+        $this->assertEquals(
+            "INSERT INTO `users` (`uid`, `uname`) VALUES (2, 'phossa'), (3, 'test')",
+            $users->insert()
+                ->set(['uid' => 2, 'uname' => 'phossa'])
+                ->set(['uid' => 3, 'uname' => 'test'])
+                ->getStatement()
+        );
+
+        // 04: with DEFAULT values
+        $this->assertEquals(
+            "INSERT INTO `users` (`uid`, `uname`, `phone`) VALUES (2, 'phossa', DEFAULT), (3, 'test', '1234')",
+            $users->insert([
+                ['uid' => 2, 'uname' => 'phossa'],
+                ['uid' => 3, 'uname' => 'test', 'phone' => '1234']
+            ])->getStatement()
+        );
+
+        // 05: with NULL values
+        $this->assertEquals(
+            "INSERT INTO `users` (`uid`, `uname`, `phone`) VALUES (2, 'phossa', NULL), (3, 'test', '1234')",
+            $users->insert([
+                ['uid' => 2, 'uname' => 'phossa'],
+                ['uid' => 3, 'uname' => 'test', 'phone' => '1234']
+            ])->getStatement(['useNullAsDefault' => true])
+        );
+
+        // 06: INSERT ... SELECT
+        $this->assertEquals(
+            "INSERT INTO `users` (`uid`, `uname`) SELECT `user_id`, `user_name` FROM `oldusers`",
+            $users->insert()->set(['uid', 'uname'])
+                ->select(['user_id', 'user_name'])
+                ->from('oldusers')
+                ->getStatement()
+        );
+    }
 }

@@ -47,9 +47,9 @@ class Insert extends StatementAbstract implements InsertStatementInterface
      * @var    int
      * @access protected
      */
-    const ORDER_INTO = 10;
-    const ORDER_SET  = 20;
-    const ORDER_VAL  = 25;
+    const ORDER_INTO   = 10;
+    const ORDER_SET    = 20;
+    const ORDER_VALUES = 25;
 
     /**
      * order, prefix, join char
@@ -75,7 +75,7 @@ class Insert extends StatementAbstract implements InsertStatementInterface
         ],
 
         // build values
-        self::ORDER_VAL => [
+        self::ORDER_VALUES => [
             'prefix'    => 'VALUES',
             'func'      => 'buildValues',
             'join'      => '',

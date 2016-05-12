@@ -206,14 +206,8 @@ class Builder implements BuilderInterface
      */
     public function insert(array $values = [])/*# : InsertStatementInterface */
     {
-
-        // INSERT statement
-        $insert = $this->getDialect()->insert($this);
-
-        // set table
-        if (count($this->tables)) {
-            $insert->into($this->tables[array_keys($this->tables)[0]]);
-        }
+        /* @var $insert InsertStatementInterface */
+        $insert = $this->getDialectStatement('insert');
 
         // set cols
         if (!empty($values)) {
@@ -228,21 +222,8 @@ class Builder implements BuilderInterface
      */
     public function replace(array $values = [])/*# : ReplaceStatementInterface */
     {
-        // REPLACE statement
-        $dialect = $this->getDialect();
-        if (!method_exists($dialect, 'replace')) {
-            throw new BadMethodCallException(
-                Message::get(Message::BUILDER_UNKNOWN_METHOD, 'replace'),
-                Message::BUILDER_UNKNOWN_METHOD
-            );
-        }
-
-        $replace = $dialect->replace($this);
-
-        // set table
-        if (count($this->tables)) {
-            $replace->into($this->tables[array_keys($this->tables)[0]]);
-        }
+        /* @var $replace ReplaceStatementInterface */
+        $replace = $this->getDialectStatement('replace');
 
         // set cols
         if (!empty($values)) {
@@ -257,13 +238,8 @@ class Builder implements BuilderInterface
      */
     public function update(array $values = [])/*# : UpdateStatementInterface */
     {
-        // UPDATE statement
-        $update = $this->getDialect()->update($this);
-
-        // set table
-        if (count($this->tables)) {
-            $update->table($this->tables);
-        }
+        /* @var $update UpdateStatementInterface */
+        $update = $this->getDialectStatement('update');
 
         // set cols
         if (!empty($values)) {
@@ -278,13 +254,8 @@ class Builder implements BuilderInterface
      */
     public function delete()/*# : DeleteStatementInterface */
     {
-        // DELETE statement
-        $delete = $this->getDialect()->delete($this);
-
-        // set table
-        if (count($this->tables)) {
-            $delete->table($this->tables);
-        }
+        /* @var $delete DeleteStatementInterface */
+        $delete = $this->getDialectStatement('delete');
 
         return $delete;
     }
@@ -308,7 +279,7 @@ class Builder implements BuilderInterface
      */
     protected function getDialectStatement(
         /*# string */ $method,
-        /*# bool */ $setTable
+        /*# bool */ $setTable = true
     )/*# StatementInterface */ {
         // dialect
         $dialect = $this->getDialect();
@@ -331,7 +302,15 @@ class Builder implements BuilderInterface
 
         // set tables
         } elseif ($setTable && count($this->tables)) {
-            $statement->from($this->tables);
+            if (method_exists($statement, 'from')) {
+
+                // FROM all tables
+                $statement->from($this->tables);
+            } else {
+
+                // INTO the first table
+                $statement->into($this->tables[array_keys($this->tables)[0]]);
+            }
         }
 
         return $statement;
