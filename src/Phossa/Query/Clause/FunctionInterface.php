@@ -26,7 +26,12 @@ namespace Phossa\Query\Clause;
 interface FunctionInterface extends ClauseInterface
 {
     /**
-     * Function used in column field
+     * Use function template with col
+     *
+     * ```php
+     * // SELECT CONCAT(`user_name`, \"XXX\") AS `new_name` FROM `users`
+     * $users->select()->func('CONCAT(%s, "XXX")', 'user_name', 'new_name');
+     * ```
      *
      * @param  string $function
      * @param  string $col

@@ -43,29 +43,29 @@ interface FromInterface extends ClauseInterface
      * // FROM `users`, `accounts`
      * select()->from(['users', 'accounts'])
      *
-     * // FROM `users`, `accounts` `a`
+     * // FROM `users`, `accounts` AS `a`
      * select()->from(['users', 'accounts' => 'a'])
      *
-     * // FROM (SELECT id FROM users WHERE id < 10) AS sub
+     * // FROM (SELECT `id` FROM `users` WHERE `id` < 10) AS `sub`
      * select()->from($users->select('id')->where('id < 10'), 'sub');
      * ```
      *
-     * @param  string|array|SelectStatementInterface $table table specification[s]
+     * @param  string|array|SelectStatementInterface $table table[s]
      * @param  string $tableAlias alias to be used later in the query
      * @return self
      * @access public
      */
-    public function from(
+    public function table(
         $table,
         /*# string */ $tableAlias = ''
     );
 
     /**
-     * Alias to self::from()
+     * Alias to self::table()
      *
-     * @see    self::from()
+     * @see    self::table()
      */
-    public function table(
+    public function from(
         $table,
         /*# string */ $tableAlias = ''
     );

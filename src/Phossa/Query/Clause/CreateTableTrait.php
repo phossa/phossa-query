@@ -94,8 +94,8 @@ trait CreateTableTrait
     public function select()/*# : SelectStatementInterface */
     {
         $cols = func_get_args();
-        return $this->getBuilder()->setPrevious($this)->select(false)
-        ->col($cols);
+        return $this->getBuilder()->setPrevious($this)
+            ->select(false)->col($cols);
     }
 
     /**

@@ -109,6 +109,7 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      * @param  string|array|bool $col column specification[s]
      * @param  string $colAlias alias name for $col
      * @return SelectStatementInterface
+     * @throws BadMethodCallException if not supported
      * @access public
      */
     public function select(
@@ -121,6 +122,7 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      *
      * @param  array $values
      * @return InsertStatementInterface
+     * @throws BadMethodCallException if not supported
      * @access public
      */
     public function insert(array $values = [])/*# : InsertStatementInterface */;
@@ -140,6 +142,7 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      *
      * @param  array $values
      * @return UpdateStatementInterface
+     * @throws BadMethodCallException if not supported
      * @access public
      */
     public function update(array $values = [])/*# : UpdateStatementInterface */;
@@ -148,6 +151,7 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      * Build an DELETE statement
      *
      * @return DeleteStatementInterface
+     * @throws BadMethodCallException if not supported
      * @access public
      */
     public function delete()/*# : DeleteStatementInterface */;
@@ -156,6 +160,7 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      * Build an CREATE statement
      *
      * @return CreateInterface
+     * @throws BadMethodCallException if not supported
      * @access public
      */
     public function create()/*# : CreateInterface */;

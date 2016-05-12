@@ -52,7 +52,7 @@ interface ColInterface extends ClauseInterface
      * ->col(['user_id', 'user_name' => 'n'])
      * ```
      *
-     * @param  mixed $col column specification
+     * @param  mixed $col column specification[s]
      * @param  string $colAlias column alias name
      * @return self
      * @access public
@@ -65,7 +65,7 @@ interface ColInterface extends ClauseInterface
     /**
      * Alias of col()
      *
-     * @param  mixed $col column specification
+     * @param  mixed $col column specification[s]
      * @param  string $colAlias column alias name
      * @return self
      * @see    self::col()
@@ -83,7 +83,11 @@ interface ColInterface extends ClauseInterface
      * // SELECT COUNT(user_id) AS cnt
      * ->colRaw('COUNT(user_id)', 'cnt')
      *
-     * @param  string $string
+     * // array type
+     * ->colRaw(['COUNT(user_id)' => 'cnt'])
+     * ```
+     *
+     * @param  string|array $string
      * @param  string $alias
      * @return self
      * @access public
@@ -93,7 +97,7 @@ interface ColInterface extends ClauseInterface
     /**
      * Alias of colRaw()
      *
-     * @param  string $string
+     * @param  string|array $string
      * @param  string $alias
      * @return self
      * @access public

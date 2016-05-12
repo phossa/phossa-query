@@ -106,11 +106,11 @@ trait ColTrait
                 $this->realCol($key, $val, $rawMode);
             }
 
-            // clear columns
+        // clear columns
         } else if ('*' === $col) {
             $this->clause_column = [];
 
-            // add columns
+        // add columns
         } elseif (!empty($col)) {
             // auto raw mode detect
             $rawMode = $rawMode ?: $this->isRaw($col);
@@ -144,7 +144,7 @@ trait ColTrait
                 // col alias
                 $alias = is_int($as) ? '' : (' AS ' . $this->quoteSpace($as));
 
-                // rawMode
+                // rawMode ?
                 $field = $col[0] ? $col[1] : $this->quote($col[1]);
 
                 // function ?

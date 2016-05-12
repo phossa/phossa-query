@@ -33,6 +33,7 @@ use Phossa\Query\Dialect\Common\SelectStatementInterface;
 use Phossa\Query\Dialect\Common\InsertStatementInterface;
 use Phossa\Query\Dialect\Common\UpdateStatementInterface;
 use Phossa\Query\Dialect\Common\DeleteStatementInterface;
+use Phossa\Query\Statement\StatementInterface;
 
 /**
  * Query Builder
@@ -70,19 +71,19 @@ class Builder implements BuilderInterface
      * Constructor
      *
      * ```php
-     * // FROM `Users`
-     * $user = new Builder('Users')
+     * // builder with default table `users`
+     * $users = new Builder('users')
      *
-     * // FROM `Users`, `Accounts`
-     * $user = new Builder(['Users', 'Accounts'])
+     * // builder with defult tables:  `users` and `accounts` AS `a`
+     * $builder = new Builder(['users', 'accounts' => 'a'])
      *
-     * // FROM `Users`, `Accounts` `a`
-     * $user = new Builder(['Users', 'Accounts' => 'a'])
+     * // change default settings & dialect
+     * $builder = new Builder('', ['autoQuote' => false], new Mysql());
      * ```
      *
-     * @param  string|array $table table to build upon
+     * @param  string|array $table table[s] to build upon
      * @param  array $settings builder settings
-     * @param  DialectInterface $dialect
+     * @param  DialectInterface $dialect default dialect is `Common`
      * @access public
      */
     public function __construct(
@@ -90,9 +91,16 @@ class Builder implements BuilderInterface
         array $settings = [],
         DialectInterface $dialect = null
     ) {
-        $this->combineSettings($settings)
-             ->setDialect($dialect ?: new Common())
-             ->from($table);
+        // settings
+        $this->combineSettings($settings);
+
+        // default to Common
+        $this->setDialect($dialect ?: new Common());
+
+        // set default table if any
+        if (!empty($table)) {
+            $this->from($table);
+        }
     }
 
     /**
@@ -127,11 +135,13 @@ class Builder implements BuilderInterface
     }
 
     /**
-     * Set table, only one table is allowed !
+     * Set default table[s] for this builder
+     *
+     * If table[s] was set, return a cloned builder with the new default table.
      *
      * ```php
      * // a user table query builder
-     * $user = $builder->table('MyUserTable', 'u');
+     * $user = $builder->table('user', 'u');
      *
      * // working on user table
      * $user->select()->...
@@ -139,66 +149,53 @@ class Builder implements BuilderInterface
      *
      * {@inheritDoc}
      */
-    public function from($table, /*# string */ $tableAlias = '')
-    {
-        // switch to a new builder if table changed
-        if (!empty($this->tables)) {
-            $clone = clone $this;
-        } else {
-            $clone = $this;
-        }
-
-        // set tables
-        if (!empty($table)) {
-            if (is_array($table)) {
-                $clone->tables = $table;
-            } else {
-                $clone->tables = empty($tableAlias) ?
-                    [$table] : [$tableAlias => $table];
-            }
-        }
-        return $clone;
-    }
-
-    /**
-     * Alias of self::from()
-     *
-     * @see    self::from()
-     */
     public function table($table, /*# string */ $tableAlias = '')
     {
-        return $this->from($table, $tableAlias);
+        // fix table
+        if (empty($table)) {
+            $table = [];
+        } else {
+            if (!is_array($table)) {
+                $table = empty($tableAlias) ? [$table] :
+                    [$table => $tableAlias];
+            }
+        }
+
+        // clone the builder if table different
+        if ($table != $this->tables) {
+            $clone = empty($this->tables) ? $this : (clone $this);
+            $clone->tables = $table;
+            return $clone;
+        } else {
+            return $this;
+        }
     }
 
     /**
+     * Alias of self::table()
+     *
+     * @see    self::table()
+     */
+    public function from($table, /*# string */ $tableAlias = '')
+    {
+        return $this->table($table, $tableAlias);
+    }
+
+    /**
+     * Set $col to FALSE if do NOT want table pass to $select
+     *
      * {@inheritDoc}
      */
     public function select(
         $col = '',
         /*# string */ $colAlias = ''
     )/*# : SelectStatementInterface */ {
+        /* @var $select SelectStatementInterface */
+        $select = $this->getDialectStatement('select', false !== $col);
 
-        // SELECT statement
-        $select = $this->getDialect()->select($this);
-
-        // prevous statement ?
-        if ($this->hasPrevious()) {
-            $select->setPrevious($this->getPrevious());
-            $this->setPrevious(null);
-
-        } else {
-            // inherit tables
-            if (false !== $col && count($this->tables)) {
-                $select->from($this->tables);
-            }
-        }
-
-        // set columns
+        // set columns/fields
         if (!empty($col)) {
-            $select->col(
-                func_get_arg(0),
-                func_num_args() > 1 ? func_get_arg(1) : ''
-            );
+            $select->col($col, $colAlias);
         }
 
         return $select;
@@ -209,12 +206,13 @@ class Builder implements BuilderInterface
      */
     public function insert(array $values = [])/*# : InsertStatementInterface */
     {
+
         // INSERT statement
         $insert = $this->getDialect()->insert($this);
 
         // set table
         if (count($this->tables)) {
-            $insert->into($this->tables[array_keys($this->tables)]);
+            $insert->into($this->tables[array_keys($this->tables)[0]]);
         }
 
         // set cols
@@ -243,7 +241,7 @@ class Builder implements BuilderInterface
 
         // set table
         if (count($this->tables)) {
-            $replace->into($this->tables[array_keys($this->tables)]);
+            $replace->into($this->tables[array_keys($this->tables)[0]]);
         }
 
         // set cols
@@ -297,5 +295,45 @@ class Builder implements BuilderInterface
     public function create()/*# : CreateInterface */
     {
         return $this->getDialect()->create($this);
+    }
+
+    /**
+     * Get the statement object
+     *
+     * @param  string $method
+     * @param  bool $setTable set with builder tables
+     * @return StatementInterface
+     * @throws BadMethodCallException if no method found for this dialect
+     * @access protected
+     */
+    protected function getDialectStatement(
+        /*# string */ $method,
+        /*# bool */ $setTable
+    )/*# StatementInterface */ {
+        // dialect
+        $dialect = $this->getDialect();
+
+        // check method
+        if (!method_exists($dialect, $method)) {
+            throw new BadMethodCallException(
+                Message::get(Message::BUILDER_UNKNOWN_METHOD, $method),
+                Message::BUILDER_UNKNOWN_METHOD
+            );
+        }
+
+        /* @var $statement StatementInterface */
+        $statement = call_user_func([$dialect, $method], $this);
+
+        // prevous statement like in UNION
+        if ($this->hasPrevious()) {
+            $statement->setPrevious($this->getPrevious());
+            $this->setPrevious(null);
+
+        // set tables
+        } elseif ($setTable && count($this->tables)) {
+            $statement->from($this->tables);
+        }
+
+        return $statement;
     }
 }
