@@ -83,7 +83,7 @@ class JoinTraitTest extends \PHPUnit_Framework_TestCase
 
         // grouped on
         $this->assertEquals(
-            'SELECT * FROM "users" INNER JOIN "sales" (ON "users"."uid" = "sales"."s_uid" OR ON "users"."uid" = "sales"."puid")',
+            'SELECT * FROM "users" INNER JOIN "sales" (ON "users"."uid" = "sales"."s_uid" OR "users"."uid" = "sales"."puid")',
             $this->builder->select()
                 ->realJoin('INNER', 'sales',
                     $this->builder->expr()

@@ -204,4 +204,257 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
             $users->select()->col('group_id')->col('age')->count('*', 'cnt')->groupBy('group_id')->groupByRaw('age ASC')->getStatement()
         );
     }
+
+    /**
+     * example6: join
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme06()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: two tables with same column name
+        $this->assertEquals(
+            "SELECT * FROM `users` INNER JOIN `accounts` ON `users`.`id` = `accounts`.`id`",
+            $users->select()->join('accounts', 'id')->getStatement()
+        );
+
+        // 02: alias for the join table
+        $this->assertEquals(
+            "SELECT * FROM `users` INNER JOIN `accounts` AS `a` ON `users`.`id` = `a`.`id`",
+            $users->select()->join('accounts a', 'id')->getStatement()
+        );
+
+        // 03: join table with different column name
+        $this->assertEquals(
+            "SELECT * FROM `users` INNER JOIN `accounts` AS `a` ON `users`.`id` = `a`.`user_id`",
+            $users->select()->join('accounts a', 'id', 'user_id')->getStatement()
+        );
+
+        // 04: join table with operator specified
+        $this->assertEquals(
+            "SELECT * FROM `users` INNER JOIN `accounts` AS `a` ON `users`.`id` <> `a`.`user_id`",
+            $users->select()->join('accounts a', 'id', '<>', 'user_id')->getStatement()
+        );
+
+        // 05: complex ON
+        $builder = $users->table('');
+        $this->assertEquals(
+            "SELECT * FROM `users` INNER JOIN `sales` (ON `users`.`uid` = `sales`.`s_uid` OR `users`.`uid` = `sales`.`puid`)",
+            $users->select()->join('sales',
+                $builder->expr()->on('users.uid', 'sales.s_uid')->orOn('users.uid', 'sales.puid')
+            )->getStatement()
+        );
+
+        // 06: multiple joins
+        $this->assertEquals(
+            "SELECT * FROM `users` INNER JOIN `sales` AS `s` ON `users`.`uid` = `s`.`uid` INNER JOIN `order` AS `o` ON `users`.`uid` = `o`.`o_uid`",
+            $users->select()
+                ->join('sales s', 'uid', '=', 'uid')
+                ->join('order o', 'uid', 'o_uid')
+                ->getStatement()
+        );
+
+        // 07: join with subqueries
+        $this->assertEquals(
+            "SELECT * FROM `users` INNER JOIN (SELECT `uid` FROM `oldusers`) AS `x` ON `users`.`uid` = `x`.`uid`",
+            $users->select()->join(
+                $builder->select('uid')->from('oldusers')->alias('x'),
+                'uid'
+            )->getStatement()
+        );
+
+        // 08: other joins
+        $this->assertEquals(
+            "SELECT * FROM `users` OUTER JOIN `accounts` AS `a` ON `users`.`id` = `a`.`id`",
+            $users->select()->outerJoin('accounts a', 'id')->getStatement()
+        );
+
+        // 09: realJoin
+        $this->assertEquals(
+            "SELECT * FROM `users` NATURAL JOIN `accounts` AS `a` ON `users`.`id` = `a`.`id`",
+            $users->select()->realJoin('NATURAL', 'accounts a', 'id')->getStatement()
+        );
+    }
+
+    /**
+     * example7: limit
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme07()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: limit
+        $this->assertEquals(
+            "SELECT * FROM `users` LIMIT 30 OFFSET 10",
+            $users->select()->limit(30, 10)->getStatement()
+        );
+
+        // 02: offset
+        $this->assertEquals(
+            "SELECT * FROM `users` LIMIT 20 OFFSET 15",
+            $users->select()->limit(20)->offset(15)->getStatement()
+        );
+
+        // 03: page, start from 1
+        $this->assertEquals(
+            "SELECT * FROM `users` LIMIT 30 OFFSET 60",
+            $users->select()->page(3, 30)->getStatement()
+        );
+    }
+
+    /**
+     * example8: order by
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme08()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: asc desc
+        $this->assertEquals(
+            "SELECT * FROM `users` ORDER BY `age` ASC, `score` DESC",
+            $users->select()->orderByAsc('age')->orderByDesc('score')->getStatement()
+        );
+
+        // 02: raw mode
+        $this->assertEquals(
+            "SELECT * FROM `users` ORDER BY age ASC, score DESC",
+            $users->select()->orderByRaw('age ASC, score DESC')->getStatement()
+        );
+    }
+
+    /**
+     * example9: where
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme09()
+    {
+        // builder object
+        $users   = $this->builder;
+        $builder = $users->table('');
+
+        // 01: simple raw mode
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE age > 18",
+            $users->select()->where('age > 18')->getStatement()
+        );
+
+        // 02: col, val
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE `age` = 18",
+            $users->select()->where('age', 18)->getStatement()
+        );
+
+        // 03: col, operator, val
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE `age` < 18",
+            $users->select()->where('age', '<', 18)->getStatement()
+        );
+
+        // 04: with array
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE `age` > 18 AND `gender` = 'male'",
+            $users->select()->where(['age' => ['>', 18], 'gender' => 'male'])->getStatement()
+        );
+
+        // 05: multiple wheres
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE `age` > 18 AND `gender` = 'male'",
+            $users->select()->where('age', '>', 18)->where('gender','male')->getStatement()
+        );
+
+        // 06: complex where
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE (`id` = 1 OR (`id` < 20 OR `id` > 100)) OR `name` = 'Tester'",
+            $users->select()->where(
+                $builder->expr()->where('id', 1)->orWhere(
+                    $builder->expr()->where('id', '<', 20)->orWhere('id', '>', 100)
+                )
+             )->orWhere('name', 'Tester')->getStatement()
+        );
+
+        // 07: raw mode
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE age = 18 OR score > 90",
+            $users->select()->whereRaw('age = 18')->orWhereRaw('score > 90')->getStatement()
+        );
+
+        // 08: not
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE NOT `age` = 18 OR NOT `score` > 90",
+            $users->select()->whereNot('age', 18)->orWhereNot('score', '>', 90)
+                ->getStatement()
+        );
+
+        // 09: IN & BETWEEN
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE `age` IN (10,12,15,18,20) OR `score` NOT BETWEEN 90 AND 100",
+            $users->select()->whereIn('age', [10,12,15,18,20])
+                ->orWhereNotBetween('score', 90, 100)
+                ->getStatement()
+        );
+
+        // 10: Null
+        $this->assertEquals(
+            "SELECT * FROM `users` WHERE `age` IS NULL OR `score` IS NOT NULL",
+            $users->select()->whereNull('age')->orWhereNotNull('score')->getStatement()
+        );
+
+        // 11: exists
+        $qry1  = $users->select('user_id')->where('age', '>', 60);
+        $sales = $users->table('sales');
+        $this->assertEquals(
+            "SELECT * FROM `sales` WHERE EXISTS (SELECT `user_id` FROM `users` WHERE `age` > 60)",
+            $sales->select()->whereExists($qry1)->getStatement()
+        );
+    }
+
+    /**
+     * example10: having
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme10()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: having
+        $this->assertEquals(
+            "SELECT * FROM `users` HAVING `age` = 10 OR `level` > 20",
+            $users->select()->having('age', 10)->orHaving('level', '>', 20)
+                ->getStatement()
+        );
+    }
+
+    /**
+     * example11: union
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme11()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: union & union all
+        $this->assertEquals(
+            "SELECT * FROM `users` UNION SELECT * FROM `oldusers1` UNION ALL SELECT `user_id` FROM `oldusers2`",
+            $users->select()
+                ->union()
+                    ->select()->from('oldusers1')
+                ->unionAll()
+                    ->select('user_id')->from('oldusers2')
+            ->getStatement()
+        );
+    }
 }

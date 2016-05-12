@@ -112,9 +112,9 @@ trait JoinTrait
         $firstTableCol = '',
         /*# string */ $operator = ClauseInterface::NO_OPERATOR,
         /*# string */ $secondTableCol = ClauseInterface::NO_VALUE
-        ) {
-            return $this->realJoin('INNER', $table, $firstTableCol, $operator,
-                $secondTableCol);
+    ) {
+        return $this->realJoin('INNER', $table, $firstTableCol, $operator,
+            $secondTableCol);
     }
 
     /**
