@@ -497,6 +497,52 @@ Usage
 
 - `CREATE TABLE`
 
+  Create table is used by most of the ORM libraries.
+
+  ```php
+  $builder = new Builder();
+
+  $builder->create()->table('new_table')
+      ->temp()
+      ->ifNotExists()
+      ->addCol('id', 'INT')
+          ->notNull()
+          ->autoIncrement()
+      ->addCol('name', 'VARCHAR(20)')
+          ->notNull()
+          ->unique()
+          ->defaultValue('NONAME')
+      ->addCol('alias', 'VARCHAR(10)')
+          ->colConstraint('CHECK ()')
+      ->primaryKey(['id'])
+      ->uniqueKey(['name(4) ASC', 'alias'], 'ON CONFLICT REPLACE')
+      ->uniqueKey(['id', 'alias'], 'ON CONFLICT ROLLBACK')
+      ->constraint('FOREIGN KEY (...)')
+      ->tblOption('DELAY_KEY_WRITE=1')
+      ->tblOption('MAX_ROWS=100')
+      ->getStatement([
+          'seperator' => "\n",
+          'indent'    => "  ",
+      ]);
+  ```
+
+  With the following output,
+
+  ```sql
+  CREATE TEMPORARY TABLE IF NOT EXISTS "new_table"
+  (
+    "id" INT NOT NULL AUTO_INCREMENT,
+    "name" VARCHAR(20) NOT NULL DEFAULT 'NONAME' UNIQUE,
+    "alias" VARCHAR(10) CHECK (),
+    PRIMARY KEY ("id"),
+    UNIQUE ("name"(4) ASC, "alias") ON CONFLICT REPLACE,
+    UNIQUE ("id", "alias") ON CONFLICT ROLLBACK,
+    FOREIGN KEY (...)
+  )
+    DELAY_KEY_WRITE=1,
+    MAX_ROWS=100
+  ```
+
 Dependencies
 ---
 
