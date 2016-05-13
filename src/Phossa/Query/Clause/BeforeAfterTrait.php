@@ -16,6 +16,7 @@
 namespace Phossa\Query\Clause;
 
 use Phossa\Query\Message\Message;
+use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Exception\InvalidArgumentException;
 
 /**
@@ -53,6 +54,12 @@ trait BeforeAfterTrait
         /*# string */ $clause
     ) {
         $pos = $this->getPosition($position);
+
+        // if parameters provided
+        if (func_num_args() > 2) {
+            $clause = $this->dealWithParam($clause, func_get_args());
+        }
+
         $this->before[$pos][] = $clause;
         return $this;
     }
@@ -65,6 +72,12 @@ trait BeforeAfterTrait
         /*# string */ $clause
     ) {
         $pos = $this->getPosition($position);
+
+        // if parameters provided
+        if (func_num_args() > 2) {
+            $clause = $this->dealWithParam($clause, func_get_args());
+        }
+
         $this->after[$pos][] = $clause;
         return $this;
     }
@@ -86,4 +99,36 @@ trait BeforeAfterTrait
         }
         return constant($c);
     }
+
+    /**
+     * Dealing with positioned parameters
+     *
+     * @param  string $clause
+     * @return string
+     * @access protected
+     */
+    protected function dealWithParam(
+        /*# string */ $clause,
+        array $values
+    )/*# : string */ {
+        array_shift($values);
+        array_shift($values);
+
+        // replacement
+        $pat = $rep = [];
+        foreach ($values as $val) {
+            $pat[] = '/\?/';
+            $rep[] = $this->getBuilder()->generatePlaceholder($val);
+        }
+
+        return preg_replace($pat, $rep, $clause, 1);
+    }
+
+    /**
+     * Return the builder
+     *
+     * @return BuilderInterface
+     * @access public
+     */
+    abstract public function getBuilder()/*# : BuilderInterface */;
 }

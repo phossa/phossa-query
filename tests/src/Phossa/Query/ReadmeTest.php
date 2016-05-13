@@ -4,6 +4,7 @@ namespace Phossa\Query;
 use Phossa\Query\Builder;
 use Phossa\Query\Dialect\Mysql;
 use Phossa\Query\Dialect\Sqlite;
+use Phossa\Query\Dialect\Common;
 
 /**
  * README test case.
@@ -606,6 +607,92 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
                 ->join('accounts a', 'user_id')
                 ->where('a.total_amount', '<', 0)
                 ->getStatement()
+        );
+    }
+
+    /**
+     * example16: expr
+     *
+     * @covers Phossa\Query\Builder::expr()
+     */
+    public function testReadme16()
+    {
+        // builder object
+        $builder = new Builder();
+
+        // 01: where
+        $str = <<<EOT
+SELECT
+    *
+FROM
+    "Users"
+WHERE
+    ("age" < 18 OR "gender" = 'female')
+    OR ("age" > 60 OR ("age" > 55 AND "gender" = 'female'))
+EOT;
+        $this->assertEquals(
+            preg_replace("/\r\n/","\n", $str),
+            $builder->select()->from('Users')
+                ->where(
+                    $builder->expr()
+                        ->where('age', '<', 18)
+                        ->orWhere('gender', 'female')
+                )->orWhere(
+                    $builder->expr()
+                        ->where('age', '>' , 60)
+                        ->orWhere(
+                            $builder->expr()
+                                ->where('age', '>', 55)
+                                ->where('gender', 'female')
+                        )
+                )->getStatement($this->settings)
+        );
+    }
+
+    /**
+     * example17: before & after
+     *
+     * @covers Phossa\Query\Dialect\Common::before()
+     * @covers Phossa\Query\Dialect\Common::after()
+     */
+    public function testReadme17()
+    {
+        // builder object
+        $users = new Builder(new Common(), 'users');
+
+        // 01: before & after
+        $this->assertEquals(
+            'INSERT IGNORE INTO "users" ("id", "name") VALUES (3, \'phossa\') ON DUPLICATE KEY UPDATE id=id+10',
+            $users->insert()->set('id', 3)->set('name', 'phossa')
+                ->before('INTO', 'IGNORE')
+                ->after('VALUES', 'ON DUPLICATE KEY UPDATE id=id+?', 10)
+                ->getStatement()
+            );
+    }
+
+    /**
+     * example18: parameters
+     *
+     * @covers Phossa\Query\Dialect\Common::select()
+     */
+    public function testReadme18()
+    {
+        // builder object
+        $users = new Builder(new Common(), 'users');
+
+        // 01: positioned parameters
+        $this->assertEquals(
+            'SELECT * FROM "users" WHERE "user_id" = ?',
+            $users->select()->where("user_id", 10)
+                ->getPositionedStatement()
+        );
+
+        // 02: named parameters
+        $this->assertEquals(
+            'SELECT * FROM "users" WHERE "user_name" = :name AND "user_id" > 100',
+            $users->select()->where("user_name", ':name')
+                ->andWhere('user_id', '>', 100)
+                ->getNamedStatement()
         );
     }
 }

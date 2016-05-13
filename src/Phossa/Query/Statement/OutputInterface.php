@@ -39,6 +39,24 @@ interface OutputInterface
     )/*# : string */;
 
     /**
+     * Return the SQL with '?'
+     *
+     * @param  array $settings settings
+     * @return string
+     * @access public
+     */
+    public function getPositionedStatement(array $settings = [])/*# : string */;
+
+    /**
+     * Return the SQL with ':name'
+     *
+     * @param  array $settings settings
+     * @return string
+     * @access public
+     */
+    public function getNamedStatement(array $settings = [])/*# : string */;
+
+    /**
      * Get the statement with default settings & dialect
      *
      * @return string

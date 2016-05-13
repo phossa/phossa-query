@@ -60,30 +60,28 @@ trait ParameterAwareTrait
      * Replace placeholders in the SQL with '?' or real value
      *
      * @param  string $sql
-     * @param  bool $positionedParam  '?' or replace with value directly
-     * @param  callable $escapeFunction escape|quote value function
+     * @param  array $settings current settings
      * @return string replaced sql
      * @access protected
      */
     protected function bindValues(
         /*# string */ $sql,
-        /*# bool */ $positionedParam = false,
-        callable $escapeFunction = null
-    ) {
+        array $settings
+    )/*# : string */ {
         $bindings = &$this->bindings;
-        $escape   = $this->getEscapeCallable($escapeFunction);
+        $escape   = $this->getEscapeCallable($settings['escapeFunction']);
         $params   = $this->getBuilder()->getPlaceholderMapping();
 
         // real function
-        $function = function($v) use ($positionedParam, &$bindings, $escape) {
-            // bypass ':param' and '?'
-            if ('?' === $v || is_string($v) && isset($v[0]) && ':' === $v[0]) {
-                return $v;
-
-            // use positioned '?'
-            } elseif ($positionedParam) {
+        $function = function($v) use ($settings, &$bindings, $escape) {
+            // positioend parameters
+            if ($settings['positionedParam']) {
                 $bindings[] = $v;
                 return '?';
+
+            // named parameters
+            } elseif ($settings['namedParam'] && isset($v[0]) && ':' == $v[0]) {
+                return $v;
 
             // use value, but NOT escaping int or float
             } elseif (is_numeric($v) && !is_string($v)) {

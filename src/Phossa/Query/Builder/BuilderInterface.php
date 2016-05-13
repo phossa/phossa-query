@@ -58,11 +58,11 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      * //         (age > 60 OR (age > 55 AND gender = 'female'))
      * $users->select()
      * ->where(
-     *     $users->expr()->where('age', '<', 18)->orWhere('gender', 'female');
+     *     $users->expr()->where('age', '<', 18)->orWhere('gender', 'female')
      * )->orWhere(
      *     $users->expr()->where('age', '>' , 60)->orWhere(
      *         $users->where('age', '>', 55)->where('gender', 'female')
-     *     );
+     *     )
      * );
      * ```
      *

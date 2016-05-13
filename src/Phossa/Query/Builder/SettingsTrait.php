@@ -40,6 +40,9 @@ trait SettingsTrait
         // replace value with '?'
         'positionedParam'   => false,
 
+        // named parameters?
+        'namedParam'        => false,
+
         // clause seperator
         'seperator'         => ' ',
 

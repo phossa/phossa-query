@@ -109,11 +109,28 @@ abstract class StatementAbstract implements StatementInterface
             $this->resetBindings();
 
             // replace with '?' or values
-            $sql = $this->bindValues($sql, $currSettings['positionedParam'],
-                $currSettings['escapeFunction']);
+            $sql = $this->bindValues($sql, $currSettings);
         }
 
         return trim($sql);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPositionedStatement(array $settings = [])/*# : string */
+    {
+        $settings = array_replace($settings, ['positionedParam' => true]);
+        return $this->getStatement($settings);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getNamedStatement(array $settings = [])/*# : string */
+    {
+        $settings = array_replace($settings, ['namedParam' => true]);
+        return $this->getStatement($settings);
     }
 
     /**

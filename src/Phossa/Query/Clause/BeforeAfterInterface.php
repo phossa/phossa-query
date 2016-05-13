@@ -32,6 +32,8 @@ interface BeforeAfterInterface extends ClauseInterface
     /**
      * Insert clause before some position like before 'WHERE'
      *
+     * Parameters can be added after the first 2 arguments.
+     *
      * ```php
      * // insert PARTITION before WHERE
      * ->before('where', 'PARTITION (part1, part2)')
