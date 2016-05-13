@@ -33,6 +33,21 @@ or add the following lines to your `composer.json`
 }
 ```
 
+Features
+--
+
+- Support [SELECT](#select), [INSERT](#insert), [UPDATE](#update),
+  [REPLACE](#replace), [DELETE](#delete), [CREATE TABLE](#create).
+
+- Complex sql building with [expr()](#expr), [raw()](#raw), [before()](#before),
+  [after()](#after) etc.
+
+- Beautiful output with different [settings](#settings).
+
+- Output with positioned or named [parameters](#param).
+
+- Ongoing support for different dialects like `Mysql`, `Sqlite` and more.
+
 Usage
 ---
 
@@ -64,7 +79,7 @@ Usage
   $val = $query->getBindings();
   ```
 
-- `SELECT`
+- <a name="select"></a>`SELECT`
 
   - Columns
 
@@ -384,7 +399,7 @@ Usage
                 ->getStatement()
     ```
 
-- `INSERT`
+- <a name="insert"></a>`INSERT`
 
   Single insert statement,
 
@@ -436,7 +451,7 @@ Usage
                ->from('oldusers');
   ```
 
-- `UPDATE`
+- <a name="update"></a>`UPDATE`
 
   Common update statement,
 
@@ -458,7 +473,7 @@ Usage
       ->orderByASC('user_id')->limit(10);
   ```
 
-- `REPLACE`
+- <a name="replace"></a>`REPLACE`
 
   Mysql version of replace,
 
@@ -476,7 +491,7 @@ Usage
   $query = $users->replace(['user_id' => 3, 'user_name' => 'phossa']);
   ```
 
-- `DELETE`
+- <a name="delete"></a>`DELETE`
 
   Single table deletion,
 
@@ -495,7 +510,7 @@ Usage
       ->join('accounts a', 'user_id')->where('a.total_amount', '<', 0);
   ```
 
-- `CREATE TABLE`
+- <a name="create"></a>`CREATE TABLE`
 
   Create table is used by most of the ORM libraries.
 
