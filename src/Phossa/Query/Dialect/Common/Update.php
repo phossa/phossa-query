@@ -47,7 +47,7 @@ class Update extends StatementAbstract implements UpdateStatementInterface
      * @var    int
      * @access protected
      */
-    const ORDER_TABLE = 10;
+    const ORDER_FROM  = 10;
     const ORDER_SET   = 20;
     const ORDER_WHERE = 30;
 
@@ -59,7 +59,7 @@ class Update extends StatementAbstract implements UpdateStatementInterface
      */
     protected $config = [
         // table
-        self::ORDER_TABLE => [
+        self::ORDER_FROM => [
             'prefix'    => '',
             'func'      => 'buildFrom',
             'join'      => ', ',

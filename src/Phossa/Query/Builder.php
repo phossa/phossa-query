@@ -65,31 +65,31 @@ class Builder implements BuilderInterface
      * @var    array
      * @access protected
      */
-    protected $tables = [];
+    protected $tables;
 
     /**
      * Constructor
      *
      * ```php
      * // builder with default table `users`
-     * $users = new Builder('users')
+     * $users = new Builder(new Mysql(), 'users')
      *
      * // builder with defult tables:  `users` and `accounts` AS `a`
-     * $builder = new Builder(['users', 'accounts' => 'a'])
+     * $builder = new Builder(new Mysql(), ['users', 'accounts' => 'a'])
      *
-     * // change default settings & dialect
-     * $builder = new Builder('', ['autoQuote' => false], new Mysql());
+     * // change default settings
+     * $builder = new Builder(new Mysql(), false, ['autoQuote' => false]);
      * ```
      *
+     * @param  DialectInterface $dialect default dialect is `Common`
      * @param  string|array $table table[s] to build upon
      * @param  array $settings builder settings
-     * @param  DialectInterface $dialect default dialect is `Common`
      * @access public
      */
     public function __construct(
+        DialectInterface $dialect = null,
         $table = '',
-        array $settings = [],
-        DialectInterface $dialect = null
+        array $settings = []
     ) {
         // settings
         $this->combineSettings($settings);
@@ -98,9 +98,7 @@ class Builder implements BuilderInterface
         $this->setDialect($dialect ?: new Common());
 
         // set default table if any
-        if (!empty($table)) {
-            $this->from($table);
-        }
+        $this->tables = $this->fixTable($table);
     }
 
     /**
@@ -135,9 +133,7 @@ class Builder implements BuilderInterface
     }
 
     /**
-     * Set default table[s] for this builder
-     *
-     * If table[s] was set, return a cloned builder with the new default table.
+     * Clone the builder and set default table[s]
      *
      * ```php
      * // a user table query builder
@@ -151,20 +147,12 @@ class Builder implements BuilderInterface
      */
     public function table($table, /*# string */ $tableAlias = '')
     {
-        // fix table
-        if (empty($table)) {
-            $table = [];
-        } else {
-            if (!is_array($table)) {
-                $table = empty($tableAlias) ? [$table] :
-                    [$table => $tableAlias];
-            }
-        }
+        $tbl = $this->fixTable($table, $tableAlias);
 
         // clone the builder if table different
-        if ($table != $this->tables) {
-            $clone = empty($this->tables) ? $this : (clone $this);
-            $clone->tables = $table;
+        if ($tbl != $this->tables) {
+            $clone = clone $this;
+            $clone->tables = $tbl;
             return $clone;
         } else {
             return $this;
@@ -209,7 +197,7 @@ class Builder implements BuilderInterface
         /* @var $insert InsertStatementInterface */
         $insert = $this->getDialectStatement('insert');
 
-        // set cols
+        // sets
         if (!empty($values)) {
             $insert->set($values);
         }
@@ -241,7 +229,7 @@ class Builder implements BuilderInterface
         /* @var $update UpdateStatementInterface */
         $update = $this->getDialectStatement('update');
 
-        // set cols
+        // sets
         if (!empty($values)) {
             $update->set($values);
         }
@@ -252,10 +240,15 @@ class Builder implements BuilderInterface
     /**
      * {@inheritDoc}
      */
-    public function delete()/*# : DeleteStatementInterface */
+    public function delete($records = '')/*# : DeleteStatementInterface */
     {
         /* @var $delete DeleteStatementInterface */
         $delete = $this->getDialectStatement('delete');
+
+        // table records
+        if (!empty($records)) {
+            $delete->record($records);
+        }
 
         return $delete;
     }
@@ -314,5 +307,28 @@ class Builder implements BuilderInterface
         }
 
         return $statement;
+    }
+
+    /**
+     * fix table notation
+     *
+     * @param  mixed $table
+     * @param  string $tableAlias
+     * @return array
+     * @access protected
+     */
+    protected function fixTable(
+        $table,
+        /*# string */ $tableAlias = ''
+    )/*# : array */ {
+        if (empty($table)) {
+            $table = [];
+        } else {
+            if (!is_array($table)) {
+                $table = empty($tableAlias) ? [$table] :
+                [$table => $tableAlias];
+            }
+        }
+        return $table;
     }
 }

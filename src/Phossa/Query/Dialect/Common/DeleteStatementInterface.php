@@ -17,6 +17,8 @@ namespace Phossa\Query\Dialect\Common;
 
 use Phossa\Query\Clause\FromInterface;
 use Phossa\Query\Clause\WhereInterface;
+use Phossa\Query\Clause\LimitInterface;
+use Phossa\Query\Clause\OrderByInterface;
 use Phossa\Query\Statement\StatementInterface;
 
 /**
@@ -28,6 +30,6 @@ use Phossa\Query\Statement\StatementInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface DeleteStatementInterface extends StatementInterface, FromInterface, WhereInterface
+interface DeleteStatementInterface extends StatementInterface, FromInterface, WhereInterface, OrderByInterface, LimitInterface
 {
 }

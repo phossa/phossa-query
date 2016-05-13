@@ -281,7 +281,7 @@ trait JoinTrait
     protected function buildJoinOn($input, $table)/*# : string */
     {
         // original table
-        $tbl1 = $this->getTableName();
+        $tbl1 = $this->getTableName(true);
 
         if (is_array($input)) {
             $res = ['ON'];

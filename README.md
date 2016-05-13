@@ -44,8 +44,8 @@ Usage
   use Phossa\Query\Builder;
   use Phossa\Query\Dialect\Mysql;
 
-  // a builder with mysql dialect, some settings and default to 'users' table
-  $users = new Builder('users', $settings, new Mysql());
+  // a builder with mysql dialect,default 'users' table
+  $users = new Builder(new Mysql(), 'users');
 
   // SELECT * FROM `users` LIMIT 10
   $sql = $users->select()->limit(10)->getStatement();
@@ -141,14 +141,14 @@ Usage
 
     ```php
     // SELECT * FROM `users` AS `u`, `accounts` AS `a`
-    $query = $users->select(false)->from(['users' => 'u', 'accounts' => 'a']);
+    $query = $users->select()->from(['users' => 'u', 'accounts' => 'a']);
     ```
 
     Subqueries can be used in `from()`,
 
     ```php
     // builder without default table[s]
-    $builder = $users->table('');
+    $builder = $users->table(false);
 
     // SELECT * FROM (SELECT `user_id` FROM `oldusers`) AS `u`
     $query = $builder->select()->from(
@@ -206,9 +206,10 @@ Usage
     Join with complex `ON`,
 
     ```php
-    $builder = $users->table('');
+    $builder = $users->table(false);
 
-    // SELECT * FROM `users` INNER JOIN `sales` (ON `users`.`uid` = `sales`.`s_uid` OR `users`.`uid` = `sales`.`puid`)
+    // SELECT * FROM `users` INNER JOIN `sales`
+    // (ON `users`.`uid` = `sales`.`s_uid` OR `users`.`uid` = `sales`.`puid`)
     $sql = $users->select()->join('sales',
         $builder->expr()->on('users.uid', 'sales.s_uid')->orOn('users.uid', 'sales.puid')
     )->getStatement();
@@ -437,6 +438,64 @@ Usage
 
 - `UPDATE`
 
+  Common update statement,
+
+  ```php
+  // UPDATE `users` SET `user_name` = 'phossa' WHERE `user_id` = 3
+  $query = $users->update(['user_name' => 'phossa'])->where('user_id', 3);
+
+  // UPDATE `users` SET `user_name` = 'phossa', `user_addr` = 'xxx'
+  // WHERE `user_id` = 3
+  $query = $users->update()->set('user_name','phossa')
+      ->set('user_addr', 'xxx')->where('user_id', 3);
+  ```
+
+  With `Mysql` extensions,
+
+  ```php
+  // UPDATE IGNORE `users` SET `user_id` = user_id + 10 ORDER BY `user_id` ASC LIMIT 10
+  $query = $users->update()->addHint('IGNORE')->set('user_id', $builder->raw('user_id + 10'))
+      ->orderByASC('user_id')->limit(10);
+  ```
+
+- `REPLACE`
+
+  Mysql version of replace,
+
+  ```php
+  // REPLACE LOW_PRIORITY INTO `users` (`user_id`, `user_name`) VALUES (3, 'phossa')
+  $query = $users->replace(['user_id' => 3, 'user_name' => 'phossa'])
+      ->addHint('low_priority');
+  ```
+
+  Sqlite version of replace,
+
+  ```php
+  // INSERT INTO `users` (`user_id`, `user_name`) VALUES (3, 'phossa')
+  // ON CONFLICT REPLACE
+  $query = $users->replace(['user_id' => 3, 'user_name' => 'phossa']);
+  ```
+
+- `DELETE`
+
+  Single table deletion,
+
+  ```php
+  // DELETE FROM `users` WHERE `user_id` > 10 ORDER BY `user_id` ASC LIMIT 10
+  $query = $users->delete()->where('user_id', '>', 10)
+      ->orderByAsc('user_id')->limit(10);
+  ```
+
+  Multiple tables deletion
+
+  ```php
+  // DELETE `users`.* FROM `users` AS `u` INNER JOIN `accounts` AS `a`
+  // ON `u`.`user_id` = `a`.`user_id` WHERE `a`.`total_amount` < 0
+  $query = $users->delete('users')->from('users', 'u')
+      ->join('accounts a', 'user_id')->where('a.total_amount', '<', 0);
+  ```
+
+- `CREATE TABLE`
 
 Dependencies
 ---

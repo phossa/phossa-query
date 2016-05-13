@@ -3,6 +3,7 @@ namespace Phossa\Query;
 
 use Phossa\Query\Builder;
 use Phossa\Query\Dialect\Mysql;
+use Phossa\Query\Dialect\Sqlite;
 
 /**
  * README test case.
@@ -35,7 +36,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->builder = new Builder('users', [], new Mysql());
+        $this->builder = new Builder(new Mysql(), 'users');
     }
 
     /**
@@ -171,11 +172,11 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
         // 03: array
         $this->assertEquals(
             "SELECT * FROM `users` AS `u`, `accounts` AS `a`",
-            $users->select(false)->from(['users' => 'u', 'accounts' => 'a'])->getStatement()
+            $users->select()->from(['users' => 'u', 'accounts' => 'a'])->getStatement()
         );
 
         // 04: subselect
-        $builder = $users->table(''); // clear table
+        $builder = $users->table(false); // clear table
         $this->assertEquals(
             "SELECT * FROM (SELECT `user_id` FROM `oldusers`) AS `u`",
             $builder->select()->from($builder->select('user_id')->from('oldusers'), 'u')->getStatement()
@@ -459,7 +460,7 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * example11: insert
+     * example12: insert
      *
      * @covers Phossa\Query\Dialect\Common::insert()
      */
@@ -515,6 +516,95 @@ class ReadmeTest extends \PHPUnit_Framework_TestCase
             $users->insert()->set(['uid', 'uname'])
                 ->select(['user_id', 'user_name'])
                 ->from('oldusers')
+                ->getStatement()
+        );
+    }
+
+    /**
+     * example13: update
+     *
+     * @covers Phossa\Query\Dialect\Common::update()
+     */
+    public function testReadme13()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: simple update
+        $this->assertEquals(
+            "UPDATE `users` SET `user_name` = 'phossa' WHERE `user_id` = 3",
+            $users->update(['user_name' => 'phossa'])->where('user_id', 3)
+                ->getStatement()
+        );
+
+        // 02: multiple sets
+        $this->assertEquals(
+            "UPDATE `users` SET `user_name` = 'phossa', `user_addr` = 'xxx' WHERE `user_id` = 3",
+            $users->update()
+                ->set('user_name','phossa')
+                ->set('user_addr', 'xxx')
+                ->where('user_id', 3)
+                ->getStatement()
+        );
+
+        // 03: mysql extension
+        $builder = $users->table(false);
+        $this->assertEquals(
+            "UPDATE IGNORE `users` SET `user_id` = user_id + 10 ORDER BY `user_id` ASC LIMIT 10",
+            $users->update()->addHint('IGNORE')
+                ->set('user_id', $builder->raw('user_id + 10'))
+                ->orderByASC('user_id')->limit(10)->getStatement()
+        );
+    }
+
+    /**
+     * example14: replace
+     *
+     * @covers Phossa\Query\Dialect\Common::replace()
+     */
+    public function testReadme14()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: mysql replace
+        $this->assertEquals(
+            "REPLACE LOW_PRIORITY INTO `users` (`user_id`, `user_name`) VALUES (3, 'phossa')",
+            $users->replace(['user_id' => 3, 'user_name' => 'phossa'])
+                ->addHint('low_priority')->getStatement()
+        );
+
+        // 02: sqlite replace
+        $sqlite = new Builder(new Sqlite(), 'users');
+        $this->assertEquals(
+            'INSERT INTO "users" ("user_id", "user_name") VALUES (3, \'phossa\') ON CONFLICT REPLACE',
+            $sqlite->replace(['user_id' => 3, 'user_name' => 'phossa'])->getStatement()
+        );
+    }
+
+    /**
+     * example15: delete
+     *
+     * @covers Phossa\Query\Dialect\Common::delete()
+     */
+    public function testReadme15()
+    {
+        // builder object
+        $users = $this->builder;
+
+        // 01: single table deletion
+        $this->assertEquals(
+            "DELETE FROM `users` WHERE `user_id` > 10 ORDER BY `user_id` ASC LIMIT 10",
+            $users->delete()->where('user_id', '>', 10)
+                ->orderByAsc('user_id')->limit(10)->getStatement()
+        );
+
+        // 02: multiple tables deletion
+        $this->assertEquals(
+            "DELETE `users`.* FROM `users` AS `u` INNER JOIN `accounts` AS `a` ON `u`.`user_id` = `a`.`user_id` WHERE `a`.`total_amount` < 0",
+            $users->delete('users')->from('users', 'u')
+                ->join('accounts a', 'user_id')
+                ->where('a.total_amount', '<', 0)
                 ->getStatement()
         );
     }

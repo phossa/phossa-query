@@ -15,14 +15,14 @@
 
 namespace Phossa\Query\Dialect\Mysql;
 
-use Phossa\Query\Clause\LimitTrait;
-use Phossa\Query\Clause\OrderByTrait;
+use Phossa\Query\Clause\JoinTrait;
 use Phossa\Query\Clause\HintTrait;
-use Phossa\Query\Clause\PartitionTrait;
-use Phossa\Query\Clause\LimitInterface;
-use Phossa\Query\Clause\OrderByInterface;
 use Phossa\Query\Clause\HintInterface;
+use Phossa\Query\Clause\JoinInterface;
+use Phossa\Query\Clause\PartitionTrait;
+use Phossa\Query\Clause\DeleteRecordTrait;
 use Phossa\Query\Clause\PartitionInterface;
+use Phossa\Query\Clause\DeleteRecordInterface;
 use Phossa\Query\Dialect\Common\Delete as CommonDelete;
 
 /**
@@ -37,9 +37,9 @@ use Phossa\Query\Dialect\Common\Delete as CommonDelete;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-class Delete extends CommonDelete implements MysqlInterface, HintInterface, PartitionInterface, OrderByInterface, LimitInterface
+class Delete extends CommonDelete implements MysqlInterface, HintInterface, DeleteRecordInterface, PartitionInterface, JoinInterface
 {
-    use HintTrait, PartitionTrait, OrderByTrait, LimitTrait;
+    use HintTrait, DeleteRecordTrait, PartitionTrait, JoinTrait;
 
     /**
      * clauses ordering
@@ -48,9 +48,9 @@ class Delete extends CommonDelete implements MysqlInterface, HintInterface, Part
      * @access protected
      */
     const ORDER_MYSQLHINT = 5;
-    const ORDER_PARTITION = 15;
-    const ORDER_ORDBY     = 40;
-    const ORDER_LIMIT     = 50;
+    const ORDER_RECORD    = 8;
+    const ORDER_JOIN      = 15;
+    const ORDER_PARTITION = 20;
 
     /**
      * order, prefix, join char
@@ -67,26 +67,26 @@ class Delete extends CommonDelete implements MysqlInterface, HintInterface, Part
             'indent'    => true,
         ],
 
+        // table records to delete
+        self::ORDER_RECORD  => [
+            'prefix'    => '',
+            'func'      => 'buildRecord',
+            'join'      => ',',
+            'indent'    => true,
+        ],
+
+        // join
+        self::ORDER_JOIN => [
+            'prefix'    => '',
+            'func'      => 'buildJoin',
+            'join'      => '',
+            'indent'    => true,
+        ],
+
         // partition
         self::ORDER_PARTITION => [
             'prefix'    => '',
             'func'      => 'buildPartition',
-            'join'      => '',
-            'indent'    => false,
-        ],
-
-        // order by
-        self::ORDER_ORDBY => [
-            'prefix'    => 'ORDER BY',
-            'func'      => 'buildOrderBy',
-            'join'      => ',',
-            'indent'    => false,
-        ],
-
-        // limit
-        self::ORDER_LIMIT => [
-            'prefix'    => '',
-            'func'      => 'buildLimit',
             'join'      => '',
             'indent'    => false,
         ],

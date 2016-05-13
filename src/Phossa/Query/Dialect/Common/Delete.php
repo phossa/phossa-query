@@ -16,7 +16,9 @@
 namespace Phossa\Query\Dialect\Common;
 
 use Phossa\Query\Clause\FromTrait;
+use Phossa\Query\Clause\LimitTrait;
 use Phossa\Query\Clause\WhereTrait;
+use Phossa\Query\Clause\OrderByTrait;
 use Phossa\Query\Statement\StatementAbstract;
 
 /**
@@ -30,7 +32,7 @@ use Phossa\Query\Statement\StatementAbstract;
  */
 class Delete extends StatementAbstract implements DeleteStatementInterface
 {
-    use FromTrait, WhereTrait;
+    use FromTrait, WhereTrait, OrderByTrait, LimitTrait;
 
     /**
      * Statement type
@@ -46,8 +48,10 @@ class Delete extends StatementAbstract implements DeleteStatementInterface
      * @var    int
      * @access protected
      */
-    const ORDER_TABLE = 10;
-    const ORDER_WHERE = 30;
+    const ORDER_FROM    = 10;
+    const ORDER_WHERE   = 30;
+    const ORDER_ORDERBY = 40;
+    const ORDER_LIMIT   = 50;
 
     /**
      * order, prefix, join char
@@ -57,8 +61,8 @@ class Delete extends StatementAbstract implements DeleteStatementInterface
      */
     protected $config = [
         // table
-        self::ORDER_TABLE => [
-            'prefix'    => '',
+        self::ORDER_FROM => [
+            'prefix'    => 'FROM',
             'func'      => 'buildFrom',
             'join'      => ', ',
             'indent'    => true,
@@ -68,6 +72,22 @@ class Delete extends StatementAbstract implements DeleteStatementInterface
         self::ORDER_WHERE => [
             'prefix'    => 'WHERE',
             'func'      => 'buildWhere',
+            'join'      => '',
+            'indent'    => false,
+        ],
+
+        // order by
+        self::ORDER_ORDERBY => [
+            'prefix'    => 'ORDER BY',
+            'func'      => 'buildOrderBy',
+            'join'      => ',',
+            'indent'    => false,
+        ],
+
+        // limit
+        self::ORDER_LIMIT => [
+            'prefix'    => '',
+            'func'      => 'buildLimit',
             'join'      => '',
             'indent'    => false,
         ],

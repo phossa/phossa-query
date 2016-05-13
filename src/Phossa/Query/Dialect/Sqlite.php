@@ -15,6 +15,9 @@
 
 namespace Phossa\Query\Dialect;
 
+use Phossa\Query\Builder\BuilderInterface;
+use Phossa\Query\Dialect\Sqlite\ReplaceStatementInterace;
+
 /**
  * SQLITE dialect
  *
@@ -33,4 +36,15 @@ class Sqlite extends Common
      * @access protected
      */
     protected $dialect = 'Sqlite';
+
+    /**
+     * {@inheritDoc}
+     *
+     * @return ReplaceStatementInterace
+     */
+    public function replace(BuilderInterface $builder)/*# : ReplaceStatementInterface */
+    {
+        $class = __NAMESPACE__ . '\\' . $this->dialect . '\\Replace';
+        return new $class($builder);
+    }
 }

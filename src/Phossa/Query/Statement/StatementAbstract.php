@@ -143,11 +143,11 @@ abstract class StatementAbstract implements StatementInterface
         // settings
         $settings = $this->getSettings();
 
-        // configs
-        $configs  = $this->getConfig();
-
         // before build()
         $this->beforeBuild();
+
+        // configs
+        $configs  = $this->getConfig();
 
         // start of result array
         $result = [$this->getType()];

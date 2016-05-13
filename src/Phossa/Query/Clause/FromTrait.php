@@ -53,6 +53,12 @@ trait FromTrait
                 $this->from($key, $val);
             }
         } else {
+            // overwrite exisiting same table
+            $key = array_search($table, $this->clause_table, true);
+            if (false !== $key) {
+                unset($this->clause_table[$key]);
+            }
+
             if (empty($tableAlias)) {
                 $this->clause_table[] = $table;
             } else {

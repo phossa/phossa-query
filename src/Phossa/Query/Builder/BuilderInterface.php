@@ -49,7 +49,7 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
      * Create an expression
      *
      * ```php
-     * $users = new Builder('Users');
+     * $users = new Builder(new Mysql(), 'Users');
      *
      * // SELECT *
      * //     FROM Users
@@ -150,11 +150,12 @@ interface BuilderInterface extends DialectAwareInterface, SettingsInterface, Fro
     /**
      * Build an DELETE statement
      *
+     * @param  string|array $records tables like ['users', 'sales'] etc.
      * @return DeleteStatementInterface
      * @throws BadMethodCallException if not supported
      * @access public
      */
-    public function delete()/*# : DeleteStatementInterface */;
+    public function delete($records = '')/*# : DeleteStatementInterface */;
 
     /**
      * Build an CREATE statement

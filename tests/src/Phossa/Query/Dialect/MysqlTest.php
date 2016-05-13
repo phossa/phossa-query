@@ -34,7 +34,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->builder = new Builder('', $this->settings, new Mysql());
+        $this->builder = new Builder(new Mysql(), false, $this->settings);
     }
 
     /**

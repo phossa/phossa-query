@@ -41,17 +41,17 @@ interface DialectInterface
     /**
      * quote nothing
      */
-    const QUOTE_NO      = 0;
+    const QUOTE_NO    = 0;
 
     /**
      * quote, but string with spaces are not quoted
      */
-    const QUOTE_YES     = 1;
+    const QUOTE_YES   = 1;
 
     /**
      * quote string with spaces also
      */
-    const QUOTE_SPACE   = 2;
+    const QUOTE_SPACE = 2;
 
     /**#@-*/
 
