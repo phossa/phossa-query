@@ -23,7 +23,7 @@ Features
 - Complex sql building with [expr()](#expr), [raw()](#raw), [before()](#before),
   [after()](#before) etc.
 
-- Output with positioned or named [parameters](#param).
+- Statement with positioned or named [parameters](#param).
 
 - Beautiful output with different [settings](#settings).
 
