@@ -14,6 +14,22 @@ It requires PHP 5.4 and supports PHP 7.0+, HHVM. It is compliant with
 [PSR-2]: http://www.php-fig.org/psr/psr-2/ "PSR-2: Coding Style Guide"
 [PSR-4]: http://www.php-fig.org/psr/psr-4/ "PSR-4: Autoloader"
 
+Features
+--
+
+- Support [SELECT](#select), [INSERT](#insert), [UPDATE](#update),
+  [REPLACE](#replace), [DELETE](#delete), [CREATE TABLE](#create).
+
+- Complex sql building with [expr()](#expr), [raw()](#raw), [before()](#before),
+  [after()](#before) etc.
+
+- Output with positioned or named [parameters](#param).
+
+- Beautiful output with different [settings](#settings).
+
+- Ongoing support for different dialects like [`Mysql`](#mysql), `Sqlite` and
+  more.
+
 Installation
 ---
 
@@ -32,22 +48,6 @@ or add the following lines to your `composer.json`
     }
 }
 ```
-
-Features
---
-
-- Support [SELECT](#select), [INSERT](#insert), [UPDATE](#update),
-  [REPLACE](#replace), [DELETE](#delete), [CREATE TABLE](#create).
-
-- Complex sql building with [expr()](#expr), [raw()](#raw), [before()](#before),
-  [after()](#before) etc.
-
-- Output with positioned or named [parameters](#param).
-
-- Beautiful output with different [settings](#settings).
-
-- Ongoing support for different dialects like [`Mysql`](#mysql), `Sqlite` and
-  more.
 
 Usage
 ---
@@ -547,126 +547,126 @@ Usage
     MAX_ROWS=100
   ```
 
-- Advanced topics
+Advanced topics
+---
+- <a name="expr"></a>`expr()`
 
-  - <a name="expr"></a>`expr()`
+  Expression can be used to construct complex `WHERE`
 
-    Expression can be used to construct complex `WHERE`
+  ```php
+  // SELECT
+  //     *
+  // FROM
+  //     "Users"
+  // WHERE
+  //    ("age" < 18 OR "gender" = 'female')
+  //    OR ("age" > 60 OR ("age" > 55 AND "gender" = 'female'))
+  $query = $builder->select()->from('Users')->where(
+      $builder->expr()->where('age', '<', 18)->orWhere('gender', 'female')
+  )->orWhere(
+      $builder->expr()->where('age', '>' , 60)->orWhere(
+          $builder->expr()->where('age', '>', 55)->where('gender', 'female')
+      )
+  );
+  ```
 
-    ```php
-    // SELECT
-    //     *
-    // FROM
-    //     "Users"
-    // WHERE
-    //    ("age" < 18 OR "gender" = 'female')
-    //    OR ("age" > 60 OR ("age" > 55 AND "gender" = 'female'))
-    $query = $builder->select()->from('Users')->where(
-        $builder->expr()->where('age', '<', 18)->orWhere('gender', 'female')
-     )->orWhere(
-        $builder->expr()->where('age', '>' , 60)->orWhere(
-            $builder->expr()->where('age', '>', 55)->where('gender', 'female')
-        )
-    );
-    ```
+  Join with complex `ON`,
 
-    Join with complex `ON`,
+  ```php
+  $builder = $users->table(false);
 
-    ```php
-    $builder = $users->table(false);
+  // SELECT * FROM `users` INNER JOIN `sales`
+  // (ON `users`.`uid` = `sales`.`s_uid` OR `users`.`uid` = `sales`.`puid`)
+  $sql = $users->select()->join('sales',
+      $builder->expr()->on('users.uid', 'sales.s_uid')->orOn('users.uid', 'sales.puid')
+  )->getStatement();
+  ```
 
-    // SELECT * FROM `users` INNER JOIN `sales`
-    // (ON `users`.`uid` = `sales`.`s_uid` OR `users`.`uid` = `sales`.`puid`)
-    $sql = $users->select()->join('sales',
-        $builder->expr()->on('users.uid', 'sales.s_uid')->orOn('users.uid', 'sales.puid')
-    )->getStatement();
-    ```
+- <a name="raw"></a>`raw()`
 
-  - <a name="raw"></a>`raw()`
+  Raw string bypass the quoting and escaping,
 
-    Raw string bypass the quoting and escaping,
+  ```php
+  // SELECT id FROM "students" WHERE "time" = NOW()
+  $query = $builder->select()->field($builder->raw("id"))
+      ->from("students")->where("time", $builder->raw('NOW()'));
+  ```
 
-    ```php
-    // SELECT id FROM "students" WHERE "time" = NOW()
-    $query = $builder->select()->field($builder->raw("id"))
-        ->from("students")->where("time", $builder->raw('NOW()'));
-    ```
+  Raw string with parameters,
 
-    Raw string with parameters,
+  ```php
+  // SELECT * FROM "students" WHERE "age" IN RANGE(1, 1.2)
+  $query = $builder->select()->from("students")->where("age", "IN",
+      $builder->raw('RANGE(?, ?)', 1, 1.2));
+  ```
 
-    ```php
-    // SELECT * FROM "students" WHERE "age" IN RANGE(1, 1.2)
-    $query = $builder->select()->from("students")->where("age", "IN",
-        $builder->raw('RANGE(?, ?)', 1, 1.2));
-    ```
+- <a name="before"></a>`before()` and `after()`
 
-  - <a name="before"></a>`before()` and `after()`
+  Sometimes, non-standard SQL wanted and no methods found. `before()` and
+  `after()` will come to rescue.
 
-    Sometimes, non-standard SQL wanted and no methods found. `before()` and
-    `after()` will come to rescue.
+  ```php
+  // INSERT IGNORE INTO "users" ("id", "name") VALUES (3, 'phossa')
+  // ON DUPLICATE KEY UPDATE id=id+10
+  $query = $users->insert()->set('id', 3)->set('name', 'phossa')
+      ->before('INTO', 'IGNORE')
+      ->after('VALUES', 'ON DUPLICATE KEY UPDATE id=id+?', 10);
+  ```
 
-    ```php
-    // INSERT IGNORE INTO "users" ("id", "name") VALUES (3, 'phossa')
-    // ON DUPLICATE KEY UPDATE id=id+10
-    $query = $users->insert()->set('id', 3)->set('name', 'phossa')
-        ->before('INTO', 'IGNORE')
-        ->after('VALUES', 'ON DUPLICATE KEY UPDATE id=id+?', 10);
-    ```
+- <a name="param"></a>Parameters
 
-  - <a name="param"></a>Parameters
+  *phossa-query* can return statement for driver to prepare and use the
+  `getBindings()` to get the values to bind.
 
-    *phossa-query* can return statement for driver to prepare and use the
-    `getBindings()` to get the values to bind.
+  ```php
+  $query = $users->select()->where("user_id", 10);
 
-    ```php
-    $query = $users->select()->where("user_id", 10);
+  // SELECT * FROM "users" WHERE "user_id" = ?
+  $sql = $query->getPositionedStatement();
 
-    // SELECT * FROM "users" WHERE "user_id" = ?
-    $sql = $query->getPositionedStatement();
+  // values to bind: [10]
+  $val = $query->getBindings();
+  ```
 
-    // values to bind: [10]
-    $val = $query->getBindings();
-    ```
+  Or named parameters,
 
-    Or named parameters,
+  ```php
+  $query = $users->select()->where("user_name", ':name');
 
-    ```php
-    $query = $users->select()->where("user_name", ':name');
+  // SELECT * FROM "users" WHERE "user_name" = :name
+  $sql = $query->getNamedStatement();
+  ```
 
-    // SELECT * FROM "users" WHERE "user_name" = :name
-    $sql = $query->getNamedStatement();
-    ```
+- <a name="settings"></a>Settings
 
-  - <a name="settings"></a>Settings
+  Settings can be applied to `$builder` at instantiation,
 
-    Settings can be applied to `$builder` at instantiation,
+  ```php
+  $users = new Builder(new Mysql(), 'users', ['autoQuote' => false]);
+  ```
 
-    ```php
-    $users = new Builder(new Mysql(), 'users', ['autoQuote' => false]);
-    ```
+  Or applied when output with `getStatement()`,
 
-    Or applied when output with `getStatement()`,
+  ```php
+  $sql = $users->select()->getStatement(['autoQuote' => false]);
+  ```
 
-    ```php
-    $sql = $users->select()->getStatement(['autoQuote' => false]);
-    ```
+  List of settings,
 
-    List of settings,
+  - `autoQuote`: boolean. Quote db identifier or not.
 
-    - `autoQuote`: boolean. Quote db identifier or not.
+  - `positionedParam`: boolean. Output with positioned parameter or not.
 
-    - `positionedParam`: boolean. Output with positioned parameter or not.
+  - `namedParam`: boolean. Output with named parameter or not.
 
-    - `namedParam`: boolean. Output with named parameter or not.
+  - `seperator`: string, default to ' '. Seperator between clauses.
 
-    - `seperator`: string, default to ' '. Seperator between clauses.
+  - `indent`: string, default to ''. Indent prefix for clauses.
 
-    - `indent`: string, default to ''. Indent prefix for clauses.
+  - `escapeFunction`: callabel, default to `null`. Function used to quote and
+    escape values.
 
-    - `escapeFunction`: callabel, default to `null`. Function used to quote and
-      escape values.
-
-    - `useNullAsDefault`: boolean.
+  - `useNullAsDefault`: boolean.
 
 Dialects
 ---
