@@ -18,7 +18,6 @@ namespace Phossa\Query\Exception;
 /**
  * Exception marker for phossa-query
  *
- * @interface
  * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
  * @see     \Phossa\Shared\Exception\ExceptionInterface
