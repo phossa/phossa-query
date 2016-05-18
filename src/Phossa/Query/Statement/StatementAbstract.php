@@ -38,6 +38,7 @@ abstract class StatementAbstract implements StatementInterface
         BeforeAfterTrait,
         DialectAwareTrait,
         BuilderAwareTrait,
+        ExecutorAwareTrait,
         ParameterAwareTrait;
 
     /**
