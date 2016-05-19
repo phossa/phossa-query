@@ -26,6 +26,8 @@ use Phossa\Query\Statement\PreviousTrait;
 use Phossa\Query\Dialect\DialectInterface;
 use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
+use Phossa\Query\Builder\ExecutorAwareTrait;
+use Phossa\Query\Statement\StatementInterface;
 use Phossa\Query\Statement\ExpressionInterface;
 use Phossa\Query\Dialect\Common\CreateInterface;
 use Phossa\Query\Exception\BadMethodCallException;
@@ -33,7 +35,6 @@ use Phossa\Query\Dialect\Common\SelectStatementInterface;
 use Phossa\Query\Dialect\Common\InsertStatementInterface;
 use Phossa\Query\Dialect\Common\UpdateStatementInterface;
 use Phossa\Query\Dialect\Common\DeleteStatementInterface;
-use Phossa\Query\Statement\StatementInterface;
 
 /**
  * Query Builder
@@ -57,7 +58,11 @@ use Phossa\Query\Statement\StatementInterface;
  */
 class Builder implements BuilderInterface
 {
-    use SettingsTrait, DialectAwareTrait, ParameterTrait, PreviousTrait;
+    use SettingsTrait,
+        PreviousTrait,
+        ParameterTrait,
+        DialectAwareTrait,
+        ExecutorAwareTrait;
 
     /**
      * tables

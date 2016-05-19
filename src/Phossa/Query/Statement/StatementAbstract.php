@@ -15,10 +15,12 @@
 
 namespace Phossa\Query\Statement;
 
+use Phossa\Query\Message\Message;
 use Phossa\Query\Builder\SettingsTrait;
 use Phossa\Query\Clause\BeforeAfterTrait;
 use Phossa\Query\Builder\BuilderInterface;
 use Phossa\Query\Dialect\DialectAwareTrait;
+use Phossa\Query\Exception\BadMethodCallException;
 
 /**
  * StatementAbstract
@@ -38,7 +40,6 @@ abstract class StatementAbstract implements StatementInterface
         BeforeAfterTrait,
         DialectAwareTrait,
         BuilderAwareTrait,
-        ExecutorAwareTrait,
         ParameterAwareTrait;
 
     /**
@@ -75,6 +76,29 @@ abstract class StatementAbstract implements StatementInterface
     {
         $this->setBuilder($builder);
         $this->setDialect($builder->getDialect());
+    }
+
+    /**
+     * Pass any unkown method like 'get()' to the query executor
+     *
+     * @param  string $method
+     * @param  array $arguments
+     * @return mixed
+     * @throws BadMethodCallException
+     */
+    public function __call(/*# string */ $method, array $arguments)
+    {
+        $executor = $this->getBuilder()->getExecutor();
+        if ($executor && method_exists($executor, $method)) {
+            $sql = $this->getStatement();
+            $val = $this->getBindings();
+            return call_user_func_array([$executor, $method], [$sql, $val]);
+        }
+
+        throw new BadMethodCallException(
+            Message::get(Message::BUILDER_UNKNOWN_METHOD, $method),
+            Message::BUILDER_UNKNOWN_METHOD
+        );
     }
 
     /**

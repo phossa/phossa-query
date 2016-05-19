@@ -28,7 +28,7 @@ use Phossa\Query\Dialect\DialectAwareInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface StatementInterface extends DialectAwareInterface, SettingsInterface, OutputInterface, BuilderAwareInterface, ParameterAwareInterface, PreviousInterface, BeforeAfterInterface, ExecutorAwareInterface
+interface StatementInterface extends DialectAwareInterface, SettingsInterface, OutputInterface, BuilderAwareInterface, ParameterAwareInterface, PreviousInterface, BeforeAfterInterface
 {
     /**
      * Return the SQL statement type

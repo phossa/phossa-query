@@ -13,19 +13,15 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa\Query\Statement;
-
-use Phossa\Query\Exception\BadMethodCallException;
+namespace Phossa\Query\Builder;
 
 /**
  * ExecutorAwareInterface
  *
- * For any unknown method call, pass it to the executor
- *
- * @package package_name
+ * @package Phossa\Query
  * @author  Hong Zhang <phossa@126.com>
- * @version 1.0.0
- * @since   1.0.0 added
+ * @version 1.0.3
+ * @since   1.0.3 added
  */
 interface ExecutorAwareInterface
 {
@@ -39,12 +35,10 @@ interface ExecutorAwareInterface
     public function setExecutor($executor);
 
     /**
-     * Pass any unkown method like 'get()' to the executor
+     * Get the executor
      *
-     * @param  string $method
-     * @param  array $arguments
-     * @return mixed
-     * @throws BadMethodCallException
+     * @return null|object
+     * @access public
      */
-    public function __call(/*# string */ $method, array $arguments);
+    public function getExecutor();
 }

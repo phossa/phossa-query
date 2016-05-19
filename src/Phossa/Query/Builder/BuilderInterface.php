@@ -43,7 +43,7 @@ use Phossa\Query\Dialect\Common\DeleteStatementInterface;
  * @version 1.0.0
  * @since   1.0.0 added
  */
-interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface, ParameterInterface, PreviousInterface
+interface BuilderInterface extends DialectAwareInterface, SettingsInterface, FromInterface, ParameterInterface, PreviousInterface, ExecutorAwareInterface
 {
     /**
      * Create an expression
