@@ -145,6 +145,11 @@ trait ColDefinitionTrait
                     $this->processValue($col['default'][0]));
             }
 
+            // auto
+            if (isset($col['autoincrement'])) {
+                $res[] = 'AUTO_INCREMENT';
+            }
+
             // unique
             if (isset($col['unique'])) {
                 $res[] = 'UNIQUE' .
@@ -155,11 +160,6 @@ trait ColDefinitionTrait
             if (isset($col['primary'])) {
                 $res[] = 'PRIMARY KEY' .
                     ($col['primary'] ? (' ' . $col['primary']) : '');
-            }
-
-            // auto
-            if (isset($col['autoincrement'])) {
-                $res[] = 'AUTO_INCREMENT';
             }
 
             // other constraints
