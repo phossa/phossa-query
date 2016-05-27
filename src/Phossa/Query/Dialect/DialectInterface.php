@@ -106,4 +106,16 @@ interface DialectInterface
         /*# string */ $string,
         /*# bool */ $quote = DialectInterface::QUOTE_YES
     )/*# : string */;
+
+    /**
+     * Get dialect specific data type representation
+     *
+     * @param string $typeName
+     * @param int|array $attributes
+     * @return string
+     */
+    public function getType(
+        /*# string */ $typeName,
+        $attributes = 0
+    )/*# : string */;
 }

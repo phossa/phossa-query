@@ -15,6 +15,7 @@
 
 namespace Phossa\Query\Dialect;
 
+use Phossa\Query\Dialect\DataType;
 use Phossa\Query\Dialect\Common\Select;
 use Phossa\Query\Dialect\Common\Insert;
 use Phossa\Query\Builder\BuilderInterface;
@@ -55,6 +56,15 @@ class Common implements DialectInterface
      * @access protected
      */
     protected $quote_suffix = '"';
+
+    /**
+     * data type conversion
+     *
+     * @var    array
+     * @access protected
+     * @staticvar
+     */
+    protected static $type_conversion = [];
 
     /**
      * {@inheritDoc}
@@ -133,5 +143,68 @@ class Common implements DialectInterface
             );
         }
         return $string;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getType(
+        /*# string */ $typeName,
+        $attributes = 0
+    )/*# : string */ {
+        // get type
+        if (defined(DataType::getClass() . '::' . $typeName)) {
+            $type = constant(DataType::getClass() . '::' . $typeName);
+        } else {
+            $type = $typeName;
+        }
+
+        // get conversion if any
+        if (isset(static::$type_conversion[$type])) {
+            $type = static::$type_conversion[$type];
+        }
+
+        // modify type
+        if (0 !== $attributes) {
+            $type = $this->typeModification($type, func_get_args());
+        }
+
+        return $type;
+    }
+
+    /**
+     * modify the type
+     *
+     * @param  string $type
+     * @param  array $args
+     * @return string
+     */
+    protected function typeModification(
+        /*# string */ $type, array $args
+    )/*# : string */ {
+        // data size
+        if (is_int($args[1])) {
+            $type .= '(' . $args[1];
+            if (isset($args[2])) {
+                $type .= ',' . $args[2];
+            }
+            $type .= ')';
+
+        // size, zeroFill etc.
+        } elseif (is_array($args[1])) {
+            if (isset($args[1]['size'])) {
+                $type .= '(' . $args[1]['size'] . ')';
+            }
+            foreach ($args[1] as $key => $val) {
+                if ('size' === $key) {
+                    continue;
+                }
+                $type .= ' ' . strtoupper($key);
+            }
+        } else {
+            $type .= $args[1];
+        }
+
+        return $type;
     }
 }
