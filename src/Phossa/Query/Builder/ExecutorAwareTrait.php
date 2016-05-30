@@ -15,6 +15,8 @@
 
 namespace Phossa\Query\Builder;
 
+use Phossa\Query\Statement\ExecutorInterface;
+
 /**
  * ExecutorAwareTrait
  *
@@ -29,7 +31,7 @@ trait ExecutorAwareTrait
     /**
      * the query executor
      *
-     * @var    object
+     * @var    ExecutorInterface
      * @access protected
      */
     protected $executor;
@@ -37,7 +39,7 @@ trait ExecutorAwareTrait
     /**
      * {@inheritDoc}
      */
-    public function setExecutor($executor)
+    public function setExecutor(ExecutorInterface $executor)
     {
         $this->executor = $executor;
         return $this;

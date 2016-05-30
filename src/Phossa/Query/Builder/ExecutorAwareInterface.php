@@ -15,6 +15,8 @@
 
 namespace Phossa\Query\Builder;
 
+use Phossa\Query\Statement\ExecutorInterface;
+
 /**
  * ExecutorAwareInterface
  *
@@ -28,16 +30,16 @@ interface ExecutorAwareInterface
     /**
      * Normally, it is a third party query executor
      *
-     * @param  object $executor
+     * @param  ExecutorInterface $executor
      * @return self
      * @access public
      */
-    public function setExecutor($executor);
+    public function setExecutor(ExecutorInterface $executor);
 
     /**
      * Get the executor
      *
-     * @return null|object
+     * @return null|ExecutorInterface
      * @access public
      */
     public function getExecutor();
